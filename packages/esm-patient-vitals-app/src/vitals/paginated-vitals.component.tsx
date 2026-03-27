@@ -11,7 +11,7 @@ import {
   TableRow,
   type DataTableSortState,
 } from '@carbon/react';
-import { useLayoutType, usePagination } from '@openmrs/esm-framework';
+import { NumericObservation, useLayoutType, usePagination } from '@openmrs/esm-framework';
 import { PatientChartPagination } from '@openmrs/esm-patient-common-lib';
 import type { VitalsTableHeader, VitalsTableRow } from './types';
 import { VitalsAndBiometricsActionMenu } from '../components/action-menu/vitals-biometrics-action-menu.component';
@@ -21,6 +21,7 @@ interface PaginatedVitalsProps {
   isPrinting?: boolean;
   pageSize: number;
   pageUrl: string;
+  patientUuid: string;
   tableHeaders: Array<VitalsTableHeader>;
   tableRows: Array<VitalsTableRow>;
   urlLabel: string;
@@ -31,6 +32,7 @@ const PaginatedVitals: React.FC<PaginatedVitalsProps> = ({
   isPrinting,
   pageSize,
   pageUrl,
+  patientUuid,
   tableHeaders,
   tableRows,
   urlLabel,
@@ -38,21 +40,6 @@ const PaginatedVitals: React.FC<PaginatedVitalsProps> = ({
 }) => {
   const { t } = useTranslation();
   const isTablet = useLayoutType() === 'tablet';
-
-  const StyledTableCell = ({ children, interpretation }: { children: React.ReactNode; interpretation: string }) => {
-    switch (interpretation) {
-      case 'critically_high':
-        return <TableCell className={styles.criticallyHigh}>{children}</TableCell>;
-      case 'critically_low':
-        return <TableCell className={styles.criticallyLow}>{children}</TableCell>;
-      case 'high':
-        return <TableCell className={styles.high}>{children}</TableCell>;
-      case 'low':
-        return <TableCell className={styles.low}>{children}</TableCell>;
-      default:
-        return <TableCell>{children}</TableCell>;
-    }
-  };
 
   const [sortParams, setSortParams] = useState<{ key: string; sortDirection: 'ASC' | 'DESC' | 'NONE' }>({
     key: '',
@@ -123,14 +110,23 @@ const PaginatedVitals: React.FC<PaginatedVitalsProps> = ({
                 {rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.cells.map((cell) => {
-                      const vitalsObj = paginatedVitals.find((obj) => obj.id === row.id);
+                      const header = tableHeaders.find((h) => h.key === cell.info.header);
+                      const conceptUuid = header?.conceptUuid;
+                      const lookupSource = isPrinting ? sortedData : paginatedVitals;
+                      const vitalsObj = lookupSource.find((obj) => obj.id === row.id);
                       const interpretationKey = cell.info.header + 'Interpretation';
                       const interpretation = vitalsObj?.[interpretationKey];
 
                       return (
-                        <StyledTableCell key={`styled-cell-${cell.id}`} interpretation={interpretation}>
-                          {cell.value?.content ?? cell.value}
-                        </StyledTableCell>
+                        <TableCell key={`styled-cell-${cell.id}`} className={styles.numericObsCell}>
+                          <NumericObservation
+                            value={cell.value?.content ?? cell.value}
+                            interpretation={interpretation}
+                            conceptUuid={conceptUuid}
+                            variant="cell"
+                            patientUuid={patientUuid}
+                          />
+                        </TableCell>
                       );
                     })}
                     <TableCell className="cds--table-column-menu" id="actions">
