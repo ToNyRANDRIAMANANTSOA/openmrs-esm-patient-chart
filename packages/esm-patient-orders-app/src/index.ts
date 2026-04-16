@@ -6,7 +6,7 @@ import OrdersSummary from './orders-summary/orders-summary.component';
 
 export const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
 
-const moduleName = '@openmrs/esm-patient-orders-app';
+const moduleName = '@tebokaroa/openmrs-esm-patient-orders-app';
 
 const options = {
   featureName: 'patient-orders',

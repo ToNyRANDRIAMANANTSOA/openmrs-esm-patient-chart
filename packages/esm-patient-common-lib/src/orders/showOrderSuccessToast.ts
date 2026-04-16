@@ -39,7 +39,7 @@ function getNotificationTitle(
  * The notification title dynamically reflects the action(s) taken (placed, updated, discontinued)
  * and whether it's singular or plural.
  *
- * @param moduleName - The module name (e.g., '@openmrs/esm-patient-orders-app') to use for translations
+ * @param moduleName - The module name (e.g., '@tebokaroa/openmrs-esm-patient-orders-app') to use for translations
  * @param patientOrderItems - Array of order basket items that were processed
  */
 export function showOrderSuccessToast(moduleName: string, patientOrderItems: OrderBasketItem[]) {

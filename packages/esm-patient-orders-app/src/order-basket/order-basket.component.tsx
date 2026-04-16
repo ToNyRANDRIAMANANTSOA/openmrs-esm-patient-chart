@@ -137,7 +137,7 @@ const OrderBasket: React.FC<OrderBasketProps> = ({
          * t('orderUpdated', 'Order updated')
          * t('updated', 'Updated')
          */
-        showOrderSuccessToast('@openmrs/esm-patient-orders-app', orders);
+        showOrderSuccessToast('@tebokaroa/openmrs-esm-patient-orders-app', orders);
       } catch (e) {
         console.error(e);
         setCreatingEncounterError(
@@ -159,7 +159,7 @@ const OrderBasket: React.FC<OrderBasketProps> = ({
 
         if (erroredItems.length == 0) {
           await closeWorkspace({ discardUnsavedChanges: true });
-          showOrderSuccessToast('@openmrs/esm-patient-orders-app', orders);
+          showOrderSuccessToast('@tebokaroa/openmrs-esm-patient-orders-app', orders);
         } else {
           setOrdersWithErrors(erroredItems);
         }

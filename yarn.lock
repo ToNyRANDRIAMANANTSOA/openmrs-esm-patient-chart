@@ -5360,65 +5360,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openmrs/esm-patient-medications-app@workspace:packages/esm-patient-medications-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-medications-app@workspace:packages/esm-patient-medications-app"
-  dependencies:
-    "@carbon/react": "npm:^1.83.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.23"
-    openmrs: "npm:next"
-  peerDependencies:
-    "@openmrs/esm-framework": 9.x
-    "@openmrs/esm-patient-common-lib": 12.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 16.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-notes-app@workspace:packages/esm-patient-notes-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-notes-app@workspace:packages/esm-patient-notes-app"
-  dependencies:
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.23"
-    openmrs: "npm:next"
-  peerDependencies:
-    "@openmrs/esm-framework": 9.x
-    "@openmrs/esm-patient-common-lib": 12.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 16.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-orders-app@workspace:packages/esm-patient-orders-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-orders-app@workspace:packages/esm-patient-orders-app"
-  dependencies:
-    "@carbon/react": "npm:^1.83.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.23"
-    openmrs: "npm:next"
-  peerDependencies:
-    "@openmrs/esm-framework": 9.x
-    "@openmrs/esm-patient-common-lib": 12.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 16.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
 "@openmrs/esm-patient-programs-app@workspace:packages/esm-patient-programs-app":
   version: 0.0.0-use.local
   resolution: "@openmrs/esm-patient-programs-app@workspace:packages/esm-patient-programs-app"
@@ -8400,6 +8341,65 @@ __metadata:
   checksum: 10/c29df3bcec6fc3bdec2b17981d89d9c9fc9bd7d0c9bcfe92821dc533f4440bc890ccde79971838b4ceed1921d456973c4180d7175ee1d0023ad0562240a58d95
   languageName: node
   linkType: hard
+
+"@tebokaroa/openmrs-esm-patient-medications-app@workspace:packages/esm-patient-medications-app":
+  version: 0.0.0-use.local
+  resolution: "@tebokaroa/openmrs-esm-patient-medications-app@workspace:packages/esm-patient-medications-app"
+  dependencies:
+    "@carbon/react": "npm:^1.83.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.23"
+    openmrs: "npm:next"
+  peerDependencies:
+    "@openmrs/esm-framework": 9.x
+    "@openmrs/esm-patient-common-lib": 12.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 16.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@tebokaroa/openmrs-esm-patient-notes-app@workspace:packages/esm-patient-notes-app":
+  version: 0.0.0-use.local
+  resolution: "@tebokaroa/openmrs-esm-patient-notes-app@workspace:packages/esm-patient-notes-app"
+  dependencies:
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.23"
+    openmrs: "npm:next"
+  peerDependencies:
+    "@openmrs/esm-framework": 9.x
+    "@openmrs/esm-patient-common-lib": 12.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 16.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@tebokaroa/openmrs-esm-patient-orders-app@workspace:packages/esm-patient-orders-app":
+  version: 0.0.0-use.local
+  resolution: "@tebokaroa/openmrs-esm-patient-orders-app@workspace:packages/esm-patient-orders-app"
+  dependencies:
+    "@carbon/react": "npm:^1.83.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.23"
+    openmrs: "npm:next"
+  peerDependencies:
+    "@openmrs/esm-framework": 9.x
+    "@openmrs/esm-patient-common-lib": 12.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 16.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
 
 "@testing-library/dom@npm:^10.0.0, @testing-library/dom@npm:^10.1.0":
   version: 10.1.0
