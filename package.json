@@ -1,15 +1,15 @@
 {
-  "name": "@openmrs/esm-patient-chart",
+  "name": "@tebokaroa/openmrs-esm-patient-chart",
   "private": true,
-  "version": "12.1.0",
+  "version": "12.1.0-tebokaroa.1",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "start": "openmrs develop --sources packages/esm-patient-chart-app/",
-    "ci:publish": "yarn workspaces foreach --all --topological --exclude @openmrs/esm-patient-chart npm publish --access public --tag latest",
-    "ci:prepublish": "yarn workspaces foreach --all --topological --exclude @openmrs/esm-patient-chart npm publish --access public --tag next",
-    "ci:prepublish-patch": "yarn workspaces foreach --all --topological --exclude @openmrs/esm-patient-chart npm publish --access public --tag patch",
+    "ci:publish": "yarn workspaces foreach --all --topological --exclude @tebokaroa/openmrs-esm-patient-chart npm publish --access public --tag latest",
+    "ci:prepublish": "yarn workspaces foreach --all --topological --exclude @tebokaroa/openmrs-esm-patient-chart npm publish --access public --tag next",
+    "ci:prepublish-patch": "yarn workspaces foreach --all --topological --exclude @tebokaroa/openmrs-esm-patient-chart npm publish --access public --tag patch",
     "ci:bump-form-engine-lib": "yarn up @openmrs/esm-form-engine-lib@latest",
     "release": "yarn workspaces foreach --all --topological version",
     "verify": "turbo run lint typescript test --color --concurrency=5",

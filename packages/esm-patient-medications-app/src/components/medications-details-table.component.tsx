@@ -33,7 +33,7 @@ import {
   type PatientWorkspaceGroupProps,
   useLaunchWorkspaceRequiringVisit,
   useOrderBasket,
-} from '@openmrs/esm-patient-common-lib';
+} from '@tebokaroa/openmrs-esm-patient-common-lib';
 import {
   AddIcon,
   age,
@@ -286,7 +286,7 @@ const MedicationsDetailsTable: React.FC<MedicationsDetailsTableProps> = ({
               {t('print', 'Print')}
             </Button>
           )}
-          {showAddButton ?? true ? (
+          {(showAddButton ?? true) ? (
             <Button
               kind="ghost"
               renderIcon={(props: ComponentProps<typeof AddIcon>) => <AddIcon size={16} {...props} />}

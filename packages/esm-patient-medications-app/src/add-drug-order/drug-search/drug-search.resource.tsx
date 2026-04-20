@@ -6,7 +6,7 @@ import {
   type DrugOrderBasketItem,
   type DrugOrderTemplate,
   type OrderTemplate,
-} from '@openmrs/esm-patient-common-lib';
+} from '@tebokaroa/openmrs-esm-patient-common-lib';
 
 export interface DrugSearchResult {
   uuid?: string;
@@ -154,7 +154,7 @@ export function getTemplateOrderBasketItem(
         display: drug.display,
         drug,
         unit:
-          getDefault(template.template, 'unit') ?? drug?.dosageForm
+          (getDefault(template.template, 'unit') ?? drug?.dosageForm)
             ? {
                 value: drug?.dosageForm?.display,
                 valueCoded: drug?.dosageForm?.uuid,
@@ -182,7 +182,7 @@ export function getTemplateOrderBasketItem(
         indication: '',
         template: template.template,
         quantityUnits:
-          getDefault(template.template, 'quantityUnits') ?? drug?.dosageForm
+          (getDefault(template.template, 'quantityUnits') ?? drug?.dosageForm)
             ? {
                 value: drug?.dosageForm?.display,
                 valueCoded: drug?.dosageForm?.uuid,

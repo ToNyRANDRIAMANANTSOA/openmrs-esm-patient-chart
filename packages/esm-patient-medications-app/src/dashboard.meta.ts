@@ -1,4 +1,4 @@
-import { type DashboardLinkConfig } from '@openmrs/esm-patient-common-lib';
+import { type DashboardLinkConfig } from '@tebokaroa/openmrs-esm-patient-common-lib';
 
 export const moduleName = '@tebokaroa/openmrs-esm-patient-medications-app';
 export const dashboardMeta: DashboardLinkConfig & { slot: string } = {

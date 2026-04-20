@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { type Order } from '@openmrs/esm-patient-common-lib';
+import { type Order } from '@tebokaroa/openmrs-esm-patient-common-lib';
 import { generateRandomTestOrder, deleteTestOrder, createEncounter, deleteEncounter, getProvider } from '../commands';
 import { type Encounter } from '../commands/types';
 import { test as base } from '../core';

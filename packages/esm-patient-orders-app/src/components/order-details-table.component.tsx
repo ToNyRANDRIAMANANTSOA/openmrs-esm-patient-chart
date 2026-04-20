@@ -44,7 +44,7 @@ import {
   useOrderBasket,
   useOrderTypes,
   usePatientOrders,
-} from '@openmrs/esm-patient-common-lib';
+} from '@tebokaroa/openmrs-esm-patient-common-lib';
 import { prepMedicationOrderPostData } from '@tebokaroa/openmrs-esm-patient-medications-app/src/api/api';
 import { prepTestOrderPostData } from '@openmrs/esm-patient-tests-app/src/test-orders/api';
 import { prepOrderPostData } from '../order-basket/general-order-type/resources';

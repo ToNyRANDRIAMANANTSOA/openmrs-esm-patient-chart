@@ -11,7 +11,7 @@ import {
   careSettingUuid,
   type OrderAction,
   normalizeDrugOrders,
-} from '@openmrs/esm-patient-common-lib';
+} from '@tebokaroa/openmrs-esm-patient-common-lib';
 import { type ConfigObject } from '../config-schema';
 
 const customRepresentation =

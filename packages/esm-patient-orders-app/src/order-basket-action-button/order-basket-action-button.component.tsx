@@ -5,7 +5,7 @@ import {
   useStartVisitIfNeeded,
   useOrderBasket,
   type PatientChartWorkspaceActionButtonProps,
-} from '@openmrs/esm-patient-common-lib';
+} from '@tebokaroa/openmrs-esm-patient-common-lib';
 
 /**
  * This extension uses the patient chart store and MUST only be mounted within the patient chart

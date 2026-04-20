@@ -1,4 +1,4 @@
-import { type DashboardLinkConfig } from '@openmrs/esm-patient-common-lib';
+import { type DashboardLinkConfig } from '@tebokaroa/openmrs-esm-patient-common-lib';
 
 export const dashboardMeta: DashboardLinkConfig & { slot: string } = {
   slot: 'patient-chart-encounters-dashboard-slot',

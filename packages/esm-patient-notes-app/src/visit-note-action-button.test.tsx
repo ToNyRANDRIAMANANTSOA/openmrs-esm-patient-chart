@@ -6,8 +6,8 @@ import { mockPatient } from 'tools';
 
 const mockUseLayoutType = jest.mocked(useLayoutType);
 
-jest.mock('@openmrs/esm-patient-common-lib', () => {
-  const originalModule = jest.requireActual('@openmrs/esm-patient-common-lib');
+jest.mock('@tebokaroa/openmrs-esm-patient-common-lib', () => {
+  const originalModule = jest.requireActual('@tebokaroa/openmrs-esm-patient-common-lib');
 
   return {
     ...originalModule,

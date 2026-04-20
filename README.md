@@ -1,6 +1,6 @@
 :wave: **New to our project?** Be sure to review the [OpenMRS 3 Frontend Developer Documentation](https://openmrs.atlassian.net/wiki/x/IABBHg) :teacher:
 
-![OpenMRS CI](https://github.com/openmrs/openmrs-esm-patient-chart/actions/workflows/ci.yml/badge.svg)
+![OpenMRS CI](https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart/actions/workflows/ci.yml/badge.svg)
 
 # OpenMRS ESM Patient Chart
 
