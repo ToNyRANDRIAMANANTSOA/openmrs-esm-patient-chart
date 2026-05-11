@@ -1,6 +1,6 @@
 {
   "name": "@tebokaroa/esm-patient-chart-app",
-  "version": "12.1.0",
+  "version": "12.1.1-0",
   "license": "MPL-2.0",
   "description": "Patient dashboard microfrontend for the OpenMRS SPA",
   "browser": "dist/openmrs-esm-patient-chart-app.js",
@@ -58,5 +58,6 @@
     "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib",
     "@types/uuid": "^9.0.4",
     "openmrs": "next"
-  }
+  },
+  "stableVersion": "12.1.0"
 }

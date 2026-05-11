@@ -1,6 +1,6 @@
 {
   "name": "@tebokaroa/esm-patient-immunizations-app",
-  "version": "12.1.0",
+  "version": "12.1.1-0",
   "license": "MPL-2.0",
   "description": "Patient immunizations microfrontend for the OpenMRS SPA",
   "browser": "dist/openmrs-esm-patient-immunizations-app.js",
@@ -56,5 +56,6 @@
   "devDependencies": {
     "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib",
     "openmrs": "next"
-  }
+  },
+  "stableVersion": "12.1.0"
 }

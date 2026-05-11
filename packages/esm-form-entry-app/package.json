@@ -1,6 +1,6 @@
 {
   "name": "@tebokaroa/esm-form-entry-app",
-  "version": "12.1.0",
+  "version": "12.1.1-0",
   "license": "MPL-2.0",
   "description": "Angular form engine for O3",
   "browser": "dist/openmrs-esm-form-entry-app.js",
@@ -108,5 +108,6 @@
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
-  }
+  },
+  "stableVersion": "12.1.0"
 }
