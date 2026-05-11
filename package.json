@@ -14,11 +14,11 @@
     "release": "yarn workspaces foreach --all --topological version",
     "verify": "turbo run lint typescript test --color --concurrency=5",
     "postinstall": "husky install",
+    "tebokaroa:update-packages-metadata": "sh ./tebokaroa-update-package-json-files-metadata.sh",
     "tebokaroa:version-prerelease": "yarn workspaces foreach --all --topological exec yarn version prerelease && yarn version apply --all",
     "tebokaroa:version-prerelease-alt": "yarn workspaces foreach --all --topological exec sh -c \"npm version prerelease --preid=tebokaroa\"",
-    "tebokaroa:publish": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" npm publish --access public --tag latest",
-    "tebokaroa:update-packages-metadata": "sh ./tebokaroa-update-package-json-files-metadata.sh",
     "tebokaroa:build": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" run build",
+    "tebokaroa:publish": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" npm publish --access public --tag latest",
     "test-e2e": "playwright test"
   },
   "dependencies": {
