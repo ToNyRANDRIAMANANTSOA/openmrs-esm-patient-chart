@@ -53,6 +53,8 @@
   },
   "devDependencies": {
     "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib",
+    "@openmrs/esm-patient-medications-app": "workspace:packages/esm-patient-medications-app",
+    "@openmrs/esm-patient-tests-app": "workspace:packages/esm-patient-tests-app",
     "openmrs": "next"
   },
   "stableVersion": "12.1.0"
