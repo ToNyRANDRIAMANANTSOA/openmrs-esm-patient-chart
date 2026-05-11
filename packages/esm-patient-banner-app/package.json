@@ -1,5 +1,5 @@
 {
-  "name": "@openmrs/esm-patient-banner-app",
+  "name": "@tebokaroa/esm-patient-banner-app",
   "version": "12.1.0",
   "license": "MPL-2.0",
   "description": "Patient banner microfrontend for the OpenMRS SPA",
@@ -25,25 +25,25 @@
   "keywords": [
     "openmrs"
   ],
-  "homepage": "https://github.com/openmrs/openmrs-esm-patient-chart#readme",
+  "homepage": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git#readme",
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openmrs/openmrs-esm-patient-chart.git"
+    "url": "git+https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git"
   },
   "bugs": {
-    "url": "https://github.com/openmrs/openmrs-esm-patient-chart/issues"
+    "url": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git/issues"
   },
   "dependencies": {
     "@carbon/react": "^1.83.0",
-    "@openmrs/esm-patient-common-lib": "next",
+    "@openmrs/esm-patient-common-lib": "npm:@tebokaroa/esm-patient-common-lib@latest",
     "lodash-es": "^4.18.1"
   },
   "peerDependencies": {
     "@openmrs/esm-framework": "9.x",
-    "@openmrs/esm-patient-common-lib": "12.x",
+    "@openmrs/esm-patient-common-lib": "*",
     "dayjs": "1.x",
     "react": "18.x",
     "react-i18next": "16.x",
@@ -52,7 +52,7 @@
     "swr": "2.x"
   },
   "devDependencies": {
-    "@openmrs/esm-patient-common-lib": "workspace:*",
+    "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib",
     "openmrs": "next"
   }
 }

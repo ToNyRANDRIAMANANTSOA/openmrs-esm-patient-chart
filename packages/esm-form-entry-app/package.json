@@ -1,5 +1,5 @@
 {
-  "name": "@openmrs/esm-form-entry-app",
+  "name": "@tebokaroa/esm-form-entry-app",
   "version": "12.1.0",
   "license": "MPL-2.0",
   "description": "Angular form engine for O3",
@@ -24,16 +24,16 @@
   "keywords": [
     "openmrs"
   ],
-  "homepage": "https://github.com/openmrs/openmrs-esm-patient-chart#readme",
+  "homepage": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git#readme",
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openmrs/openmrs-esm-patient-chart.git"
+    "url": "git+https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git"
   },
   "bugs": {
-    "url": "https://github.com/openmrs/openmrs-esm-patient-chart/issues"
+    "url": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git/issues"
   },
   "dependencies": {
     "@angular-extensions/elements": "^19.0.0",
@@ -69,6 +69,7 @@
   },
   "peerDependencies": {
     "@openmrs/esm-framework": "9.x",
+    "@openmrs/esm-patient-common-lib": "*",
     "single-spa": "6.x"
   },
   "devDependencies": {
@@ -82,6 +83,7 @@
     "@angular/cli": "^19.2.0",
     "@angular/language-service": "^19.2.0",
     "@angular/localize": "^19.2.0",
+    "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib",
     "@schematics/angular": "^19.2.0",
     "@types/jasmine": "^5.1.8",
     "@types/node": "^22.15.30",
