@@ -18,6 +18,7 @@
     "tebokaroa:version-prerelease-alt": "yarn workspaces foreach --all --topological exec sh -c \"npm version prerelease --preid=tebokaroa\"",
     "tebokaroa:publish": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" npm publish --access public --tag latest",
     "tebokaroa:update-packages-metadata": "sh ./tebokaroa-update-package-json-files-metadata.sh",
+    "tebokaroa:build": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" run build",
     "test-e2e": "playwright test"
   },
   "dependencies": {

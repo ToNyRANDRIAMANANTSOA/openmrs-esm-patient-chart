@@ -18,7 +18,7 @@ yarn workspaces foreach --all --topological \
   npm pkg set homepage="https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git#readme"
   echo "Setting bugs.url"
   npm pkg set bugs.url="https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git/issues"
-  '
+'
 
 commands='
   echo "Setting name"
@@ -48,6 +48,7 @@ commands='
 # ⚠️ edit all packages instead
 yarn workspaces foreach --all --topological \
   --exclude @openmrs/esm-patient-chart \
+  --exclude packages/esm-patient-common-lib \
   exec sh -c "$commands"
 
 
