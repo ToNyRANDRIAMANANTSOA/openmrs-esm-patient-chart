@@ -5333,7 +5333,6 @@ __metadata:
     openmrs: "npm:next"
   peerDependencies:
     "@openmrs/esm-framework": 9.x
-    "@openmrs/esm-patient-common-lib": "*"
     dayjs: 1.x
     react: 18.x
     react-i18next: 16.x
@@ -7770,7 +7769,6 @@ __metadata:
     openmrs: "npm:next"
   peerDependencies:
     "@openmrs/esm-framework": 9.x
-    "@openmrs/esm-patient-common-lib": "*"
     dayjs: 1.x
     react: 18.x
     react-i18next: 16.x
