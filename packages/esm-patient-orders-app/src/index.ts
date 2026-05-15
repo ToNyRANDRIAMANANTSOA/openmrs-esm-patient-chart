@@ -3,10 +3,11 @@ import { createDashboardLink } from '@openmrs/esm-patient-common-lib';
 import { configSchema } from './config-schema';
 import { ordersDashboardMeta } from './dashboard.meta';
 import OrdersSummary from './orders-summary/orders-summary.component';
+// Dynamically set modulename (for customized packages / distro)
+import { name as moduleName } from '../package.json' assert { type: 'json' };
+// const moduleName = '@openmrs/esm-patient-orders-app';
 
 export const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
-
-const moduleName = '@openmrs/esm-patient-orders-app';
 
 const options = {
   featureName: 'patient-orders',

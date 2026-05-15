@@ -9,7 +9,9 @@ import { configSchema } from './config-schema';
 import notesOverviewExtension from './notes/notes-overview.extension';
 import visitNotesActionButtonExtension from './visit-note-action-button.extension';
 
-const moduleName = '@openmrs/esm-patient-notes-app';
+// Dynamically set modulename (for customized packages / distro)
+import { name as moduleName } from '../package.json' assert { type: 'json' };
+// const moduleName = '@openmrs/esm-patient-notes-app';
 
 const options = {
   featureName: 'patient-notes',
