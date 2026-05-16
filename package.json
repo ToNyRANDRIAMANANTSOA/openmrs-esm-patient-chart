@@ -1,7 +1,7 @@
 {
   "name": "@openmrs/esm-patient-chart",
   "private": true,
-  "version": "12.1.1-2",
+  "version": "12.1.1-4",
   "workspaces": [
     "packages/*"
   ],
@@ -17,8 +17,9 @@
     "tebokaroa:update-packages-metadata": "sh ./tebokaroa-update-package-json-files-metadata.sh",
     "tebokaroa:version-prerelease": "yarn workspaces foreach --all --topological exec yarn version prerelease && yarn version apply --all",
     "tebokaroa:version-prerelease-alt": "yarn workspaces foreach --all --topological exec sh -c \"npm version prerelease --preid=tebokaroa\"",
-    "tebokaroa:build": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" run build",
-    "tebokaroa:publish": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" npm publish --access public --tag latest",
+    "tebokaroa:build": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" --exclude \"packages/esm-patient-common-lib\" run build",
+    "tebokaroa:publish": "sh ./tebokaroa-publish.sh",
+    "tebokaroa:publish-without-package-rename": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" npm publish --access public --tag latest",
     "test-e2e": "playwright test"
   },
   "dependencies": {
