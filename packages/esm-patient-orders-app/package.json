@@ -1,6 +1,6 @@
 {
-  "name": "@tebokaroa/esm-patient-orders-app",
-  "version": "12.1.1-4",
+  "name": "@openmrs/esm-patient-orders-app",
+  "version": "12.1.1-5",
   "license": "MPL-2.0",
   "description": "Microfrontend for the OpenMRS SPA providing the order basket for the patient chart",
   "browser": "dist/openmrs-esm-patient-orders-app.js",
@@ -43,6 +43,7 @@
   },
   "peerDependencies": {
     "@openmrs/esm-framework": "9.x",
+    "@openmrs/esm-patient-common-lib": "*",
     "dayjs": "1.x",
     "react": "18.x",
     "react-i18next": "16.x",
