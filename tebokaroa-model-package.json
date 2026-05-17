@@ -1,0 +1,22 @@
+{
+    "homepage": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git#readme",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git/issues"
+    },
+    "dependencies": {
+        "@openmrs/esm-patient-common-lib": "npm:@tebokaroa/esm-patient-common-lib@latest"
+    },
+    "peerDependencies": {
+        "@openmrs/esm-patient-common-lib": "npm:@tebokaroa/esm-patient-common-lib@latest"
+    },
+    "devDependencies": {
+        "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib"
+    }
+}
