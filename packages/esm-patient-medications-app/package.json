@@ -39,6 +39,7 @@
   "dependencies": {
     "@carbon/react": "^1.83.0",
     "@openmrs/esm-patient-common-lib": "npm:@tebokaroa/esm-patient-common-lib@latest",
+    "@openmrs/esm-patient-common-lib-tebokaroa": "npm:@tebokaroa/esm-patient-common-lib-tebokaroa@latest",
     "lodash-es": "^4.18.1"
   },
   "peerDependencies": {
@@ -53,6 +54,7 @@
   },
   "devDependencies": {
     "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib",
+    "@openmrs/esm-patient-common-lib-tebokaroa": "workspace:packages/esm-patient-common-lib-tebokaroa",
     "openmrs": "next"
   },
   "stableVersion": "12.1.0"
