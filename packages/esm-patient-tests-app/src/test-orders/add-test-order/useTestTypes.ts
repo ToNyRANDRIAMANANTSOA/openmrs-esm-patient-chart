@@ -1,5 +1,5 @@
+import { useOrderableConceptSets } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { useMemo } from 'react';
-import { useOrderableConceptSets } from '@openmrs/esm-patient-common-lib';
 
 export interface TestType {
   label: string;

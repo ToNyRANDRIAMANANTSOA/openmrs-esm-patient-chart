@@ -1,11 +1,11 @@
-import React from 'react';
-import { screen, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { useConfig, useLayoutType } from '@openmrs/esm-framework';
-import type { Drug } from '@openmrs/esm-patient-common-lib';
+import type { Drug } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 import DrugActionsMenu from './drug-actions-menu.component';
-import { useFavoritesActions } from './useFavoritesActions';
 import type { DrugFavoriteOrder } from './types';
+import { useFavoritesActions } from './useFavoritesActions';
 
 jest.mock('./useFavoritesActions', () => ({
   useFavoritesActions: jest.fn(),

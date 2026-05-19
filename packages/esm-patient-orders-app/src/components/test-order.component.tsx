@@ -1,6 +1,3 @@
-import React, { useMemo } from 'react';
-import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import {
   DataTable,
   DataTableSkeleton,
@@ -15,11 +12,14 @@ import {
 } from '@carbon/react';
 import { useLayoutType } from '@openmrs/esm-framework';
 import {
-  type Order,
   type OBSERVATION_INTERPRETATION,
-  useReferenceRanges,
   ReferenceRangeDisplay,
+  useReferenceRanges,
 } from '@openmrs/esm-patient-common-lib';
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import classNames from 'classnames';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLabEncounter, useOrderConceptByUuid, useOrderConceptsByUuids } from '../lab-results/lab-results.resource';
 import { getConceptUuids, getEffectiveRanges, getInterpretationClass, interpretObservation } from '../utils';
 import styles from './test-order.scss';

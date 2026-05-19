@@ -1,9 +1,6 @@
+import { type PatientWorkspace2DefinitionProps } from '@openmrs/esm-patient-common-lib';
+import { type OrderBasketItem, type OrderBasketWindowProps } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import React from 'react';
-import {
-  type OrderBasketItem,
-  type OrderBasketWindowProps,
-  type PatientWorkspace2DefinitionProps,
-} from '@openmrs/esm-patient-common-lib';
 import AddGeneralOrder from './add-general-order.component';
 
 interface OrderableConceptSearchWorkspaceProps {

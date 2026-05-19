@@ -1,6 +1,3 @@
-import React, { type ComponentProps, useCallback, useMemo, useRef } from 'react';
-import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import { Button, ButtonSkeleton, Search, SkeletonText, Tile } from '@carbon/react';
 import { ShoppingCartArrowUp } from '@carbon/react/icons';
 import {
@@ -13,11 +10,14 @@ import {
   type Visit,
   type Workspace2DefinitionProps,
 } from '@openmrs/esm-framework';
-import { useOrderBasket, type TestOrderBasketItem } from '@openmrs/esm-patient-common-lib';
+import { useOrderBasket, type TestOrderBasketItem } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import classNames from 'classnames';
+import React, { useCallback, useMemo, useRef, type ComponentProps } from 'react';
+import { useTranslation } from 'react-i18next';
 import { prepTestOrderPostData } from '../api';
 import { createEmptyLabOrder } from './test-order';
-import { useTestTypes, type TestType } from './useTestTypes';
 import styles from './test-type-search.scss';
+import { useTestTypes, type TestType } from './useTestTypes';
 
 export interface TestTypeSearchProps {
   openLabForm: (searchResult: TestOrderBasketItem) => void;

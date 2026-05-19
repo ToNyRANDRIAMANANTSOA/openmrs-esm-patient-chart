@@ -1,29 +1,25 @@
-import React from 'react';
+import { getDefaultsFromConfigSchema, useConfig } from '@openmrs/esm-framework';
+import { type PatientWorkspace2DefinitionProps } from '@openmrs/esm-patient-common-lib';
+import { useOrderBasket, type Order, type TestOrderBasketItem } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { getDefaultsFromConfigSchema, useConfig } from '@openmrs/esm-framework';
-import {
-  useOrderConceptsByUuids,
-  useLabEncounter,
-  useObservation,
-  type LabOrderConcept,
-  updateOrderResult,
-  type Datatype,
-  useCompletedLabResultsArray,
-} from './lab-results.resource';
-import LabResultsForm, { type LabResultsFormProps } from './lab-results-form.workspace';
+import React from 'react';
+import { mockPatient } from 'tools';
+import { configSchema, type ConfigObject } from '../config-schema';
+import { type Encounter } from '../types/encounter';
 import ExportedLabResultsForm, {
   type LabResultsFormProps as ExportedLabResultsFormProps,
 } from './exported-lab-results-form.workspace';
+import LabResultsForm, { type LabResultsFormProps } from './lab-results-form.workspace';
 import {
-  type PatientWorkspace2DefinitionProps,
-  type Order,
-  type TestOrderBasketItem,
-  useOrderBasket,
-} from '@openmrs/esm-patient-common-lib';
-import { configSchema, type ConfigObject } from '../config-schema';
-import { type Encounter } from '../types/encounter';
-import { mockPatient } from 'tools';
+  updateOrderResult,
+  useCompletedLabResultsArray,
+  useLabEncounter,
+  useObservation,
+  useOrderConceptsByUuids,
+  type Datatype,
+  type LabOrderConcept,
+} from './lab-results.resource';
 
 const mockUseOrderConceptByUuids = jest.mocked(useOrderConceptsByUuids);
 const mockUseLabEncounter = jest.mocked(useLabEncounter);

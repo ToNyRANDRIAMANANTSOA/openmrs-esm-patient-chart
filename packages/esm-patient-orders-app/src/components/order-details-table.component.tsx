@@ -1,9 +1,3 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import dayjs from 'dayjs';
-import { capitalize } from 'lodash-es';
-import { useTranslation } from 'react-i18next';
-import { useReactToPrint } from 'react-to-print';
-import { useSWRConfig } from 'swr';
 import {
   Button,
   DataTable,
@@ -29,26 +23,6 @@ import {
   Tile,
 } from '@carbon/react';
 import {
-  CardHeader,
-  EmptyState,
-  ErrorState,
-  getDrugOrderByUuid,
-  invalidateVisitByUuid,
-  PatientChartPagination,
-  type FulfillerStatus,
-  type Order,
-  type OrderBasketItem,
-  type OrderType,
-  type OrderUrgency,
-  useLaunchWorkspaceRequiringVisit,
-  useOrderBasket,
-  useOrderTypes,
-  usePatientOrders,
-} from '@openmrs/esm-patient-common-lib';
-import { prepMedicationOrderPostData } from '@openmrs/esm-patient-medications-app/src/api/api';
-import { prepTestOrderPostData } from '@openmrs/esm-patient-tests-app/src/test-orders/api';
-import { prepOrderPostData } from '../order-basket/general-order-type/resources';
-import {
   AddIcon,
   age,
   ExtensionSlot,
@@ -63,11 +37,39 @@ import {
   useLayoutType,
   usePagination,
 } from '@openmrs/esm-framework';
+import {
+  CardHeader,
+  EmptyState,
+  ErrorState,
+  invalidateVisitByUuid,
+  PatientChartPagination,
+  useLaunchWorkspaceRequiringVisit,
+} from '@openmrs/esm-patient-common-lib';
+import {
+  type FulfillerStatus,
+  getDrugOrderByUuid,
+  type Order,
+  type OrderBasketItem,
+  type OrderType,
+  type OrderUrgency,
+  useOrderBasket,
+  useOrderTypes,
+  usePatientOrders,
+} from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { prepMedicationOrderPostData } from '@openmrs/esm-patient-medications-app/src/api/api';
+import { prepTestOrderPostData } from '@openmrs/esm-patient-tests-app/src/test-orders/api';
+import dayjs from 'dayjs';
+import { capitalize } from 'lodash-es';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useReactToPrint } from 'react-to-print';
+import { useSWRConfig } from 'swr';
+import { getOrderGrouping, isValidOmrsOrderType, ORDER_TYPES } from '../constants/order-types';
+import { prepOrderPostData } from '../order-basket/general-order-type/resources';
+import PrintComponent from '../print/print.component';
 import { buildGeneralOrder, buildLabOrder, buildMedicationOrder } from '../utils';
-import { ORDER_TYPES, getOrderGrouping, isValidOmrsOrderType } from '../constants/order-types';
 import GeneralOrderTable from './general-order-table.component';
 import MedicationRecord from './medication-record.component';
-import PrintComponent from '../print/print.component';
 import styles from './order-details-table.scss';
 
 interface OrderDetailsProps {

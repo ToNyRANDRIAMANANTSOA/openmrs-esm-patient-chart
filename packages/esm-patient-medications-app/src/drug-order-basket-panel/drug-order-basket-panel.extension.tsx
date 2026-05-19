@@ -1,18 +1,18 @@
-import React, { type ComponentProps, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
 import { Button, Tile } from '@carbon/react';
 import { AddIcon, ChevronDownIcon, ChevronUpIcon, useConfig, useLayoutType } from '@openmrs/esm-framework';
 import {
+  type DrugOrderBasketItem,
   type OrderBasketExtensionProps,
   useOrderBasket,
-  type DrugOrderBasketItem,
-} from '@openmrs/esm-patient-common-lib';
-import type { ConfigObject } from '../config-schema';
+} from '@openmrs/esm-patient-common-lib-tebokaroa';
+import classNames from 'classnames';
+import React, { type ComponentProps, useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { prepMedicationOrderPostData } from '../api/api';
+import type { ConfigObject } from '../config-schema';
+import styles from './drug-order-basket-panel.scss';
 import OrderBasketItemTile from './order-basket-item-tile.component';
 import RxIcon from './rx-icon.component';
-import styles from './drug-order-basket-panel.scss';
 
 /**
  * The extension is slotted into order-basket-slot in the main Order Basket workspace by default.

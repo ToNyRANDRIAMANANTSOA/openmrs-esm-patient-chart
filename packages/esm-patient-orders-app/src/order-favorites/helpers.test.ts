@@ -1,4 +1,4 @@
-import type { Drug } from '@openmrs/esm-patient-common-lib';
+import type { Drug } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { buildFavoriteOrder } from './helpers';
 
 const makeDrug = (overrides: Partial<Drug> = {}): Drug =>

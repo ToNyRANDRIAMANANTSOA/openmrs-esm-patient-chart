@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import { Button, ModalBody, ModalFooter, ModalHeader, RadioButton, RadioButtonGroup } from '@carbon/react';
-import { launchWorkspace2, formatDatetime, parseDate } from '@openmrs/esm-framework';
-import { type Order } from '@openmrs/esm-patient-common-lib';
+import { formatDatetime, launchWorkspace2, parseDate } from '@openmrs/esm-framework';
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import classNames from 'classnames';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './edit-lab-results.scss';
 
 type EditLabResultModalProps = {

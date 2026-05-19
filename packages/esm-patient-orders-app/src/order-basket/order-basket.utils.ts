@@ -1,5 +1,5 @@
 import { type Workspace2DefinitionProps } from '@openmrs/esm-framework';
-import { type OrderBasketItem, type OrderBasketExtensionProps } from '@openmrs/esm-patient-common-lib';
+import { type OrderBasketExtensionProps, type OrderBasketItem } from '@openmrs/esm-patient-common-lib-tebokaroa';
 
 export interface CreateOrderBasketExtensionPropsArguments {
   patient: fhir.Patient;

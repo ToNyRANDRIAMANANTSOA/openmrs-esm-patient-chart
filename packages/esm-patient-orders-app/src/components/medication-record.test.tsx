@@ -1,6 +1,6 @@
-import React from 'react';
+import { type Order, useDrugOrderByUuid } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { screen } from '@testing-library/react';
-import { type Order, useDrugOrderByUuid } from '@openmrs/esm-patient-common-lib';
+import React from 'react';
 import { renderWithSwr } from 'tools';
 import MedicationRecord from './medication-record.component';
 

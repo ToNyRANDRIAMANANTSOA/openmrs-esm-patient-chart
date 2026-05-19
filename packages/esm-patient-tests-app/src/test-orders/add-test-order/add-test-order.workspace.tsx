@@ -1,9 +1,6 @@
+import { type PatientWorkspace2DefinitionProps } from '@openmrs/esm-patient-common-lib';
+import { type OrderBasketItem, type OrderBasketWindowProps } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import React from 'react';
-import {
-  type OrderBasketWindowProps,
-  type OrderBasketItem,
-  type PatientWorkspace2DefinitionProps,
-} from '@openmrs/esm-patient-common-lib';
 import AddLabOrder from './add-test-order.component';
 
 export interface AddTestOrderWorkspaceProps {

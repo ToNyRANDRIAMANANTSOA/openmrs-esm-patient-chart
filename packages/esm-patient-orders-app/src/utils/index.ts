@@ -1,15 +1,13 @@
+import { assessValue, type OBSERVATION_INTERPRETATION, type ReferenceRanges } from '@openmrs/esm-patient-common-lib';
 import {
-  assessValue,
   type DrugOrderBasketItem,
-  type OBSERVATION_INTERPRETATION,
   type Order,
   type OrderAction,
   type OrderBasketItem,
-  type ReferenceRanges,
   type TestOrderBasketItem,
-} from '@openmrs/esm-patient-common-lib';
-import { type Observation, type ObservationValue } from '../types/encounter';
+} from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { type LabOrderConcept } from '../lab-results/lab-results.resource';
+import { type Observation, type ObservationValue } from '../types/encounter';
 
 /**
  * Enables a comparison of arbitrary values with support for undefined/null.

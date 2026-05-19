@@ -1,4 +1,4 @@
-import { type Order } from '@openmrs/esm-patient-common-lib';
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
 
 export interface PatientMedicationFetchResponse {
   results: Array<Order>;

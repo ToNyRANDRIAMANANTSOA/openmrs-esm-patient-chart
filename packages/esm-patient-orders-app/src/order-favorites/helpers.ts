@@ -1,6 +1,6 @@
-import { v4 as uuid } from 'uuid';
 import type { Visit } from '@openmrs/esm-framework';
-import type { Drug, DrugOrderBasketItem } from '@openmrs/esm-patient-common-lib';
+import type { Drug, DrugOrderBasketItem } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { v4 as uuid } from 'uuid';
 import type { DrugFavoriteOrder } from './types';
 
 export function createDrugFromFavorite(favorite: DrugFavoriteOrder): Drug {

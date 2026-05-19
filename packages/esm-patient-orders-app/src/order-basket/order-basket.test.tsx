@@ -1,7 +1,7 @@
-import React from 'react';
-import { screen, render } from '@testing-library/react';
 import { useConfig, useLayoutType, useSession } from '@openmrs/esm-framework';
-import { type OrderBasketExtensionProps } from '@openmrs/esm-patient-common-lib';
+import { type OrderBasketExtensionProps } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { render, screen } from '@testing-library/react';
+import React from 'react';
 import { mockPatient } from 'tools';
 import OrderBasket from './order-basket.component';
 

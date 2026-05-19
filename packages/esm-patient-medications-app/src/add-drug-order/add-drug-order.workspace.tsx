@@ -1,9 +1,6 @@
+import { type PatientWorkspace2DefinitionProps } from '@openmrs/esm-patient-common-lib';
+import { type DrugOrderBasketItem, type OrderBasketWindowProps } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import React from 'react';
-import {
-  type DrugOrderBasketItem,
-  type OrderBasketWindowProps,
-  type PatientWorkspace2DefinitionProps,
-} from '@openmrs/esm-patient-common-lib';
 import AddDrugOrder from './add-drug-order.component';
 
 export interface AddDrugOrderWorkspaceProps {

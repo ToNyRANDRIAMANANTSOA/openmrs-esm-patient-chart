@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-import useSWRImmutable from 'swr/immutable';
 import { openmrsFetch, restBaseUrl } from '@openmrs/esm-framework';
 import {
   type DosingUnit,
@@ -7,7 +5,9 @@ import {
   type MedicationFrequency,
   type MedicationRoute,
   type QuantityUnit,
-} from '@openmrs/esm-patient-common-lib';
+} from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { useMemo } from 'react';
+import useSWRImmutable from 'swr/immutable';
 
 export interface ConceptName {
   uuid: string;

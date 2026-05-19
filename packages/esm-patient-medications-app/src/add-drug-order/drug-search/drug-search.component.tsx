@@ -1,16 +1,16 @@
-import React, { useCallback, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, Search } from '@carbon/react';
 import {
   ExtensionSlot,
+  ResponsiveWrapper,
   useConfig,
   useDebounce,
-  ResponsiveWrapper,
   useLayoutType,
-  type Workspace2DefinitionProps,
   type Visit,
+  type Workspace2DefinitionProps,
 } from '@openmrs/esm-framework';
-import { type DrugOrderBasketItem } from '@openmrs/esm-patient-common-lib';
+import { type DrugOrderBasketItem } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import React, { useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { type ConfigObject } from '../../config-schema';
 import OrderBasketSearchResults from './order-basket-search-results.component';
 import styles from './order-basket-search.scss';
