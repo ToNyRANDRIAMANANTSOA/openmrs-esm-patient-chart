@@ -69,7 +69,7 @@
   },
   "peerDependencies": {
     "@openmrs/esm-framework": "9.x",
-    "@openmrs/esm-patient-common-lib": "*",
+    "@openmrs/esm-patient-common-lib": "12.x",
     "single-spa": "6.x"
   },
   "devDependencies": {
