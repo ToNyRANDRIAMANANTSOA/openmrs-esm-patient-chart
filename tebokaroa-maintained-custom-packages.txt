@@ -1,4 +1,4 @@
-packages/esm-patient-common-lib
+packages/esm-patient-common-lib-tebokaroa
 packages/esm-patient-medications-app
 packages/esm-patient-notes-app
 packages/esm-patient-orders-app

@@ -16,11 +16,12 @@
     "postinstall": "husky install",
     "tebokaroa:scope-openmrs": "sh ./tebokaroa-bulk-rename-scopes.sh @openmrs",
     "tebokaroa:scope-tebokaroa": "sh ./tebokaroa-bulk-rename-scopes.sh @tebokaroa",
+    "tebokaroa:sync-metadata": "sh ./tebokaroa-sync-metadata.sh",
     "tebokaroa:update-packages-metadata": "sh ./tebokaroa-update-package-json-files-metadata.sh",
     "tebokaroa:version-prerelease": "yarn workspaces foreach --all --topological version prerelease && yarn version apply --all",
     "tebokaroa:version-prerelease-alt": "yarn workspaces foreach --all --topological exec sh -c \"npm version prerelease --preid=tebokaroa\"",
     "tebokaroa:build": "yarn workspaces foreach --all --topological --exclude @openmrs/esm-patient-chart --exclude \"packages/esm-patient-common-lib\" run build",
-    "tebokaroa:build-selective": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" --exclude \"packages/esm-patient-common-lib\" run build",
+    "tebokaroa:build-selective": "yarn workspaces foreach --all --topological -p -j 5 --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" --exclude \"packages/esm-patient-common-lib\" run build",
     "tebokaroa:publish": "sh ./tebokaroa-publish.sh",
     "tebokaroa:publish-without-package-rename": "yarn workspaces foreach --all --topological --include \"{$(paste -sd, tebokaroa-maintained-custom-packages.txt)}\" npm publish --access public --tag latest",
     "test-e2e": "playwright test"

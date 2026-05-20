@@ -98,6 +98,8 @@ sync_workspace() {
             if [ "$dry_run" = "false" ]; then
                 print_info "  [RUN] Updating the above"
                 npm pkg set "$key=$model_value"
+                npm pkg get "$key"
+                # print_info "   current_value: $(npm pkg get \"$key\" --json | jq -r 'to_entries | .[0].value' )"
                 updated=$((updated + 1))
             else
                 print_info "  [DRY RUN] Would update the above"

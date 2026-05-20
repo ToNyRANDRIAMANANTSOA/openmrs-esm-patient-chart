@@ -11,10 +11,11 @@
         "url": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git/issues"
     },
     "dependencies": {
-        "@openmrs/esm-patient-common-lib": "npm:@tebokaroa/esm-patient-common-lib@latest"
+        "@openmrs/esm-patient-common-lib": "12.x",
+        "@openmrs/esm-patient-common-lib-tebokaroa": "npm:@tebokaroa/esm-patient-common-lib-tebokaroa@latest"
     },
     "peerDependencies": {
-        "@openmrs/esm-patient-common-lib": "npm:@tebokaroa/esm-patient-common-lib@latest"
+        "@openmrs/esm-patient-common-lib": "12.x"
     },
     "devDependencies": {
         "@openmrs/esm-patient-common-lib": "workspace:packages/esm-patient-common-lib"

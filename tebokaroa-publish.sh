@@ -28,7 +28,7 @@ bulk_rename_pkg_scopes() {
     # ⚠️ Rename every sub packages instead, 
     # because they will all be modified to use our custom esm-patient-common-lib
     
-    yarn workspaces foreach --all --topological \
+    yarn workspaces foreach --all --topological -p -j 25 \
     --exclude @openmrs/esm-patient-chart \
     exec sh -c "scope=$build_scope && $commands"
 
