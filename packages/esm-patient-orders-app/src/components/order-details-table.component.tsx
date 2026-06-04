@@ -24,6 +24,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableSelectAll,
+  TableSelectRow,
+  TableToolbar,
   TableToolbarContent,
   Tag,
   Tile,
@@ -59,6 +62,7 @@ import {
   OpenmrsDateRangePicker,
   parseDate,
   PrinterIcon,
+  showModal,
   useConfig,
   useLayoutType,
   usePagination,
@@ -135,6 +139,12 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
   const contentToPrintRef = useRef<HTMLDivElement | null>(null);
   const { excludePatientIdentifierCodeTypes } = useConfig();
   const [isPrinting, setIsPrinting] = useState(false);
+
+  // TODO: Pass isSelectable and printSelectionEnabled down as Props instead ?
+  const [isPrintingSelections, setIsPrintingSelections] = useState(false);
+  const [isSelectable, setIsSelectable] = useState(true);
+  const [printSelectionEnabled, setPrintSelectionEnabled] = useState(true);
+
   const { data: orderTypes } = useOrderTypes();
   const [selectedOrderTypeUuid, setSelectedOrderTypeUuid] = useState(null);
   // UI-controlled date range
@@ -339,6 +349,21 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
     },
   });
 
+  const handlePrintSelected = useCallback(
+    (selectedRows: Array<any>) => {
+      const selectedOrdersUuidsSet = new Set(selectedRows.map((row) => row.id));
+      const selectedOrders = displayedOrders.filter((order) => selectedOrdersUuidsSet.has(order.uuid));
+
+      const dispose = showModal('print-selected-orders-modal', {
+        close: () => dispose(),
+        closeModal: () => dispose(),
+        selectedOrders,
+        patient,
+      });
+    },
+    [patient, displayedOrders],
+  );
+
   const orderTypesToDisplay = useMemo(
     () => [
       {
@@ -456,117 +481,147 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
                     headers,
                     onInputChange,
                     rows,
-                  }) => (
-                    <>
-                      <TableContainer {...getTableContainerProps()}>
-                        {!isPrinting && (
-                          <div className={styles.toolBarContent}>
+                    getToolbarProps,
+                    getSelectionProps,
+                    selectedRows,
+                  }) => {
+                    const selectedRowsCount = selectedRows.length;
+                    return (
+                      <>
+                        <TableContainer {...getTableContainerProps()}>
+                          <TableToolbar {...getToolbarProps()}>
                             <TableToolbarContent>
-                              <Search
-                                isExpanded
-                                labelText={t('searchTable', 'Search table')}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputChange(e)}
-                                placeholder={t('searchTable', 'Search table')}
-                              />
-                            </TableToolbarContent>
-                          </div>
-                        )}
-                        <Table className={styles.table} {...getTableProps()}>
-                          <TableHead>
-                            <TableRow>
-                              <TableExpandHeader enableToggle {...getExpandHeaderProps()} />
-                              {headers.map((header) => (
-                                <TableHeader
-                                  {...getHeaderProps({ header })}
-                                  isSortable={(header as unknown as OrderHeaderProps).isSortable}
+                              {isSelectable && printSelectionEnabled && (
+                                <Button
+                                  kind="ghost"
+                                  size={responsiveSize}
+                                  renderIcon={PrinterIcon}
+                                  disabled={selectedRowsCount === 0 || isPrinting}
+                                  onClick={() => handlePrintSelected(selectedRows)}
                                 >
-                                  {header.header}
-                                </TableHeader>
-                              ))}
-                              {!isPrinting && <TableExpandHeader />}
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {rows.map((row) => {
-                              const matchingOrder = allOrders?.find((order) => order.uuid === row.id);
-                              const isExpandable =
-                                matchingOrder?.type === ORDER_TYPES.DRUG_ORDER ||
-                                matchingOrder?.type === ORDER_TYPES.GENERAL_ORDER;
-
-                              const cells = row.cells.map((cell) => (
-                                <TableCell className={styles.tableCell} key={cell.id}>
-                                  {cell.value?.['content'] ?? cell.value}
-                                </TableCell>
-                              ));
-
-                              const actionCell = !isPrinting && (
-                                <TableCell className="cds--table-column-menu">
-                                  {matchingOrder && isOmrsOrder(matchingOrder) ? (
-                                    <OrderBasketItemActions patient={patient} orderItem={matchingOrder} />
-                                  ) : (
-                                    <ExtensionSlot
-                                      name={`${matchingOrder?.type}-action-menu-items-slot`}
-                                      state={{
-                                        className: styles.menuItem,
-                                        orderItem: matchingOrder,
-                                        responsiveSize,
-                                      }}
-                                    />
-                                  )}
-                                </TableCell>
-                              );
-
-                              return (
-                                <React.Fragment key={row.id}>
-                                  {isExpandable ? (
-                                    <TableExpandRow className={styles.row} {...getRowProps({ row })}>
-                                      {cells}
-                                      {actionCell}
-                                    </TableExpandRow>
-                                  ) : (
-                                    <TableRow className={styles.row} {...getRowProps({ row })}>
-                                      <TableCell />
-                                      {cells}
-                                      {actionCell}
-                                    </TableRow>
-                                  )}
-                                  {isExpandable &&
-                                    (row.isExpanded ? (
-                                      <TableExpandedRow
-                                        colSpan={headers.length + 2}
-                                        {...getExpandedRowProps({
-                                          row,
-                                        })}
-                                      >
-                                        {matchingOrder?.type === ORDER_TYPES.DRUG_ORDER ? (
-                                          <MedicationRecord medication={matchingOrder} />
-                                        ) : (
-                                          <GeneralOrderTable order={matchingOrder} />
-                                        )}
-                                      </TableExpandedRow>
-                                    ) : (
-                                      <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />
-                                    ))}
-                                </React.Fragment>
-                              );
-                            })}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      {rows.length === 0 ? (
-                        <div className={styles.tileContainer}>
-                          <Tile className={styles.emptyStateTile}>
-                            <div className={styles.tileContent}>
-                              <p className={styles.content}>
-                                {t('noMatchingOrdersToDisplay', 'No matching orders to display')}
-                              </p>
-                              <p className={styles.helperText}>{t('checkFilters', 'Check the filters above')}</p>
+                                  {isPrintingSelections
+                                    ? t('generating', 'Generating...')
+                                    : t('printSelected', 'Print selected')}
+                                </Button>
+                              )}
+                            </TableToolbarContent>
+                          </TableToolbar>
+                          {!isPrinting && (
+                            <div className={styles.toolBarContent}>
+                              <TableToolbarContent>
+                                <Search
+                                  isExpanded
+                                  labelText={t('searchTable', 'Search table')}
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputChange(e)}
+                                  placeholder={t('searchTable', 'Search table')}
+                                />
+                              </TableToolbarContent>
                             </div>
-                          </Tile>
-                        </div>
-                      ) : null}
-                    </>
-                  )}
+                          )}
+                          <Table className={styles.table} {...getTableProps()}>
+                            <TableHead>
+                              <TableRow>
+                                <TableExpandHeader enableToggle {...getExpandHeaderProps()} />
+                                {isSelectable && printSelectionEnabled && <TableSelectAll {...getSelectionProps()} />}
+                                {headers.map((header) => (
+                                  <TableHeader
+                                    {...getHeaderProps({ header })}
+                                    isSortable={(header as unknown as OrderHeaderProps).isSortable}
+                                  >
+                                    {header.header}
+                                  </TableHeader>
+                                ))}
+                                {!isPrinting && <TableExpandHeader />}
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {rows.map((row) => {
+                                const matchingOrder = allOrders?.find((order) => order.uuid === row.id);
+                                const isExpandable =
+                                  matchingOrder?.type === ORDER_TYPES.DRUG_ORDER ||
+                                  matchingOrder?.type === ORDER_TYPES.GENERAL_ORDER;
+
+                                const cells = row.cells.map((cell) => (
+                                  <TableCell className={styles.tableCell} key={cell.id}>
+                                    {cell.value?.['content'] ?? cell.value}
+                                  </TableCell>
+                                ));
+
+                                const actionCell = !isPrinting && (
+                                  <TableCell className="cds--table-column-menu">
+                                    {matchingOrder && isOmrsOrder(matchingOrder) ? (
+                                      <OrderBasketItemActions patient={patient} orderItem={matchingOrder} />
+                                    ) : (
+                                      <ExtensionSlot
+                                        name={`${matchingOrder?.type}-action-menu-items-slot`}
+                                        state={{
+                                          className: styles.menuItem,
+                                          orderItem: matchingOrder,
+                                          responsiveSize,
+                                        }}
+                                      />
+                                    )}
+                                  </TableCell>
+                                );
+
+                                return (
+                                  <React.Fragment key={row.id}>
+                                    {isExpandable ? (
+                                      <TableExpandRow className={styles.row} {...getRowProps({ row })}>
+                                        {isSelectable && printSelectionEnabled && (
+                                          <TableSelectRow {...getSelectionProps({ row })} />
+                                        )}
+                                        {cells}
+                                        {actionCell}
+                                      </TableExpandRow>
+                                    ) : (
+                                      <TableRow className={styles.row} {...getRowProps({ row })}>
+                                        <TableCell />
+                                        {isSelectable && printSelectionEnabled && (
+                                          <TableSelectRow {...getSelectionProps({ row })} />
+                                        )}
+                                        {cells}
+                                        {actionCell}
+                                      </TableRow>
+                                    )}
+                                    {isExpandable &&
+                                      (row.isExpanded ? (
+                                        <TableExpandedRow
+                                          colSpan={headers.length + (isSelectable ? 3 : 2)}
+                                          {...getExpandedRowProps({
+                                            row,
+                                          })}
+                                        >
+                                          {matchingOrder?.type === ORDER_TYPES.DRUG_ORDER ? (
+                                            <MedicationRecord medication={matchingOrder} />
+                                          ) : (
+                                            <GeneralOrderTable order={matchingOrder} />
+                                          )}
+                                        </TableExpandedRow>
+                                      ) : (
+                                        <TableExpandedRow className={styles.hiddenRow} colSpan={headers.length + 2} />
+                                      ))}
+                                  </React.Fragment>
+                                );
+                              })}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                        {rows.length === 0 ? (
+                          <div className={styles.tileContainer}>
+                            <Tile className={styles.emptyStateTile}>
+                              <div className={styles.tileContent}>
+                                <p className={styles.content}>
+                                  {t('noMatchingOrdersToDisplay', 'No matching orders to display')}
+                                </p>
+                                <p className={styles.helperText}>{t('checkFilters', 'Check the filters above')}</p>
+                              </div>
+                            </Tile>
+                          </div>
+                        ) : null}
+                      </>
+                    );
+                  }}
                 </DataTable>
                 {!isPrinting && (
                   <div className={styles.paginationContainer}>
