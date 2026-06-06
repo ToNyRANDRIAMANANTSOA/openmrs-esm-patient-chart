@@ -3,7 +3,7 @@ import { configSchema } from './config-schema';
 import { moduleName } from './constants';
 
 const options = {
-  featureName: 'patient-print-app',
+  featureName: 'patient-print',
   moduleName,
 };
 
@@ -14,10 +14,17 @@ export function startupApp() {
 }
 
 // Root component
-export const root = getAsyncLifecycle(() => import('./root.component'), options);
 
 // Extensions
+export const printSelectedOrdersButtonExtension = getAsyncLifecycle(
+  () => import('./print-selected-orders/print-selected-orders-button.extension'),
+  options,
+);
 
 // Modals
+export const printSelectedOrdersModal = getAsyncLifecycle(
+  () => import('./print-selected-orders/components/print-selected-orders.modal'),
+  options,
+);
 
 // Workspaces

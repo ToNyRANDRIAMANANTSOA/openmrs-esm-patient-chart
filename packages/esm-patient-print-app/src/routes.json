@@ -1,14 +1,19 @@
 {
   "$schema": "https://json.openmrs.org/routes.schema.json",
-  "pages": [
+  "backendDependencies": {
+    "webservices.rest": ">=2.2.0"
+  },
+  "extensions": [
     {
-      "route": "patient-print-app",
-      "component": "root",
-      "online": true,
-      "offline": true
+      "name": "print-selected-orders-button",
+      "component": "printSelectedOrdersButtonExtension",
+      "slot": "orders-selections-actions-slot"
     }
   ],
-  "extensions": [
+  "modals": [
+    {
+      "name": "print-selected-orders-modal",
+      "component": "printSelectedOrdersModal"
+    }
   ]
 }
-

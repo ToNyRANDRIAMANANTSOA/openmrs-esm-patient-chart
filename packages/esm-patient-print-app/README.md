@@ -9,8 +9,6 @@ yarn install
 yarn start
 \`\`\`
 
-Once started, your module will be available at:
-**http://localhost:8080/openmrs/spa/patient-print-app**
 
 ## What's included
 

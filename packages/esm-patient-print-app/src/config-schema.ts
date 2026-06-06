@@ -1,21 +1,29 @@
 import { Type, validators } from '@openmrs/esm-framework';
 
 export const configSchema = {
-  // Add your configuration schema here
-  // Example:
-  // logo: {
-  //   src: {
-  //     _type: Type.String,
-  //     _default: '',
-  //     _description: 'The path or URL to the logo image',
-  //     _validators: [validators.isUrl],
-  //   },
-  //   alt: {
-  //     _type: Type.String,
-  //     _default: 'Logo',
-  //     _description: 'The alternative text for the logo image',
-  //   },
-  // },
+  logo: {
+    alt: {
+      _type: Type.String,
+      _default: 'Logo',
+      _description: 'Alt text, shown on hover',
+    },
+    name: {
+      _type: Type.String,
+      _default: '',
+      _description: 'The organization name displayed when image is absent',
+    },
+    src: {
+      _type: Type.String,
+      _default: '',
+      _description: 'A path or URL to an image. Defaults to the OpenMRS SVG sprite.',
+    },
+  },
 };
 
-export type ConfigSchema = Record<string, never>;
+export type ConfigSchema = {
+  logo: {
+    alt: string;
+    name: string;
+    src: string;
+  };
+};

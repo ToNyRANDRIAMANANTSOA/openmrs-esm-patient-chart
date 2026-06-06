@@ -1,4 +1,4 @@
 {
-  "welcomeToModule": "Welcome to patient-print-app!",
-  "getStarted": "Get started by adding routes, extensions, or components."
+  "patient-print-appDescription": "Welcome to the PatientPrintApp page.",
+  "patient-print-appHeading": "PatientPrintApp"
 }
