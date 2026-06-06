@@ -7,6 +7,7 @@ import { useSWRConfig } from 'swr';
 import {
   Button,
   DataTable,
+  type DataTableRow,
   DataTableSkeleton,
   Dropdown,
   InlineLoading,
@@ -140,10 +141,8 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
   const { excludePatientIdentifierCodeTypes } = useConfig();
   const [isPrinting, setIsPrinting] = useState(false);
 
-  // TODO: Pass isSelectable and printSelectionEnabled down as Props instead ?
-  const [isPrintingSelections, setIsPrintingSelections] = useState(false);
+  // TODO: Pass isSelectable down as Props instead or get from config ?
   const [isSelectable, setIsSelectable] = useState(true);
-  const [printSelectionEnabled, setPrintSelectionEnabled] = useState(true);
 
   const { data: orderTypes } = useOrderTypes();
   const [selectedOrderTypeUuid, setSelectedOrderTypeUuid] = useState(null);
@@ -155,6 +154,8 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
   const selectedToDate = useMemo(() => (endDate ? dayjs(endDate).format('YYYY-MM-DD') : null), [endDate]);
 
   const selectedOrderType = orderTypes?.find((x) => x.uuid === selectedOrderTypeUuid);
+
+  const [selectedOrders, setSelectedOrders] = useState<Order[]>([]);
 
   const getOrderTypeDisplayText = useCallback(
     (orderType: OrderType | undefined) => {
@@ -349,19 +350,14 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
     },
   });
 
-  const handlePrintSelected = useCallback(
-    (selectedRows: Array<any>) => {
-      const selectedOrdersUuidsSet = new Set(selectedRows.map((row) => row.id));
-      const selectedOrders = displayedOrders.filter((order) => selectedOrdersUuidsSet.has(order.uuid));
-
-      const dispose = showModal('print-selected-orders-modal', {
-        close: () => dispose(),
-        closeModal: () => dispose(),
-        selectedOrders,
-        patient,
-      });
+  const handleChangeSelectedOrders = useCallback(
+    (selectedRows: DataTableRow<any[]>[]) => {
+      if (selectedRows.length != selectedOrders.length) {
+        const selectedOrdersUuidsSet = new Set(selectedRows.map((row) => row.id));
+        setSelectedOrders(displayedOrders.filter((order) => selectedOrdersUuidsSet.has(order.uuid)));
+      }
     },
-    [patient, displayedOrders],
+    [displayedOrders, selectedOrders.length],
   );
 
   const orderTypesToDisplay = useMemo(
@@ -435,6 +431,17 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
                   </span>
                 ) : null}
                 <div className={styles.buttons}>
+                  {isSelectable && (
+                    <ExtensionSlot
+                      name={`orders-selections-actions-slot`}
+                      state={{
+                        selectedOrders,
+                        patient,
+                        responsiveSize,
+                      }}
+                      className={styles.actionButtonExtensions}
+                    />
+                  )}
                   {showPrintButton && (
                     <Button
                       className={styles.printButton}
@@ -485,27 +492,11 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
                     getSelectionProps,
                     selectedRows,
                   }) => {
-                    const selectedRowsCount = selectedRows.length;
+                    handleChangeSelectedOrders(selectedRows);
+
                     return (
                       <>
                         <TableContainer {...getTableContainerProps()}>
-                          <TableToolbar {...getToolbarProps()}>
-                            <TableToolbarContent>
-                              {isSelectable && printSelectionEnabled && (
-                                <Button
-                                  kind="ghost"
-                                  size={responsiveSize}
-                                  renderIcon={PrinterIcon}
-                                  disabled={selectedRowsCount === 0 || isPrinting}
-                                  onClick={() => handlePrintSelected(selectedRows)}
-                                >
-                                  {isPrintingSelections
-                                    ? t('generating', 'Generating...')
-                                    : t('printSelected', 'Print selected')}
-                                </Button>
-                              )}
-                            </TableToolbarContent>
-                          </TableToolbar>
                           {!isPrinting && (
                             <div className={styles.toolBarContent}>
                               <TableToolbarContent>
@@ -522,7 +513,7 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
                             <TableHead>
                               <TableRow>
                                 <TableExpandHeader enableToggle {...getExpandHeaderProps()} />
-                                {isSelectable && printSelectionEnabled && <TableSelectAll {...getSelectionProps()} />}
+                                {isSelectable && <TableSelectAll {...getSelectionProps()} />}
                                 {headers.map((header) => (
                                   <TableHeader
                                     {...getHeaderProps({ header })}
@@ -568,18 +559,14 @@ const OrderDetailsTable: React.FC<OrderDetailsProps> = ({
                                   <React.Fragment key={row.id}>
                                     {isExpandable ? (
                                       <TableExpandRow className={styles.row} {...getRowProps({ row })}>
-                                        {isSelectable && printSelectionEnabled && (
-                                          <TableSelectRow {...getSelectionProps({ row })} />
-                                        )}
+                                        {isSelectable && <TableSelectRow {...getSelectionProps({ row })} />}
                                         {cells}
                                         {actionCell}
                                       </TableExpandRow>
                                     ) : (
                                       <TableRow className={styles.row} {...getRowProps({ row })}>
                                         <TableCell />
-                                        {isSelectable && printSelectionEnabled && (
-                                          <TableSelectRow {...getSelectionProps({ row })} />
-                                        )}
+                                        {isSelectable && <TableSelectRow {...getSelectionProps({ row })} />}
                                         {cells}
                                         {actionCell}
                                       </TableRow>

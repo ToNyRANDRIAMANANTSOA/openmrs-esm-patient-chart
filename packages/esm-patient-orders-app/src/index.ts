@@ -85,11 +85,3 @@ export const drugFavoritesListExtension = getAsyncLifecycle(
   () => import('./order-favorites/drug-favorites-list.component'),
   options,
 );
-
-export const printSelectedOrdersModal = getAsyncLifecycle(
-  () => import('./components/print-selected-orders/print-selected-orders.modal'),
-  {
-    featureName: 'print-selected-orders-modal',
-    moduleName,
-  },
-);

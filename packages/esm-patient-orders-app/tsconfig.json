@@ -1,4 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*", "../../tools/setup-tests.ts"],
+  "include": ["src/**/*", "../../tools/setup-tests.ts", "../esm-patient-print-app/src/components/print-selected-orders"],
 }

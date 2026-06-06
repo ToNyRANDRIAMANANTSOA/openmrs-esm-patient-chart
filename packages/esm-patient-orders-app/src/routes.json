@@ -105,10 +105,6 @@
     {
       "component": "printLabResultModal",
       "name": "print-lab-results-modal"
-    },
-    {
-      "name": "print-selected-orders-modal",
-      "component": "printSelectedOrdersModal"
     }
   ]
 }
