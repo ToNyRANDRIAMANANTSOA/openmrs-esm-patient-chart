@@ -5155,6 +5155,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@openmrs/esm-patient-certifications-app@workspace:packages/esm-patient-certifications-app":
+  version: 0.0.0-use.local
+  resolution: "@openmrs/esm-patient-certifications-app@workspace:packages/esm-patient-certifications-app"
+  dependencies:
+    "@carbon/react": "npm:^1.83.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.18.1"
+    openmrs: "npm:next"
+    vitest: "npm:^4.1.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 9.x
+    "@openmrs/esm-patient-common-lib": 12.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 16.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
 "@openmrs/esm-patient-chart-app@workspace:packages/esm-patient-chart-app":
   version: 0.0.0-use.local
   resolution: "@openmrs/esm-patient-chart-app@workspace:packages/esm-patient-chart-app"
@@ -5449,6 +5470,7 @@ __metadata:
   dependencies:
     "@carbon/react": "npm:^1.83.0"
     openmrs: "npm:next"
+    qrcode.react: "npm:^4.2.0"
     vitest: "npm:^4.1.2"
   peerDependencies:
     "@carbon/react": 1.x
@@ -19507,6 +19529,15 @@ __metadata:
   version: 1.2.0
   resolution: "qjobs@npm:1.2.0"
   checksum: 10/eb64c00724d2fecaf9246383b4eebc3a4c34845b25d41921dd57f41b30a4310cef661543facac27ceb6911aab64a1acdf45b5d8f1d5e2838554d0c010ee56852
+  languageName: node
+  linkType: hard
+
+"qrcode.react@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "qrcode.react@npm:4.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/665036d88b160e6d5de4e24d101bc63bd2b76712802e874bbffe56c6b6e5fe50c63f02c3cba2975b2e2b555c1f1e112cbb42987f8cb3a626ce2d17023cfde6ac
   languageName: node
   linkType: hard
 

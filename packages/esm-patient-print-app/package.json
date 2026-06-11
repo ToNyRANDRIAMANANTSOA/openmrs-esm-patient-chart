@@ -43,7 +43,8 @@
     "src"
   ],
   "dependencies": {
-    "@carbon/react": "^1.83.0"
+    "@carbon/react": "^1.83.0",
+    "qrcode.react": "^4.2.0"
   },
   "peerDependencies": {
     "@carbon/react": "1.x",
