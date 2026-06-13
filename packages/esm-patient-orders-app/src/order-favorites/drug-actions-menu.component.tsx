@@ -1,9 +1,9 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { IconButton, InlineLoading } from '@carbon/react';
 import { Pin, PinFilled } from '@carbon/react/icons';
 import { useLayoutType } from '@openmrs/esm-framework';
-import type { Drug } from '@openmrs/esm-patient-common-lib';
+import type { Drug } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { usePinToggle } from './usePinToggle';
 
 const DrugActionsMenu: React.FC<{ drug: Drug }> = ({ drug }) => {

@@ -1,5 +1,5 @@
-import type { Order } from '@openmrs/esm-patient-common-lib';
-import { vi, describe, it, expect } from 'vitest';
+import type { Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { describe, expect, it } from 'vitest';
 import { buildMedicationOrder } from './index';
 
 const medicationOrder = {

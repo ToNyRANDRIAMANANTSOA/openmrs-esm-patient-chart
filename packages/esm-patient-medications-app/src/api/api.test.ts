@@ -1,7 +1,7 @@
 import { toOmrsIsoString } from '@openmrs/esm-framework';
-import { vi, describe, it, expect } from 'vitest';
-import { prepMedicationOrderPostData, buildMedicationOrder } from './api';
-import type { DrugOrderBasketItem, Order } from '@openmrs/esm-patient-common-lib';
+import type { DrugOrderBasketItem, Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { describe, expect, it } from 'vitest';
+import { buildMedicationOrder, prepMedicationOrderPostData } from './api';
 
 const startDate = new Date('2026-04-01T10:15:00.000Z');
 

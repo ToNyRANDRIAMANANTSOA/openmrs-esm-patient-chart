@@ -1,8 +1,8 @@
-import React from 'react';
-import { vi, describe, it, expect } from 'vitest';
+import { type Order, useDrugOrderByUuid } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { screen } from '@testing-library/react';
-import { type Order, useDrugOrderByUuid } from '@openmrs/esm-patient-common-lib';
+import React from 'react';
 import { renderWithSwr } from 'tools';
+import { describe, expect, it, vi } from 'vitest';
 import MedicationRecord from './medication-record.component';
 
 const mockUseDrugOrderByUuid = vi.mocked(useDrugOrderByUuid);

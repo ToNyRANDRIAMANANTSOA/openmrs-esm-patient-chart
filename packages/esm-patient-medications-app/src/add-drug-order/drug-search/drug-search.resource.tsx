@@ -1,12 +1,12 @@
-import { useMemo } from 'react';
-import useSWRImmutable from 'swr/immutable';
 import { type FetchResponse, openmrsFetch, restBaseUrl, useFeatureFlag, type Visit } from '@openmrs/esm-framework';
 import {
   type Drug,
   type DrugOrderBasketItem,
   type DrugOrderTemplate,
   type OrderTemplate,
-} from '@openmrs/esm-patient-common-lib';
+} from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { useMemo } from 'react';
+import useSWRImmutable from 'swr/immutable';
 
 export interface DrugSearchResult {
   uuid?: string;

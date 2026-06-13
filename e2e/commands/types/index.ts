@@ -1,5 +1,5 @@
 import { type OpenmrsResource } from '@openmrs/esm-framework';
-import { type Order } from '@openmrs/esm-patient-common-lib';
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
 
 export interface Encounter {
   uuid: string;

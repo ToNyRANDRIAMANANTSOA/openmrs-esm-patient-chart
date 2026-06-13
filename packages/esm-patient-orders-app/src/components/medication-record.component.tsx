@@ -1,9 +1,9 @@
-import React from 'react';
-import { capitalize } from 'lodash-es';
 import { InlineLoading, Toggletip, ToggletipButton, ToggletipContent } from '@carbon/react';
-import { useTranslation } from 'react-i18next';
 import { formatDate, UserIcon } from '@openmrs/esm-framework';
-import { type Order, useDrugOrderByUuid } from '@openmrs/esm-patient-common-lib';
+import { type Order, useDrugOrderByUuid } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { capitalize } from 'lodash-es';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './medication-record.scss';
 
 interface MedicationRecordProps {

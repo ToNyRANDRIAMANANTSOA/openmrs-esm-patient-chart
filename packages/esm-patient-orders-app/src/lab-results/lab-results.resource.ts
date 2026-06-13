@@ -1,7 +1,7 @@
+import { openmrsFetch, restBaseUrl, type FetchResponse, type OpenmrsResource } from '@openmrs/esm-framework';
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { useMemo } from 'react';
 import useSWR from 'swr';
-import { openmrsFetch, restBaseUrl, type FetchResponse, type OpenmrsResource } from '@openmrs/esm-framework';
-import { type Order } from '@openmrs/esm-patient-common-lib';
 import { type Encounter, type Observation } from '../types/encounter';
 import { type OrderDiscontinuationPayload } from '../types/order';
 

@@ -1,9 +1,9 @@
-import React, { type ComponentProps, useRef } from 'react';
-import classNames from 'classnames';
-import { Button, Tile, ClickableTile } from '@carbon/react';
-import { useTranslation } from 'react-i18next';
+import { Button, ClickableTile, Tile } from '@carbon/react';
 import { TrashCanIcon, useLayoutType, WarningIcon } from '@openmrs/esm-framework';
-import { type OrderBasketItem } from '@openmrs/esm-patient-common-lib';
+import { type OrderBasketItem } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import classNames from 'classnames';
+import React, { type ComponentProps, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './order-basket-item-tile.scss';
 
 export interface OrderBasketItemTileProps {

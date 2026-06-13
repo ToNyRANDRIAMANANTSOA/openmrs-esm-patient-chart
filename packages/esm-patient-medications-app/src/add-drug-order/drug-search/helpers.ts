@@ -1,4 +1,4 @@
-import { type DrugOrderBasketItem } from '@openmrs/esm-patient-common-lib';
+import { type DrugOrderBasketItem } from '@openmrs/esm-patient-common-lib-tebokaroa';
 
 type DrugsOrOrders = Pick<DrugOrderBasketItem, 'action' | 'commonMedicationName'>;
 

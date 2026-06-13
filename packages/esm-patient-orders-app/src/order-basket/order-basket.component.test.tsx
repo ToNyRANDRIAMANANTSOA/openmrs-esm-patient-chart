@@ -1,9 +1,9 @@
-import React from 'react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { type LayoutType, useConfig, useLayoutType, useSession } from '@openmrs/esm-framework';
+import { useMutatePatientOrders, useOrderBasket } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { render, screen } from '@testing-library/react';
-import { type LayoutType, useSession, useConfig, useLayoutType } from '@openmrs/esm-framework';
-import { useOrderBasket, useMutatePatientOrders } from '@openmrs/esm-patient-common-lib';
 import { mockSessionDataResponse } from '__mocks__';
+import React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useOrderEncounterForSystemWithVisitDisabled, useProviders } from '../api/api';
 import OrderBasket from './order-basket.component';
 

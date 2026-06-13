@@ -1,11 +1,11 @@
+import { showSnackbar, useConfig } from '@openmrs/esm-framework';
+import type { Drug } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { showSnackbar, useConfig } from '@openmrs/esm-framework';
-import type { Drug } from '@openmrs/esm-patient-common-lib';
 import type { ConfigObject } from '../config-schema';
-import { addDrugFavorite, isDrugFavorite, getDrugFavorite } from './drug-favorites.resource';
-import { useFavoritesActions } from './useFavoritesActions';
+import { addDrugFavorite, getDrugFavorite, isDrugFavorite } from './drug-favorites.resource';
 import { buildFavoriteOrder } from './helpers';
+import { useFavoritesActions } from './useFavoritesActions';
 
 export function usePinToggle(drug: Drug | undefined) {
   const { t } = useTranslation();

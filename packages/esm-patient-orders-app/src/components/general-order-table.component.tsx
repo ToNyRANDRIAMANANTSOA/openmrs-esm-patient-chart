@@ -1,4 +1,3 @@
-import React, { useMemo } from 'react';
 import {
   DataTable,
   DataTableSkeleton,
@@ -11,11 +10,12 @@ import {
   TableHeader,
   TableRow,
 } from '@carbon/react';
-import { useTranslation } from 'react-i18next';
-import { type Order } from '@openmrs/esm-patient-common-lib';
 import { useLayoutType } from '@openmrs/esm-framework';
-import { getObservationDisplayValue } from '../utils';
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLabEncounter, useOrderConceptByUuid } from '../lab-results/lab-results.resource';
+import { getObservationDisplayValue } from '../utils';
 import styles from './general-order-table.scss';
 
 interface GeneralOrderProps {

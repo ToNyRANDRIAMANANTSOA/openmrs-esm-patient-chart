@@ -1,5 +1,5 @@
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
 import { type APIRequestContext, expect } from '@playwright/test';
-import { type Order } from '@openmrs/esm-patient-common-lib';
 import { type Encounter } from './types';
 
 export const generateRandomTestOrder = async (

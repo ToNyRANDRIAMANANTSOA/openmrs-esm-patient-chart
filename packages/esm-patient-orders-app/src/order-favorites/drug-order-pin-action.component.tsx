@@ -1,10 +1,10 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { InlineLoading } from '@carbon/react';
 import { Pin, PinFilled } from '@carbon/react/icons';
-import { usePinToggle } from './usePinToggle';
-import type { Drug } from '@openmrs/esm-patient-common-lib';
+import type { Drug } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './drug-order-pin-action.scss';
+import { usePinToggle } from './usePinToggle';
 
 interface DrugOrderPinActionProps {
   drug: Drug;

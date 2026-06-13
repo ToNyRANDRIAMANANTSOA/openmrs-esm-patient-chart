@@ -1,6 +1,3 @@
-import React, { useMemo } from 'react';
-import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import {
   DataTable,
   DataTableSkeleton,
@@ -14,13 +11,16 @@ import {
   TableRow,
 } from '@carbon/react';
 import {
-  type Order,
   type OBSERVATION_INTERPRETATION,
   ReferenceRangeDisplay,
   useReferenceRanges,
 } from '@openmrs/esm-patient-common-lib';
-import { useLabEncounter, useOrderConceptByUuid } from '../../lab-results.resource';
+import { type Order } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import classNames from 'classnames';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getConceptUuids, getEffectiveRanges, getInterpretationClass, interpretObservation } from '../../../utils';
+import { useLabEncounter, useOrderConceptByUuid } from '../../lab-results.resource';
 import styles from './print-preview.scss';
 
 interface PrintableReportProps {

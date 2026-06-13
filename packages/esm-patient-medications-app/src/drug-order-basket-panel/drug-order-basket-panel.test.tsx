@@ -1,10 +1,10 @@
-import React from 'react';
-import { vi, describe, expect, test } from 'vitest';
-import { screen, render } from '@testing-library/react';
+import { type DrugOrderBasketItem, type OrderBasketExtensionProps } from '@openmrs/esm-patient-common-lib-tebokaroa';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { type OrderBasketExtensionProps, type DrugOrderBasketItem } from '@openmrs/esm-patient-common-lib';
-import { getByTextWithMarkup } from 'tools';
 import { mockDrugSearchResultApiData, mockFhirPatient, mockPatientDrugOrdersApiData } from '__mocks__';
+import React from 'react';
+import { getByTextWithMarkup } from 'tools';
+import { describe, expect, test, vi } from 'vitest';
 import { getTemplateOrderBasketItem } from '../add-drug-order/drug-search/drug-search.resource';
 import DrugOrderBasketPanel from './drug-order-basket-panel.extension';
 

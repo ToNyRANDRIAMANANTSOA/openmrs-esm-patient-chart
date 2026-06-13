@@ -1,16 +1,14 @@
-import React, { type ComponentProps, useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
 import {
   ArrowLeftIcon,
-  SearchIcon,
   ListCheckedIcon,
+  SearchIcon,
   showSnackbar,
   useConfig,
-  type Visit,
-  type Workspace2DefinitionProps,
   useLayoutType,
+  type Visit,
   Workspace2,
+  type Workspace2DefinitionProps,
 } from '@openmrs/esm-framework';
 import {
   type DrugOrderBasketItem,
@@ -18,16 +16,18 @@ import {
   showOrderSuccessToast,
   useMutatePatientOrders,
   useOrderBasket,
-} from '@openmrs/esm-patient-common-lib';
+} from '@openmrs/esm-patient-common-lib-tebokaroa';
+import React, { type ComponentProps, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { type ConfigObject } from '../config-schema';
 import { prepMedicationOrderPostData } from '../api/api';
-import { ordersEqual } from './drug-search/helpers';
-import { useConceptSets } from './drug-search/drug-search.resource';
+import { type ConfigObject } from '../config-schema';
+import styles from './add-drug-order.scss';
 import { DrugOrderForm } from './drug-order-form.component';
 import DrugBrowse from './drug-search/drug-browse.component';
 import DrugSearch from './drug-search/drug-search.component';
-import styles from './add-drug-order.scss';
+import { useConceptSets } from './drug-search/drug-search.resource';
+import { ordersEqual } from './drug-search/helpers';
 
 export interface AddDrugOrderWorkspaceAdditionalProps {}
 
