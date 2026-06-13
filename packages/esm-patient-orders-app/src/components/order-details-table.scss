@@ -38,10 +38,6 @@
   }
 }
 
-.buttons {
-  justify-content: flex-end;
-}
-
 .tile {
   text-align: center;
   border-bottom: 1px solid vars.$ui-03;
@@ -118,6 +114,16 @@
   @include type.type-style('helper-text-02');
 }
 
+.buttons {
+  justify-content: flex-end;
+  display: flex;
+  button {
+    align-items: center;
+    height: 100%;
+    @extend .button;
+  }
+}
+
 .button {
   svg {
     fill: currentColor !important;
@@ -125,12 +131,16 @@
 }
 
 .printButton {
-  margin-left: 1.25rem;
+  // margin-left: 1.25rem;
   @extend .button;
 }
 
 .addButton {
   @extend .button;
+}
+
+.actionButtonExtensions {
+  display: flex;
 }
 
 @media print {
