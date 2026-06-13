@@ -39,12 +39,12 @@
   "dependencies": {
     "@carbon/react": "^1.83.0",
     "@openmrs/esm-patient-common-lib": "12.x",
-    "@openmrs/esm-patient-common-lib-tebokaroa": "npm:@tebokaroa/esm-patient-common-lib-tebokaroa@latest",
     "lodash-es": "^4.18.1"
   },
   "peerDependencies": {
     "@openmrs/esm-framework": "9.x",
     "@openmrs/esm-patient-common-lib": "12.x",
+    "@openmrs/esm-patient-common-lib-tebokaroa": "npm:@tebokaroa/esm-patient-common-lib-tebokaroa@latest",
     "dayjs": "1.x",
     "react": "18.x",
     "react-i18next": "16.x",

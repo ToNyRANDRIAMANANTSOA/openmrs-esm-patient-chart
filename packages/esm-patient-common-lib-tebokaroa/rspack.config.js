@@ -14,7 +14,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'openmrs-esm-patient-common-lib.js',
+    filename: 'openmrs-esm-patient-common-lib-tebokaroa.js',
     library: {
       type: 'module',
     },
@@ -34,6 +34,10 @@ module.exports = {
     react: 'react',
     'single-spa': 'single-spa',
     '@openmrs/esm-framework': '@openmrs/esm-framework',
+    '@carbon/react': '@carbon/react',
+    'lodash-es': 'lodash-es',
+    'swr': 'swr',
+    'uuid': 'uuid',
   },
 
   module: {

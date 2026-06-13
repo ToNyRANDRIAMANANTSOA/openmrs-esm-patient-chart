@@ -3,7 +3,7 @@
   "version": "12.1.1-5",
   "license": "MPL-2.0",
   "description": "Library for common patient chart components. Customized subset version of @openmrs/esm-patient-common-lib for customized packages.",
-  "browser": "dist/openmrs-esm-patient-common-lib.js",
+  "browser": "dist/openmrs-esm-patient-common-lib-tebokaroa.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
@@ -29,15 +29,14 @@
   "bugs": {
     "url": "https://github.com/ToNyRANDRIAMANANTSOA/openmrs-esm-patient-chart.git/issues"
   },
-  "dependencies": {
-    "@carbon/react": "^1.83.0",
-    "lodash-es": "^4.18.1",
-    "uuid": "^8.3.2"
-  },
   "peerDependencies": {
+    "@carbon/react": "^1.83.0",
     "@openmrs/esm-framework": "9.x",
+    "lodash-es": "^4.18.1",
     "react": "18.x",
-    "single-spa": "6.x"
+    "single-spa": "6.x",
+    "swr": "2.x",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "openmrs": "next"

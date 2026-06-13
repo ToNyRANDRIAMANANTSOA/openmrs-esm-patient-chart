@@ -21,7 +21,7 @@ const initialState = {
   postDataPrepFunctions: {},
 };
 
-export const orderBasketStore = createGlobalStore<OrderBasketStore>('tebokaroa-order-basket', initialState);
+export const orderBasketStore = createGlobalStore<OrderBasketStore>('order-basket', initialState);
 
 /**
  * @internal for testing only
