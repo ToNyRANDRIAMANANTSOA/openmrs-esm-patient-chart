@@ -5490,15 +5490,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@openmrs/esm-patient-common-lib-tebokaroa@workspace:packages/esm-patient-common-lib-tebokaroa"
   dependencies:
+    "@carbon/react": "npm:^1.83.0"
+    lodash-es: "npm:^4.18.1"
     openmrs: "npm:next"
+    uuid: "npm:^8.3.2"
   peerDependencies:
-    "@carbon/react": ^1.83.0
     "@openmrs/esm-framework": 9.x
-    lodash-es: ^4.18.1
     react: 18.x
     single-spa: 6.x
     swr: 2.x
-    uuid: ^8.3.2
   languageName: unknown
   linkType: soft
 
