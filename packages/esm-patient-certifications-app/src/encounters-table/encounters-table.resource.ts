@@ -179,7 +179,13 @@ export async function downloadPdf(encounterUuids: string[], t: TFunction) {
       throw new Error('Report generation timed out. Please try again or select fewer encounters.');
     }
 
-    const downloadResponse = await openmrsFetch(`/ws/rest/v1/patientdocuments/encounters/download/${currentJobId}`);
+    const downloadResponse = await fetch(
+      `${window.location.origin}/openmrs/ws/rest/v1/patientdocuments/encounters/download/${currentJobId}`,
+      {
+        method: 'GET',
+        credentials: 'include', // utilise les cookies de session OpenMRS
+      },
+    );
 
     const blob = await downloadResponse.blob();
     const url = window.URL.createObjectURL(blob);

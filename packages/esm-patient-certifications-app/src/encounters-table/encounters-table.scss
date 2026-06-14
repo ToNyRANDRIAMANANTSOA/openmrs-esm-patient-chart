@@ -6,7 +6,9 @@
   margin: layout.$spacing-05 0;
   border: 1px solid $ui-03;
 }
-
+.actionButtonExtensions {
+  display: flex;
+}
 .tableContainer {
   padding: 0;
   border-bottom: none;
