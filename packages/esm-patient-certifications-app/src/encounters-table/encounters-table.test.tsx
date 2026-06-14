@@ -18,8 +18,8 @@ import userEvent from '@testing-library/user-event';
 import { mockEncountersAlice, mockEncounterTypes, mockFhirPatient, mockPatientAlice } from '__mocks__';
 import { renderWithSwr } from 'tools';
 import { type EncountersTableProps, useEncounterTypes } from './encounters-table.resource';
-import { type ChartConfig, esmPatientChartSchema } from '../../../../config-schema';
-import { jsonSchemaResourceName } from '../../../../constants';
+import { type ChartConfig, esmPatientChartSchema } from '../config-schema';
+import { jsonSchemaResourceName } from '../constants';
 import EncountersTable from './encounters-table.component';
 
 const testProps: EncountersTableProps = {

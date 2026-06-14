@@ -2,7 +2,7 @@ import React, { type ComponentProps, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLayoutType, isDesktop as desktopLayout, AddIcon, launchWorkspace2 } from '@openmrs/esm-framework';
 import { CardHeader } from '@openmrs/esm-patient-common-lib';
-// import CompletedFormsTable from './completed-forms-table.component';
+import CompletedFormsTable from './completed-forms-table.component';
 import styles from './certifications-detailed-summary.scss';
 import { Button } from '@carbon/react';
 
@@ -29,7 +29,7 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
           {t('add', 'Add')}
         </Button>
       </CardHeader>
-      {/* <CompletedFormsTable patientUuid={patientUuid} isTabActive /> */}
+      <CompletedFormsTable patientUuid={patientUuid} isTabActive />
     </div>
   );
 };

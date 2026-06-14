@@ -43,8 +43,8 @@ import {
   PrinterIcon,
 } from '@openmrs/esm-framework';
 import { invalidateVisitAndEncounterData, usePatientChartStore } from '@openmrs/esm-patient-common-lib';
-import { type ChartConfig } from '../../../../config-schema';
-import { jsonSchemaResourceName } from '../../../../constants';
+import { type ChartConfig } from '../config-schema';
+import { jsonSchemaResourceName } from '../constants';
 import {
   deleteEncounter,
   downloadPdf,
@@ -53,7 +53,7 @@ import {
   type EncountersTableProps,
   type MappedEncounter,
 } from './encounters-table.resource';
-import EncounterObservations from '../../encounter-observations';
+import EncounterObservations from '../encounter-observations';
 import styles from './encounters-table.scss';
 
 /**
@@ -256,9 +256,9 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                       encounter.encounterType === 'Visit Note' && !encounter.form;
 
                     const supportsEmbeddedFormView = (encounter: MappedEncounter) =>
-                      encounter.form?.uuid &&
-                      encounter.form.resources?.some((resource) => resource.name === jsonSchemaResourceName);
-
+                      Boolean(encounter.form?.uuid) &&
+                      Array.isArray(encounter.form?.resources) &&
+                      encounter.form.resources.some((resource) => resource.name === jsonSchemaResourceName);
                     const encounterAgeInMinutes =
                       (Date.now() - new Date(encounter.rawDatetime).getTime()) / (1000 * 60);
 
@@ -266,7 +266,7 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                       userHasAccess(encounter.editPrivilege, session?.user) &&
                       (encounterEditableDuration === 0 ||
                         (encounterEditableDuration > 0 && encounterAgeInMinutes <= encounterEditableDuration) ||
-                        encounterEditableDurationOverridePrivileges.some((privilege) =>
+                        (encounterEditableDurationOverridePrivileges ?? []).some((privilege) =>
                           userHasAccess(privilege, session?.user),
                         ));
 

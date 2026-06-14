@@ -14,7 +14,7 @@ import {
   useOpenmrsPagination,
 } from '@openmrs/esm-framework';
 import { type Form } from '@openmrs/esm-patient-common-lib';
-import { jsonSchemaResourceName } from '../../../../constants';
+import { jsonSchemaResourceName } from '../constants';
 
 export interface EncountersTableProps {
   patientUuid: string;
