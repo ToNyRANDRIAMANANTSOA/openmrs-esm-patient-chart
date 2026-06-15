@@ -1,4 +1,4 @@
-import { createGlobalStore } from '@openmrs/esm-framework';
+import { getGlobalStore } from '@openmrs/esm-framework';
 import type { OrderBasketItem, PostDataPrepFunction } from './types';
 
 // The order basket holds order information for each patient. The orders are grouped by `key`
@@ -21,7 +21,11 @@ const initialState = {
   postDataPrepFunctions: {},
 };
 
-export const orderBasketStore = createGlobalStore<OrderBasketStore>('order-basket', initialState);
+// Reuse the single global `order-basket` store (created by @openmrs/esm-patient-common-lib).
+// `getGlobalStore` is idempotent: it returns the existing store or creates it if absent,
+// so this subset shares one basket instance with the rest of the chart instead of
+// registering a second store under the same name.
+export const orderBasketStore = getGlobalStore<OrderBasketStore>('order-basket', initialState);
 
 /**
  * @internal for testing only
