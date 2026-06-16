@@ -1,3 +1,4 @@
+@use '@carbon/colors';
 @use '@carbon/layout';
 @use '@carbon/type';
 @use '@openmrs/esm-styleguide/src/vars' as *;
@@ -111,5 +112,64 @@
 
   :global(.cds--btn--primary) {
     background-color: unset;
+  }
+}
+
+@media print {
+  .printContainer {
+    width: 100%;
+  }
+
+  .printableEncounterPage {
+    page-break-after: always;
+    page-break-inside: avoid;
+
+    &:last-child {
+      page-break-after: avoid;
+    }
+  }
+
+  .encounterMetadata {
+    display: flex;
+    justify-content: space-between;
+    margin: layout.$spacing-05 0 layout.$spacing-03 0;
+    padding-bottom: layout.$spacing-03;
+    border-bottom: 1px solid #e0e0e0;
+    @include type.type-style('body-compact-02');
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .encounterObservations {
+    margin-top: layout.$spacing-05;
+  }
+
+  .signatureSection {
+    display: flex;
+    justify-content: space-between;
+    margin-top: layout.$spacing-10;
+    page-break-inside: avoid;
+  }
+
+  .signatureLine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+  }
+
+  .line {
+    width: 100%;
+    border-bottom: 1px solid colors.$gray-60;
+    margin-bottom: layout.$spacing-03;
+    height: 40px;
+  }
+
+  .label {
+    @include type.type-style('label-01');
+    color: colors.$gray-80;
+    text-align: center;
   }
 }
