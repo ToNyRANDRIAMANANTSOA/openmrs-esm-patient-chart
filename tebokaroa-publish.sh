@@ -92,3 +92,9 @@ tebokaroa_publish() {
 }
 
 tebokaroa_publish
+
+# Manually fix package names that didn't get updates ??
+# TODO: Fix this. We should not have to use this. 
+# TODO: Also, this just removes name fields in the packages.json, not even behaving as expected
+# TODO: For now, you can just use `cd packages && git restore . && cd .. && yarn` to revert the names back
+# bulk_rename_pkg_scopes openmrs
