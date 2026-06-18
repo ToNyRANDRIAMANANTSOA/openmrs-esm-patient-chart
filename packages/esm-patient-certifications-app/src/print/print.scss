@@ -113,4 +113,32 @@
     letter-spacing: 1px;
     margin: 0;
   }
+
+  .signatureSection {
+    display: flex;
+    justify-content: space-between;
+    margin-top: layout.$spacing-10;
+    page-break-inside: avoid;
+  }
+
+  .signatureLine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+  }
+
+  .line {
+    width: 100%;
+    border-bottom: 1px solid colors.$gray-60;
+    margin-bottom: layout.$spacing-03;
+    height: 40px;
+  }
+
+  .label {
+    @include type.type-style('label-01');
+    color: colors.$gray-80;
+    text-align: center;
+    font-weight: bold;
+  }
 }

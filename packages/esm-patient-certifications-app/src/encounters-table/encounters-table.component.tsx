@@ -118,12 +118,30 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
         (identifier) => !excludePatientIdentifierCodeTypes?.uuids?.includes(identifier.type?.coding?.[0]?.code),
       ) ?? [];
 
+    const familyName = patient?.name?.[0]?.family || '';
+    const givenName = patient?.name?.[0]?.given?.join(' ') || '';
+    const birthDate = patient?.birthDate || '';
+    const address = patient?.address?.[0]
+      ? [
+          patient.address[0].line?.join(' '),
+          patient.address[0].city,
+          patient.address[0].state,
+          patient.address[0].postalCode,
+        ]
+          .filter(Boolean)
+          .join(', ')
+      : '';
+
     return {
       name: patient ? getPatientName(patient) : '',
       age: age(patient?.birthDate),
       gender: getGender(patient?.gender),
-      location: patient?.address?.[0]?.city,
+      location: patient?.address?.[0]?.city || '',
       identifiers: identifiers?.length ? identifiers.map(({ value }) => value) : [],
+      familyName,
+      givenName,
+      birthDate,
+      address,
     };
   }, [patient, excludePatientIdentifierCodeTypes?.uuids]);
 
@@ -528,30 +546,14 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
           {encountersToPrint.map((encounter, index) => (
             <div key={encounter.id} className={styles.printableEncounterPage}>
               <PrintComponent
-                subheader={encounter.encounterType || t('medicalCertification', 'Medical Certification')}
+                subheader={
+                  encounterTypeToFilter?.display ||
+                  encounter.encounterType ||
+                  t('medicalCertification', 'Medical Certification')
+                }
                 patientDetails={patientDetails}
+                encounter={encounter}
               />
-              <div className={styles.encounterMetadata}>
-                <p>
-                  <strong>{t('date', 'Date')}:</strong> {encounter.datetime}
-                </p>
-                <p>
-                  <strong>{t('provider', 'Provider')}:</strong> {encounter.provider}
-                </p>
-              </div>
-              <div className={styles.encounterObservations}>
-                <EncounterObservations observations={encounter.obs} />
-              </div>
-              <div className={styles.signatureSection}>
-                <div className={styles.signatureLine}>
-                  <div className={styles.line} />
-                  <span className={styles.label}>{t('doctorSignature', "Doctor's Signature / Stamp")}</span>
-                </div>
-                <div className={styles.signatureLine}>
-                  <div className={styles.line} />
-                  <span className={styles.label}>{t('patientSignature', "Patient's Signature")}</span>
-                </div>
-              </div>
               {index < encountersToPrint.length - 1 && <div className={styles.pageBreak} />}
             </div>
           ))}
