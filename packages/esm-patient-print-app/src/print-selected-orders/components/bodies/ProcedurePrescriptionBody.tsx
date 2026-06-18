@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loading } from '@carbon/react';
+import { useTranslation } from 'react-i18next';
 import styles from '../printable-prescription.scss';
 import { type PrescriptionBodyProps } from './types';
 
@@ -8,14 +9,16 @@ const ProcedurePrescriptionBody: React.FC<PrescriptionBodyProps> = ({
   isLoadingEncounters,
   formatDate,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <section className={styles.block}>
         <div className={styles.sectionTitleWrapper}>
-          <strong>Procedure Request Details:</strong>
+          <strong>{t('procedureRequestDetails', 'Procedure Request Details:')}</strong>
 
           <span>
-            <strong>Date issued:</strong>{' '}
+            <strong>{t('dateIssued', 'Date issued:')}</strong>{' '}
             {prescription?.encounter?.encounterDatetime && formatDate(prescription.encounter.encounterDatetime)}
           </span>
         </div>
@@ -23,10 +26,10 @@ const ProcedurePrescriptionBody: React.FC<PrescriptionBodyProps> = ({
         <table className={styles.printPrescription}>
           <thead>
             <tr>
-              <th>Procedure</th>
-              <th>Scheduled Date</th>
-              <th>Urgency</th>
-              <th>Instructions</th>
+              <th>{t('procedure', 'Procedure')}</th>
+              <th>{t('scheduledDate', 'Scheduled Date')}</th>
+              <th>{t('urgency', 'Urgency')}</th>
+              <th>{t('instructions', 'Instructions')}</th>
             </tr>
           </thead>
 
@@ -45,12 +48,14 @@ const ProcedurePrescriptionBody: React.FC<PrescriptionBodyProps> = ({
 
       <footer className={styles.prescriptionFooter}>
         <div className={styles.footerColumn}>
-          <p>Please arrive before the scheduled procedure time.</p>
-          <p>Follow all preparation instructions provided by your clinician.</p>
+          <p>{t('arriveBeforeScheduledProcedureTime', 'Please arrive before the scheduled procedure time.')}</p>
+          <p>{t('followPreparationInstructions', 'Follow all preparation instructions provided by your clinician.')}</p>
         </div>
 
         <div className={styles.footerColumn}>
-          <p className={styles.generatedNotice}>Electronically generated procedure request</p>
+          <p className={styles.generatedNotice}>
+            {t('electronicallyGeneratedProcedureRequest', 'Electronically generated procedure request')}
+          </p>
         </div>
       </footer>
     </>
