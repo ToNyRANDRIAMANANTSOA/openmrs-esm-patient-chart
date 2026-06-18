@@ -70,12 +70,15 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
                 <br />
                 <span>{prescription?.provider?.attributes?.specialties}</span>
                 <br />
-                <strong>{prescription?.provider?.attributes?.licenseType ?? 'Nº Ordre'}:</strong>{' '}
+                <strong>
+                  {prescription?.provider?.attributes?.licenseType ?? t('licenseTypeDefault', 'Nº Ordre')}:
+                </strong>{' '}
                 <span>{prescription?.provider?.attributes?.licenseNb}</span>
                 {prescription?.provider?.attributes?.phoneNumber && (
                   <>
                     <br />
-                    <strong>Phone:</strong> <span>{prescription?.provider?.attributes?.phoneNumber}</span>
+                    <strong>{t('phone', 'Phone:')}</strong>{' '}
+                    <span>{prescription?.provider?.attributes?.phoneNumber}</span>
                   </>
                 )}
               </div>
@@ -89,12 +92,13 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
               <>
                 <strong className={styles.clinicInfo}>{prescription?.encounter?.visit?.location?.name}</strong>
                 <br />
-                <strong>Contact:</strong> {prescription?.encounter?.visit?.location?.attributes?.phoneNumber1}
+                <strong>{t('contact', 'Contact:')}</strong>{' '}
+                {prescription?.encounter?.visit?.location?.attributes?.phoneNumber1}
                 {prescription?.encounter?.visit?.location?.attributes?.phoneNumber2 && (
                   <> {prescription?.encounter?.visit?.location?.attributes?.phoneNumber2}</>
                 )}
                 <br />
-                <strong>Email:</strong> {prescription?.encounter?.visit?.location?.attributes?.email}
+                <strong>{t('email', 'Email:')}</strong> {prescription?.encounter?.visit?.location?.attributes?.email}
                 <br />
                 {prescription?.encounter?.visit?.location?.attributes?.addressDisplay}
               </>
@@ -115,7 +119,8 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
               </td>
 
               <td colSpan={3}>
-                <strong>Patient Name:</strong> <span className={styles.value}>{prescription?.patient?.display}</span>
+                <strong>{t('patientName', 'Patient Name:')}</strong>{' '}
+                <span className={styles.value}>{prescription?.patient?.display}</span>
               </td>
 
               <td rowSpan={5} className={styles.qrCodeCell}>
@@ -127,7 +132,7 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
 
                     <span>
                       <br />
-                      <strong>Visit Details</strong>
+                      <strong>{t('visitDetails', 'Visit Details')}</strong>
                     </span>
                   </>
                 )}
@@ -136,24 +141,24 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
 
             <tr>
               <td>
-                <strong>Age:</strong> {prescription?.patient?.age}
+                <strong>{t('age', 'Age:')}</strong> {prescription?.patient?.age}
               </td>
 
               <td>
-                <strong>Gender:</strong> {prescription?.patient?.gender}
+                <strong>{t('gender', 'Gender:')}</strong> {prescription?.patient?.gender}
               </td>
 
               <td>
-                <strong>Weight:</strong> {prescription?.patient?.weightKg}
+                <strong>{t('weight', 'Weight:')}</strong> {prescription?.patient?.weightKg}
               </td>
             </tr>
 
             <tr>
               <td colSpan={3}>
-                <strong>Allergies:</strong>{' '}
+                <strong>{t('allergies', 'Allergies:')}</strong>{' '}
                 {prescription?.patient?.allergies?.length
                   ? prescription.patient.allergies.join(', ')
-                  : 'No allergies recorded'}
+                  : t('noAllergiesRecorded', 'No allergies recorded')}
               </td>
             </tr>
           </tbody>

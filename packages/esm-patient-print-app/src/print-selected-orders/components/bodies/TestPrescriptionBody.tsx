@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loading } from '@carbon/react';
+import { useTranslation } from 'react-i18next';
 import styles from '../printable-prescription.scss';
 import { type PrescriptionBodyProps } from './types';
 import { getOrderTestName } from '../../utils/get-order-name';
@@ -20,14 +21,16 @@ export const urgencyMap = {
 // export type OrderUrgency = 'ROUTINE' | 'STAT' | 'ON_SCHEDULED_DATE';
 
 const TestPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, isLoadingEncounters, formatDate }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <section className={styles.block}>
         <div className={styles.sectionTitleWrapper}>
-          <strong>Laboratory Request Details:</strong>
+          <strong>{t('laboratoryRequestDetails', 'Laboratory Request Details:')}</strong>
 
           <span>
-            <strong>Date issued:</strong>{' '}
+            <strong>{t('dateIssued', 'Date issued:')}</strong>{' '}
             {prescription?.encounter?.encounterDatetime && formatDate(prescription.encounter.encounterDatetime)}
           </span>
         </div>
@@ -35,9 +38,9 @@ const TestPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
         <table className={styles.printPrescription}>
           <thead>
             <tr>
-              <th>Test Requested</th>
-              <th>Urgency</th>
-              <th>Reference</th>
+              <th>{t('testRequested', 'Test Requested')}</th>
+              <th>{t('urgency', 'Urgency')}</th>
+              <th>{t('reference', 'Reference')}</th>
               {/* <th>Specimen Source</th> */}
             </tr>
           </thead>
@@ -61,14 +64,14 @@ const TestPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
                     <td>{order.accessionNumber ?? '--'}</td>
 
                     {/* <td>
-                      {order.specimenSource?.display ?? '--'}                      
+                      {order.specimenSource?.display ?? '--'}
                     </td> */}
                   </tr>
 
                   {order.instructions && (
                     <tr className={styles.prescriptionNotes}>
                       <td colSpan={4}>
-                        <strong>Notes:</strong> {capitalize(order.instructions)}
+                        <strong>{t('notes', 'Notes:')}</strong> {capitalize(order.instructions)}
                       </td>
                     </tr>
                   )}
@@ -83,19 +86,27 @@ const TestPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
         <div className={styles.footerColumn}>
           <p>
             <u>
-              <strong>LABORATORY NOTICES:</strong>
+              <strong>{t('laboratoryNotices', 'LABORATORY NOTICES:')}</strong>
             </u>
           </p>
 
-          <p>Please present this request at the laboratory.</p>
-          <p>Follow specimen collection instructions provided by staff.</p>
-          <p>Results should be interpreted by a qualified clinician.</p>
+          <p>{t('presentRequestAtLaboratory', 'Please present this request at the laboratory.')}</p>
+          <p>
+            {t('followSpecimenCollectionInstructions', 'Follow specimen collection instructions provided by staff.')}
+          </p>
+          <p>
+            {t('resultsInterpretedByQualifiedClinician', 'Results should be interpreted by a qualified clinician.')}
+          </p>
         </div>
 
         <div className={styles.footerColumn}>
-          <p className={styles.generatedNotice}>Electronically generated laboratory request</p>
+          <p className={styles.generatedNotice}>
+            {t('electronicallyGeneratedLaboratoryRequest', 'Electronically generated laboratory request')}
+          </p>
 
-          <p className={styles.confidentialNotice}>Confidential medical information</p>
+          <p className={styles.confidentialNotice}>
+            {t('confidentialMedicalInfo', 'Confidential medical information')}
+          </p>
         </div>
       </footer>
     </>
