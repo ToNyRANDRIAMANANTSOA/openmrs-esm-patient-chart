@@ -27,6 +27,11 @@
         "path": "certifications"
       },
       "order": 10
+    },
+    {
+      "name": "certifications-print-button",
+      "slot": "certifications-print-actions-slot",
+      "component": "printCertificationsExtensionButton"
     }
   ],
   "pages": [],

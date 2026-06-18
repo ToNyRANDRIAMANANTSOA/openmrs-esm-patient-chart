@@ -1,6 +1,6 @@
-import React, { type ComponentProps, useCallback, useMemo, useState, useRef, useEffect } from 'react';
+import React, { type ComponentProps, useCallback, useMemo, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { useReactToPrint } from 'react-to-print';
 import { useSWRConfig } from 'swr';
 import {
   Button,
@@ -41,9 +41,7 @@ import {
   type EncounterType,
   ExtensionSlot,
   useFeatureFlag,
-  PrinterIcon,
   age,
-  formatDate,
   getPatientName,
   getCoreTranslation,
 } from '@openmrs/esm-framework';
@@ -146,41 +144,67 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   }, [patient, excludePatientIdentifierCodeTypes?.uuids]);
 
   const [encountersToPrint, setEncountersToPrint] = useState<MappedEncounter[]>([]);
-  const contentToPrintRef = useRef<HTMLDivElement | null>(null);
-  const onBeforeGetContentResolve = useRef<null | ((value?: unknown) => void)>(null);
 
+  // Trigger window.print() after React has committed the print content to the DOM.
+  // Sets the document title (→ PDF filename) and waits for images to load before printing.
   useEffect(() => {
-    if (isPrinting && onBeforeGetContentResolve.current) {
-      onBeforeGetContentResolve.current();
-    }
-  }, [isPrinting]);
+    if (!isPrinting || !encountersToPrint.length) return;
 
-  const handlePrint = useReactToPrint({
-    content: () => contentToPrintRef.current,
-    documentTitle: `OpenMRS - ${patientDetails.name} - Certifications`,
-    onBeforeGetContent: () =>
-      new Promise((resolve) => {
-        onBeforeGetContentResolve.current = resolve;
-        setIsPrinting(true);
-      }),
-    onAfterPrint: () => {
-      onBeforeGetContentResolve.current = null;
+    const originalTitle = document.title;
+    document.title = `${patientDetails.name} - Certifications`;
+
+    let cancelled = false;
+    let rafId: ReturnType<typeof requestAnimationFrame>;
+    const cleanupListeners: Array<() => void> = [];
+
+    rafId = requestAnimationFrame(() => {
+      if (cancelled) return;
+
+      const portal = document.getElementById('certifications-print-root');
+      const imgs = portal ? Array.from(portal.querySelectorAll<HTMLImageElement>('img')) : [];
+      const pending = imgs.filter((img) => !img.complete);
+
+      const doPrint = () => {
+        if (!cancelled) window.print();
+      };
+
+      if (pending.length === 0) {
+        doPrint();
+        return;
+      }
+
+      let settled = 0;
+      const onSettled = () => {
+        settled += 1;
+        if (settled === pending.length) doPrint();
+      };
+      pending.forEach((img) => {
+        img.addEventListener('load', onSettled, { once: true });
+        img.addEventListener('error', onSettled, { once: true });
+        cleanupListeners.push(() => {
+          img.removeEventListener('load', onSettled);
+          img.removeEventListener('error', onSettled);
+        });
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+      cleanupListeners.forEach((fn) => fn());
+      document.title = originalTitle;
+    };
+  }, [isPrinting, encountersToPrint, patientDetails.name]);
+
+  // Reset state when the browser print dialog closes
+  useEffect(() => {
+    const handleAfterPrint = () => {
       setIsPrinting(false);
       setEncountersToPrint([]);
-    },
-    pageStyle: `
-      @page {
-        size: A4 portrait;
-        margin: 1.5cm;
-      }
-      @media print {
-        body {
-          print-color-adjust: exact;
-          -webkit-print-color-adjust: exact;
-        }
-      }
-    `,
-  });
+    };
+    window.addEventListener('afterprint', handleAfterPrint);
+    return () => window.removeEventListener('afterprint', handleAfterPrint);
+  }, []);
 
   const paginatedMappedEncounters = useMemo(
     () => (paginatedEncounters ?? []).map(mapEncounter).filter(Boolean),
@@ -262,10 +286,11 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   const handlePrintSelected = useCallback(
     (selectedRows: Array<any>) => {
       const selectedEncounters = selectedRows.map((row) => encountersByUuid.get(row.id)).filter(Boolean);
+      if (!selectedEncounters.length) return;
       setEncountersToPrint(selectedEncounters);
-      handlePrint();
+      setIsPrinting(true);
     },
-    [encountersByUuid, handlePrint],
+    [encountersByUuid],
   );
 
   if (isLoadingEncounterTypes || isLoading) {
@@ -316,15 +341,15 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                       />
                     </div>
                     {isSelectable && canPrintEncounters && (
-                      <Button
-                        kind="ghost"
-                        size={responsiveSize}
-                        renderIcon={PrinterIcon}
-                        disabled={selectedRowsCount === 0 || isPrinting}
-                        onClick={() => handlePrintSelected(selectedRows)}
-                      >
-                        {isPrinting ? t('generating', 'Generating...') : t('printSelected', 'Print selected')}
-                      </Button>
+                      <ExtensionSlot
+                        name="certifications-print-actions-slot"
+                        state={{
+                          onPrint: () => handlePrintSelected(selectedRows),
+                          isPrinting,
+                          disabled: selectedRowsCount === 0 || isPrinting,
+                          size: responsiveSize,
+                        }}
+                      />
                     )}
                   </TableToolbarContent>
                 </TableToolbar>
@@ -414,7 +439,7 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                                       disabled={isPrinting}
                                       onClick={() => {
                                         setEncountersToPrint([encounter]);
-                                        handlePrint();
+                                        setIsPrinting(true);
                                       }}
                                     />
                                   )}
@@ -541,24 +566,29 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
           }}
         />
       }
-      <div style={{ display: isPrinting ? 'block' : 'none' }}>
-        <div ref={contentToPrintRef} className={styles.printContainer}>
-          {encountersToPrint.map((encounter, index) => (
-            <div key={encounter.id} className={styles.printableEncounterPage}>
-              <PrintComponent
-                subheader={
-                  encounterTypeToFilter?.display ||
-                  encounter.encounterType ||
-                  t('medicalCertification', 'Medical Certification')
-                }
-                patientDetails={patientDetails}
-                encounter={encounter}
-              />
-              {index < encountersToPrint.length - 1 && <div className={styles.pageBreak} />}
+      {isPrinting &&
+        encountersToPrint.length > 0 &&
+        createPortal(
+          <div id="certifications-print-root">
+            <div className={styles.printContainer}>
+              {encountersToPrint.map((encounter, index) => (
+                <div key={encounter.id} className={styles.printableEncounterPage}>
+                  <PrintComponent
+                    subheader={
+                      encounterTypeToFilter?.display ||
+                      encounter.encounterType ||
+                      t('medicalCertification', 'Medical Certification')
+                    }
+                    patientDetails={patientDetails}
+                    encounter={encounter}
+                  />
+                  {index < encountersToPrint.length - 1 && <div className={styles.pageBreak} />}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

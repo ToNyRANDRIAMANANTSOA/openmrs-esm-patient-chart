@@ -1,5 +1,7 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSWRConfig } from 'swr';
 import { userHasAccess, useSession, type EncounterType } from '@openmrs/esm-framework';
+import { invalidateVisitAndEncounterData } from '@openmrs/esm-patient-common-lib';
 import { type EncountersTableProps, useAllEncounters, encounterHasJsonSchemaForm } from './encounters-table.resource';
 import EncountersTable from './encounters-table.component';
 
@@ -13,6 +15,14 @@ const CompletedFormsTable: React.FC<CompletedFormsTableProps> = ({ patientUuid, 
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+
+  const { mutate } = useSWRConfig();
+
+  useEffect(() => {
+    if (isTabActive) {
+      invalidateVisitAndEncounterData(mutate, patientUuid);
+    }
+  }, [isTabActive, mutate, patientUuid]);
 
   const setEncounterTypeToFilter = useCallback((encounterType: EncounterType) => {
     setEncounterTypeToFilterState(encounterType);

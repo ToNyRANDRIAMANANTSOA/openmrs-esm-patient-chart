@@ -154,5 +154,8 @@
   "leavingTo": "au",
   "inclusive": "inclus",
   "generalCertClosing": "Ce certificat est établi à la demande de l'intéressé(e) et remis en main propre pour faire valoir ce que de droit.",
-  "dayUnit": "jour(s)"
+  "dayUnit": "jour(s)",
+  "generalCertStatement": "Et certifie, après examen clinique, que l'état de santé de la personne susmentionnée justifie la délivrance du présent certificat médical.",
+  "deathCertStatement": "Et certifie avoir constaté le décès de la personne dont l'identité figure ci-dessus.",
+  "birthCertStatement": "Et certifie avoir assisté à la naissance ou constaté la naissance de l'enfant dont les coordonnées figurent ci-dessus."
 }

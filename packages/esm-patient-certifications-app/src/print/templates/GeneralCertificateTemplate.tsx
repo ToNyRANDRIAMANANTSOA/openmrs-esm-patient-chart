@@ -91,6 +91,13 @@ const GeneralCertificateTemplate: React.FC<Props> = ({ patientDetails, encounter
           </div>
         </div>
 
+        <div className={styles.certStatement}>
+          {t(
+            'generalCertStatement',
+            'And certifies, after clinical examination, that the health of the above-named person warrants the issuance of this medical certificate.',
+          )}
+        </div>
+
         {/* ── Medical leave — only if data exists ── */}
         {leaveDays && (
           <div className={styles.certSection}>
