@@ -94,7 +94,6 @@
     "*.{css,scss,ts,tsx}": "prettier --write --list-different"
   },
   "resolutions": {
-    "@openmrs/esm-patient-common-lib": "npm:@tebokaroa/esm-patient-common-lib@latest",
     "sass": "^1.54.3"
   },
   "packageManager": "yarn@4.10.3",

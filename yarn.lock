@@ -5502,21 +5502,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@openmrs/esm-patient-common-lib@npm:@tebokaroa/esm-patient-common-lib@latest":
-  version: 12.1.1-4
-  resolution: "@tebokaroa/esm-patient-common-lib@npm:12.1.1-4"
-  dependencies:
-    "@carbon/react": "npm:^1.83.0"
-    lodash-es: "npm:^4.18.1"
-    uuid: "npm:^8.3.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 9.x
-    react: 18.x
-    single-spa: 6.x
-  checksum: 10/de2e80835f88c6b324157c7410c41ce35da52adcfcf256f07f5c4261c84ce936f534619d0209a7d605093b696b1af65171bf0b5fcbb23c8e37939ce71bb41df7
-  languageName: node
-  linkType: hard
-
 "@openmrs/esm-patient-common-lib@workspace:packages/esm-patient-common-lib":
   version: 0.0.0-use.local
   resolution: "@openmrs/esm-patient-common-lib@workspace:packages/esm-patient-common-lib"
