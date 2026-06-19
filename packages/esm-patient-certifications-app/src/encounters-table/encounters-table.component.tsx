@@ -1,5 +1,6 @@
-import React, { type ComponentProps, useCallback, useMemo, useState } from 'react';
+import React, { type ComponentProps, useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useReactToPrint } from 'react-to-print';
 import { useSWRConfig } from 'swr';
 import {
   Button,
@@ -41,19 +42,23 @@ import {
   ExtensionSlot,
   useFeatureFlag,
   PrinterIcon,
+  age,
+  formatDate,
+  getPatientName,
+  getCoreTranslation,
 } from '@openmrs/esm-framework';
 import { invalidateVisitAndEncounterData, usePatientChartStore } from '@openmrs/esm-patient-common-lib';
 import { type ChartConfig } from '../config-schema';
 import { jsonSchemaResourceName } from '../constants';
 import {
   deleteEncounter,
-  downloadPdf,
   mapEncounter,
   useEncounterTypes,
   type EncountersTableProps,
   type MappedEncounter,
 } from './encounters-table.resource';
 import EncounterObservations from '../encounter-observations';
+import PrintComponent from '../print/print.component';
 import styles from './encounters-table.scss';
 
 /**
@@ -88,6 +93,94 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   const enableEmbeddedFormView = useFeatureFlag('enable-embedded-form-view');
   const { encounterEditableDuration, encounterEditableDurationOverridePrivileges } = useConfig<ChartConfig>();
   const [isPrinting, setIsPrinting] = useState(false);
+
+  const config = useConfig();
+  const excludePatientIdentifierCodeTypes = config?.excludePatientIdentifierCodeTypes;
+
+  const patientDetails = useMemo(() => {
+    const getGender = (gender: string): string => {
+      switch (gender) {
+        case 'male':
+          return getCoreTranslation('male');
+        case 'female':
+          return getCoreTranslation('female');
+        case 'other':
+          return getCoreTranslation('other');
+        case 'unknown':
+          return getCoreTranslation('unknown');
+        default:
+          return gender;
+      }
+    };
+
+    const identifiers =
+      patient?.identifier?.filter(
+        (identifier) => !excludePatientIdentifierCodeTypes?.uuids?.includes(identifier.type?.coding?.[0]?.code),
+      ) ?? [];
+
+    const familyName = patient?.name?.[0]?.family || '';
+    const givenName = patient?.name?.[0]?.given?.join(' ') || '';
+    const birthDate = patient?.birthDate || '';
+    const address = patient?.address?.[0]
+      ? [
+          patient.address[0].line?.join(' '),
+          patient.address[0].city,
+          patient.address[0].state,
+          patient.address[0].postalCode,
+        ]
+          .filter(Boolean)
+          .join(', ')
+      : '';
+
+    return {
+      name: patient ? getPatientName(patient) : '',
+      age: age(patient?.birthDate),
+      gender: getGender(patient?.gender),
+      location: patient?.address?.[0]?.city || '',
+      identifiers: identifiers?.length ? identifiers.map(({ value }) => value) : [],
+      familyName,
+      givenName,
+      birthDate,
+      address,
+    };
+  }, [patient, excludePatientIdentifierCodeTypes?.uuids]);
+
+  const [encountersToPrint, setEncountersToPrint] = useState<MappedEncounter[]>([]);
+  const contentToPrintRef = useRef<HTMLDivElement | null>(null);
+  const onBeforeGetContentResolve = useRef<null | ((value?: unknown) => void)>(null);
+
+  useEffect(() => {
+    if (isPrinting && onBeforeGetContentResolve.current) {
+      onBeforeGetContentResolve.current();
+    }
+  }, [isPrinting]);
+
+  const handlePrint = useReactToPrint({
+    content: () => contentToPrintRef.current,
+    documentTitle: `OpenMRS - ${patientDetails.name} - Certifications`,
+    onBeforeGetContent: () =>
+      new Promise((resolve) => {
+        onBeforeGetContentResolve.current = resolve;
+        setIsPrinting(true);
+      }),
+    onAfterPrint: () => {
+      onBeforeGetContentResolve.current = null;
+      setIsPrinting(false);
+      setEncountersToPrint([]);
+    },
+    pageStyle: `
+      @page {
+        size: A4 portrait;
+        margin: 1.5cm;
+      }
+      @media print {
+        body {
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+      }
+    `,
+  });
 
   const paginatedMappedEncounters = useMemo(
     () => (paginatedEncounters ?? []).map(mapEncounter).filter(Boolean),
@@ -166,11 +259,14 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
     [mutate, mutateVisitContext, patientUuid, t],
   );
 
-  const handlePrintSelected = (selectedRows: Array<any>) => {
-    const selectedEncounterUuids = selectedRows.map((row) => row.id);
-    setIsPrinting(true);
-    downloadPdf(selectedEncounterUuids, t).finally(() => setIsPrinting(false));
-  };
+  const handlePrintSelected = useCallback(
+    (selectedRows: Array<any>) => {
+      const selectedEncounters = selectedRows.map((row) => encountersByUuid.get(row.id)).filter(Boolean);
+      setEncountersToPrint(selectedEncounters);
+      handlePrint();
+    },
+    [encountersByUuid, handlePrint],
+  );
 
   if (isLoadingEncounterTypes || isLoading) {
     return <DataTableSkeleton role="progressbar" zebra />;
@@ -317,8 +413,8 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                                       itemText={t('printEncounter', 'Print this encounter')}
                                       disabled={isPrinting}
                                       onClick={() => {
-                                        setIsPrinting(true);
-                                        downloadPdf([encounter.id], t).finally(() => setIsPrinting(false));
+                                        setEncountersToPrint([encounter]);
+                                        handlePrint();
                                       }}
                                     />
                                   )}
@@ -445,6 +541,24 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
           }}
         />
       }
+      <div style={{ display: isPrinting ? 'block' : 'none' }}>
+        <div ref={contentToPrintRef} className={styles.printContainer}>
+          {encountersToPrint.map((encounter, index) => (
+            <div key={encounter.id} className={styles.printableEncounterPage}>
+              <PrintComponent
+                subheader={
+                  encounterTypeToFilter?.display ||
+                  encounter.encounterType ||
+                  t('medicalCertification', 'Medical Certification')
+                }
+                patientDetails={patientDetails}
+                encounter={encounter}
+              />
+              {index < encountersToPrint.length - 1 && <div className={styles.pageBreak} />}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

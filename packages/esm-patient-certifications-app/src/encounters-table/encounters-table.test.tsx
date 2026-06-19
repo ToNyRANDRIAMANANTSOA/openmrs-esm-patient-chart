@@ -57,6 +57,11 @@ const mockUseEncounterTypes = vi.fn(useEncounterTypes).mockReturnValue({
 
 const mockUseConfig = vi.mocked(useConfig);
 
+vi.mock('react-to-print', async () => ({
+  ...((await vi.importActual('react-to-print')) as object),
+  useReactToPrint: () => vi.fn(),
+}));
+
 vi.mock('./encounters-table.resource', async () => ({
   ...((await vi.importActual('./encounters-table.resource')) as object),
   useEncounterTypes: () => mockUseEncounterTypes(),

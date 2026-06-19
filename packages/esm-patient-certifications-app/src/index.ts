@@ -25,7 +25,7 @@ export const certificationsOverview = getSyncLifecycle(certificationsOverviewCom
 // export const certificationsDetailedSummary = getSyncLifecycle(certificationsDetailedSummaryComponent, options);
 export const certificationsDetailedSummary = getSyncLifecycle(medicalCertifications, options);
 
-//  extention
+// extention
 export const printCertificationsExtensionButton = getAsyncLifecycle(
   () => import('./encounters-table/encounters-table.component'),
   options,
