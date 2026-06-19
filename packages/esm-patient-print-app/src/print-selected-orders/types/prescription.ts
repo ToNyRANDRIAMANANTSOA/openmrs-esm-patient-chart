@@ -82,11 +82,13 @@ export interface Location {
   stateProvince?: string;
   country?: string;
   attributes?: {
+    display?: string;
     slogan?: string;
     addressDisplay?: string;
     phoneNumber1?: string;
     phoneNumber2?: string;
     email?: string;
+    comment?: string;
   };
   parentLocation?: Location;
 }

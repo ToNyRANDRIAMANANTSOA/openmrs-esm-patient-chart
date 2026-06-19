@@ -90,7 +90,7 @@ const DrugPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
                         </span>
                       )}
                     </td>
-                    <td>{formatDate(order?.scheduledDate) ?? '--'}</td>
+                    <td>{formatDate(order?.scheduledDate ?? order?.dateActivated, { time: false }) ?? '--'}</td>
                     <td>{order?.quantity ? order?.quantity + ' ' + order?.quantityUnits?.display : '--'}</td>
                   </tr>
 
@@ -102,6 +102,15 @@ const DrugPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
                         {order.dosingType === 'org.openmrs.SimpleDosingInstructions' &&
                           capitalize(order.dosingInstructions)}{' '}
                         {order.instructions && <> &mdash; &nbsp; {capitalize(order.instructions)}</>}
+                      </td>
+                    </tr>
+                  )}
+
+                  {order.asNeeded && (
+                    <tr className={styles.prescriptionNotes}>
+                      <td colSpan={4}>
+                        <strong>{t('takeAsNeeded', 'Take as Needed')}: </strong>
+                        {order.asNeededCondition ? capitalize(order.asNeededCondition) : '--'}
                       </td>
                     </tr>
                   )}

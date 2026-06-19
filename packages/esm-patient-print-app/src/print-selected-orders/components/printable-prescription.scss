@@ -84,10 +84,20 @@
 @media print {
   .printWrapper {
     break-after: page;
+    min-height: calc(297mm - 3cm);
+    position: relative;
+    padding-bottom: 60px;
   }
 
   .printWrapper:last-child {
     break-after: auto;
+  }
+
+  .centerDetailsFooter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 }
 
@@ -231,6 +241,27 @@
   z-index: 1;
 }
 
+.generatedNotice {
+  font-weight: 600;
+}
+
+.confidentialNotice {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.dosage {
+  @include type.type-style('heading-compact-01');
+}
+
+.label01 {
+  @include type.type-style('label-01');
+}
+
+.bodyLong01 {
+  @include type.type-style('body-01');
+}
+
 .prescriptionFooter {
   margin-top: 40px;
   padding-top: 16px;
@@ -267,27 +298,6 @@
   }
 }
 
-.generatedNotice {
-  font-weight: 600;
-}
-
-.confidentialNotice {
-  font-style: italic;
-  opacity: 0.8;
-}
-
-.dosage {
-  @include type.type-style('heading-compact-01');
-}
-
-.label01 {
-  @include type.type-style('label-01');
-}
-
-.bodyLong01 {
-  @include type.type-style('body-01');
-}
-
 @media (max-width: 768px) {
   .prescriptionFooter {
     flex-direction: column;
@@ -298,5 +308,13 @@
 @media print {
   .prescriptionFooter p {
     font-size: 11px;
+  }
+}
+
+.centerDetailsFooter {
+  margin-top: 2rem;
+  p {
+    font-size: 11px;
+    text-align: justify;
   }
 }

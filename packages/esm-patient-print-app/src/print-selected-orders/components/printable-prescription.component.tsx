@@ -33,6 +33,10 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
   const BodyComponent =
     prescriptionBodyComponentMap[prescription?.metadata?.prescriptionType] ?? prescriptionBodyComponentMap.default;
 
+  // TODO: If weight must be display, get inspiration from :
+  // VitalsHeader at openmrs-esm-patient-chart\packages\esm-patient-vitals-app\src\vitals-and-biometrics-header\vitals-header.extension.tsx:45
+  // const { data: vitals, isLoading, isValidating } = useVitalsAndBiometrics(patientUuid, 'both');
+
   return (
     <div className={styles.printWrapper}>
       {/* HEADER */}
@@ -90,7 +94,10 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
               <Loading withOverlay={false} small />
             ) : (
               <>
-                <strong className={styles.clinicInfo}>{prescription?.encounter?.visit?.location?.name}</strong>
+                <strong className={styles.clinicInfo}>
+                  {prescription?.encounter?.visit?.location?.attributes?.display ??
+                    prescription?.encounter?.visit?.location?.name}
+                </strong>
                 <br />
                 <strong>{t('contact', 'Contact:')}</strong>{' '}
                 {prescription?.encounter?.visit?.location?.attributes?.phoneNumber1}
@@ -141,6 +148,10 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
 
             <tr>
               <td>
+                <strong>{t('dob', 'Date of birth:')}</strong> {formatDateUtils(prescription?.patient?.birthdate)}
+              </td>
+
+              <td>
                 <strong>{t('age', 'Age:')}</strong> {prescription?.patient?.age}
               </td>
 
@@ -148,9 +159,9 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
                 <strong>{t('gender', 'Gender:')}</strong> {prescription?.patient?.gender}
               </td>
 
-              <td>
+              {/* <td>
                 <strong>{t('weight', 'Weight:')}</strong> {prescription?.patient?.weightKg}
-              </td>
+              </td> */}
             </tr>
 
             <tr>
@@ -170,6 +181,16 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
         isLoadingEncounters={isLoadingEncounters}
         formatDate={formatDateUtils}
       />
+
+      <div className={styles.centerDetailsFooter}>
+        <p>
+          <strong>
+            {prescription?.encounter?.visit?.location?.attributes?.display ??
+              prescription?.encounter?.visit?.location?.name}
+          </strong>
+        </p>
+        <p>{prescription?.encounter?.visit?.location?.attributes?.comment}</p>
+      </div>
     </div>
   );
 };

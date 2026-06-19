@@ -1,3 +1,4 @@
-import { formatDate, useConfig } from '@openmrs/esm-framework';
+import { formatDate, type FormatDateOptions } from '@openmrs/esm-framework';
 
-export const formatDateUtils = (dateString: string) => formatDate(new Date(dateString), { noToday: true });
+export const formatDateUtils = (dateString: string, options?: Partial<FormatDateOptions>) =>
+  dateString && formatDate(new Date(dateString), { noToday: true, ...options });
