@@ -160,9 +160,16 @@
   margin-bottom: 40px;
   position: relative;
   z-index: 1;
+}
+
+.patientInfoRow {
+  display: flex;
+  align-items: flex-start;
 
   table {
     width: 100%;
+    flex: 1;
+    min-width: 0;
     border-collapse: collapse;
   }
 
@@ -174,6 +181,16 @@
   tr:nth-child(even) {
     background-color: var(--table-row-alt);
   }
+}
+
+.qrBlock {
+  min-width: 108px;
+  width: 108px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .sectionTitleWrapper {
@@ -230,10 +247,6 @@
   display: flex;
   flex-direction: column;
   // align-items: flex-end;
-}
-
-.qrCodeCell {
-  width: 108px;
 }
 
 .block {

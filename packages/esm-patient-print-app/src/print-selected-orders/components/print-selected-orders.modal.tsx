@@ -33,6 +33,7 @@ const PrintSelectedOrdersModal: React.FC<PrintSelectedOrdersModalProps> = ({ sel
 
   // useEffect(() => {
   //   console.log('prescriptions', prescriptions);
+  //   console.log('contentToPrintRef.current', contentToPrintRef.current);
   // }, [prescriptions]);
 
   const handlePrint = useReactToPrint({
