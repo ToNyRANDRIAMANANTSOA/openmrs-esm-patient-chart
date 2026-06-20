@@ -33,6 +33,7 @@ const PrintSelectedOrdersModal: React.FC<PrintSelectedOrdersModalProps> = ({ sel
 
   // useEffect(() => {
   //   console.log('prescriptions', prescriptions);
+  //   console.log('contentToPrintRef.current', contentToPrintRef.current);
   // }, [prescriptions]);
 
   const handlePrint = useReactToPrint({
@@ -96,7 +97,7 @@ const PrintSelectedOrdersModal: React.FC<PrintSelectedOrdersModalProps> = ({ sel
           {t('cancel', 'Cancel')}
         </Button>
         <Button type="submit" onClick={handlePrint} disabled={isPrinting || isLoading}>
-          {(isPrinting || isLoading) && <Loading withOverlay={false} small description="Loading" />}
+          {(isPrinting || isLoading) && <Loading withOverlay={false} small description={t('loading', 'Loading')} />}
           {isPrinting ? t('generatingPdf', 'Generating PDF...') : t('print', 'Print')}
         </Button>
       </ModalFooter>
@@ -112,10 +113,15 @@ type PrescriptionDividerProps = {
 };
 
 export const PrescriptionDivider: React.FC<PrescriptionDividerProps> = ({ currentDocumentIndex, documentsTotal }) => {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.prescriptionDivider}>
       <div className={styles.dividerLabel}>
-        Document #{currentDocumentIndex} / {documentsTotal}
+        {t('documentOfTotal', 'Document #{{current}} / {{total}}', {
+          current: currentDocumentIndex,
+          total: documentsTotal,
+        })}
       </div>
 
       <div className={styles.dividerGradient} />

@@ -14,10 +14,10 @@ const DrugPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
     <>
       <section className={styles.block}>
         <div className={styles.sectionTitleWrapper}>
-          <strong>Prescription details:</strong>
+          <strong>{t('prescriptionDetails', 'Prescription details:')}</strong>
 
           <span>
-            <strong>Date issued:</strong>{' '}
+            <strong>{t('dateIssued', 'Date issued:')}</strong>{' '}
             {prescription?.encounter?.encounterDatetime && formatDate(prescription.encounter.encounterDatetime)}
           </span>
         </div>
@@ -25,10 +25,10 @@ const DrugPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
         <table className={styles.printPrescription}>
           <thead>
             <tr>
-              <th>Drug Name</th>
-              <th>Dosage</th>
-              <th>Start Date</th>
-              <th>Quantity</th>
+              <th>{t('drugName', 'Drug Name')}</th>
+              <th>{t('dosage', 'Dosage')}</th>
+              <th>{t('startDate', 'Start Date')}</th>
+              <th>{t('quantity', 'Quantity')}</th>
             </tr>
           </thead>
 
@@ -90,7 +90,7 @@ const DrugPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
                         </span>
                       )}
                     </td>
-                    <td>{formatDate(order?.scheduledDate) ?? '--'}</td>
+                    <td>{formatDate(order?.scheduledDate ?? order?.dateActivated, { time: false }) ?? '--'}</td>
                     <td>{order?.quantity ? order?.quantity + ' ' + order?.quantityUnits?.display : '--'}</td>
                   </tr>
 
@@ -98,10 +98,19 @@ const DrugPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
                     (order.dosingType === 'org.openmrs.SimpleDosingInstructions' && order.dosingInstructions)) && (
                     <tr className={styles.prescriptionNotes}>
                       <td colSpan={4}>
-                        <strong>Notes:</strong>{' '}
+                        <strong>{t('notes', 'Notes:')}</strong>{' '}
                         {order.dosingType === 'org.openmrs.SimpleDosingInstructions' &&
                           capitalize(order.dosingInstructions)}{' '}
                         {order.instructions && <> &mdash; &nbsp; {capitalize(order.instructions)}</>}
+                      </td>
+                    </tr>
+                  )}
+
+                  {order.asNeeded && (
+                    <tr className={styles.prescriptionNotes}>
+                      <td colSpan={4}>
+                        <strong>{t('takeAsNeeded', 'Take as Needed')}: </strong>
+                        {order.asNeededCondition ? capitalize(order.asNeededCondition) : '--'}
                       </td>
                     </tr>
                   )}
@@ -116,20 +125,24 @@ const DrugPrescriptionBody: React.FC<PrescriptionBodyProps> = ({ prescription, i
         <div className={styles.footerColumn}>
           <p>
             <u>
-              <strong>MEDICATION NOTICES:</strong>
+              <strong>{t('medicationNotices', 'MEDICATION NOTICES:')}</strong>
             </u>
           </p>
 
-          <p>This prescription is intended only for the named patient.</p>
-          <p>Follow the prescribed dosage and duration exactly as instructed.</p>
-          <p>Keep medicines out of reach of children.</p>
-          <p>Contact your healthcare provider if adverse reactions occur.</p>
+          <p>{t('prescriptionIntendedForNamedPatient', 'This prescription is intended only for the named patient.')}</p>
+          <p>{t('followPrescribedDosage', 'Follow the prescribed dosage and duration exactly as instructed.')}</p>
+          <p>{t('keepMedicinesAwayFromChildren', 'Keep medicines out of reach of children.')}</p>
+          <p>{t('contactHealthcareProvider', 'Contact your healthcare provider if adverse reactions occur.')}</p>
         </div>
 
         <div className={styles.footerColumn}>
-          <p className={styles.generatedNotice}>Electronically generated prescription</p>
+          <p className={styles.generatedNotice}>
+            {t('electronicallyGeneratedPrescription', 'Electronically generated prescription')}
+          </p>
 
-          <p className={styles.confidentialNotice}>Confidential medical information</p>
+          <p className={styles.confidentialNotice}>
+            {t('confidentialMedicalInfo', 'Confidential medical information')}
+          </p>
         </div>
       </footer>
     </>

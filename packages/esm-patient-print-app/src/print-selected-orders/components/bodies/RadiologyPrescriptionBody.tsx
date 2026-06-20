@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loading } from '@carbon/react';
+import { useTranslation } from 'react-i18next';
 import styles from '../printable-prescription.scss';
 import { type PrescriptionBodyProps } from './types';
 
@@ -8,14 +9,16 @@ const RadiologyPrescriptionBody: React.FC<PrescriptionBodyProps> = ({
   isLoadingEncounters,
   formatDate,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <section className={styles.block}>
         <div className={styles.sectionTitleWrapper}>
-          <strong>Radiology Request Details:</strong>
+          <strong>{t('radiologyRequestDetails', 'Radiology Request Details:')}</strong>
 
           <span>
-            <strong>Date issued:</strong>{' '}
+            <strong>{t('dateIssued', 'Date issued:')}</strong>{' '}
             {prescription?.encounter?.encounterDatetime && formatDate(prescription.encounter.encounterDatetime)}
           </span>
         </div>
@@ -23,10 +26,10 @@ const RadiologyPrescriptionBody: React.FC<PrescriptionBodyProps> = ({
         <table className={styles.printPrescription}>
           <thead>
             <tr>
-              <th>Exam Requested</th>
-              <th>Urgency</th>
-              <th>Clinical History</th>
-              <th>Notes</th>
+              <th>{t('examRequested', 'Exam Requested')}</th>
+              <th>{t('urgency', 'Urgency')}</th>
+              <th>{t('clinicalHistory', 'Clinical History')}</th>
+              <th>{t('notes', 'Notes:')}</th>
             </tr>
           </thead>
 
@@ -49,12 +52,14 @@ const RadiologyPrescriptionBody: React.FC<PrescriptionBodyProps> = ({
 
       <footer className={styles.prescriptionFooter}>
         <div className={styles.footerColumn}>
-          <p>Bring previous imaging reports if available.</p>
-          <p>Radiologist interpretation should be reviewed by the clinician.</p>
+          <p>{t('bringPreviousImagingReports', 'Bring previous imaging reports if available.')}</p>
+          <p>{t('radiologistInterpretation', 'Radiologist interpretation should be reviewed by the clinician.')}</p>
         </div>
 
         <div className={styles.footerColumn}>
-          <p className={styles.generatedNotice}>Electronically generated imaging request</p>
+          <p className={styles.generatedNotice}>
+            {t('electronicallyGeneratedImagingRequest', 'Electronically generated imaging request')}
+          </p>
         </div>
       </footer>
     </>

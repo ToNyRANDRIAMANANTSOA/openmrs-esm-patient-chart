@@ -84,10 +84,20 @@
 @media print {
   .printWrapper {
     break-after: page;
+    min-height: calc(297mm - 3cm);
+    position: relative;
+    padding-bottom: 60px;
   }
 
   .printWrapper:last-child {
     break-after: auto;
+  }
+
+  .centerDetailsFooter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 }
 
@@ -150,9 +160,16 @@
   margin-bottom: 40px;
   position: relative;
   z-index: 1;
+}
+
+.patientInfoRow {
+  display: flex;
+  align-items: flex-start;
 
   table {
     width: 100%;
+    flex: 1;
+    min-width: 0;
     border-collapse: collapse;
   }
 
@@ -164,6 +181,16 @@
   tr:nth-child(even) {
     background-color: var(--table-row-alt);
   }
+}
+
+.qrBlock {
+  min-width: 108px;
+  width: 108px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .sectionTitleWrapper {
@@ -222,13 +249,30 @@
   // align-items: flex-end;
 }
 
-.qrCodeCell {
-  width: 108px;
-}
-
 .block {
   position: relative;
   z-index: 1;
+}
+
+.generatedNotice {
+  font-weight: 600;
+}
+
+.confidentialNotice {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.dosage {
+  @include type.type-style('heading-compact-01');
+}
+
+.label01 {
+  @include type.type-style('label-01');
+}
+
+.bodyLong01 {
+  @include type.type-style('body-01');
 }
 
 .prescriptionFooter {
@@ -267,27 +311,6 @@
   }
 }
 
-.generatedNotice {
-  font-weight: 600;
-}
-
-.confidentialNotice {
-  font-style: italic;
-  opacity: 0.8;
-}
-
-.dosage {
-  @include type.type-style('heading-compact-01');
-}
-
-.label01 {
-  @include type.type-style('label-01');
-}
-
-.bodyLong01 {
-  @include type.type-style('body-01');
-}
-
 @media (max-width: 768px) {
   .prescriptionFooter {
     flex-direction: column;
@@ -298,5 +321,13 @@
 @media print {
   .prescriptionFooter p {
     font-size: 11px;
+  }
+}
+
+.centerDetailsFooter {
+  margin-top: 2rem;
+  p {
+    font-size: 11px;
+    text-align: justify;
   }
 }

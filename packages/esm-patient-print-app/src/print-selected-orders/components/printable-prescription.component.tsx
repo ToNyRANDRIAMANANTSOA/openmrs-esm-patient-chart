@@ -28,10 +28,51 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
 
   const { translationKey, defaultLabel } = getPrescriptionTypeMetadata(prescription?.metadata?.prescriptionType);
 
-  const { logo } = useConfig<ConfigSchema>();
+  const { logo, prescriptionsPrint } = useConfig<ConfigSchema>();
+
+  const getQrValue = (valueType: string): string | null => {
+    switch (valueType) {
+      case 'patient_uuid':
+        return `{"uuid":"${prescription?.patient?.uuid}","res":"patient"}`;
+      case 'visit_uuid':
+        return `{"uuid":"${prescription?.encounter?.visit?.uuid}","res":"visit"}`;
+      default:
+        return null;
+    }
+  };
+
+  const getQrBottomText = (source: string, customValue: string): React.ReactNode | null => {
+    switch (source) {
+      case 'patient_identifier':
+        return <code>{prescription?.patient?.identifiers?.[0]}</code>;
+      case 'visit_label':
+        return <strong>{t('visitDetails', 'Visit Details')}</strong>;
+      case 'custom':
+        return customValue || null;
+      default:
+        return null;
+    }
+  };
+
+  const { showPatientIdentifierRow } = prescriptionsPrint;
+
+  const leftQrValue = getQrValue(prescriptionsPrint.leftQrCode.valueType);
+  const leftQrBottomText = getQrBottomText(
+    prescriptionsPrint.leftQrCode.bottomTextSource,
+    prescriptionsPrint.leftQrCode.bottomTextCustomValue,
+  );
+  const rightQrValue = getQrValue(prescriptionsPrint.rightQrCode.valueType);
+  const rightQrBottomText = getQrBottomText(
+    prescriptionsPrint.rightQrCode.bottomTextSource,
+    prescriptionsPrint.rightQrCode.bottomTextCustomValue,
+  );
 
   const BodyComponent =
     prescriptionBodyComponentMap[prescription?.metadata?.prescriptionType] ?? prescriptionBodyComponentMap.default;
+
+  // TODO: If weight must be display, get inspiration from :
+  // VitalsHeader at openmrs-esm-patient-chart\packages\esm-patient-vitals-app\src\vitals-and-biometrics-header\vitals-header.extension.tsx:45
+  // const { data: vitals, isLoading, isValidating } = useVitalsAndBiometrics(patientUuid, 'both');
 
   return (
     <div className={styles.printWrapper}>
@@ -70,12 +111,15 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
                 <br />
                 <span>{prescription?.provider?.attributes?.specialties}</span>
                 <br />
-                <strong>{prescription?.provider?.attributes?.licenseType ?? 'Nº Ordre'}:</strong>{' '}
+                <strong>
+                  {prescription?.provider?.attributes?.licenseType ?? t('licenseTypeDefault', 'Nº Ordre')}:
+                </strong>{' '}
                 <span>{prescription?.provider?.attributes?.licenseNb}</span>
                 {prescription?.provider?.attributes?.phoneNumber && (
                   <>
                     <br />
-                    <strong>Phone:</strong> <span>{prescription?.provider?.attributes?.phoneNumber}</span>
+                    <strong>{t('phone', 'Phone:')}</strong>{' '}
+                    <span>{prescription?.provider?.attributes?.phoneNumber}</span>
                   </>
                 )}
               </div>
@@ -87,14 +131,18 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
               <Loading withOverlay={false} small />
             ) : (
               <>
-                <strong className={styles.clinicInfo}>{prescription?.encounter?.visit?.location?.name}</strong>
+                <strong className={styles.clinicInfo}>
+                  {prescription?.encounter?.visit?.location?.attributes?.display ??
+                    prescription?.encounter?.visit?.location?.name}
+                </strong>
                 <br />
-                <strong>Contact:</strong> {prescription?.encounter?.visit?.location?.attributes?.phoneNumber1}
+                <strong>{t('contact', 'Contact:')}</strong>{' '}
+                {prescription?.encounter?.visit?.location?.attributes?.phoneNumber1}
                 {prescription?.encounter?.visit?.location?.attributes?.phoneNumber2 && (
                   <> {prescription?.encounter?.visit?.location?.attributes?.phoneNumber2}</>
                 )}
                 <br />
-                <strong>Email:</strong> {prescription?.encounter?.visit?.location?.attributes?.email}
+                <strong>{t('email', 'Email:')}</strong> {prescription?.encounter?.visit?.location?.attributes?.email}
                 <br />
                 {prescription?.encounter?.visit?.location?.attributes?.addressDisplay}
               </>
@@ -105,59 +153,86 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
 
       {/* PATIENT INFO */}
       <div className={styles.patientInfo}>
-        <table>
-          <tbody>
-            <tr>
-              <td rowSpan={4} className={styles.qrCodeCell}>
-                <QRCodeSVG value={`{"uuid":"${prescription?.patient?.uuid}","res":"patient"}`} size={96} />
-                <br />
-                <code>{prescription?.patient?.identifiers?.[0]}</code>
-              </td>
-
-              <td colSpan={3}>
-                <strong>Patient Name:</strong> <span className={styles.value}>{prescription?.patient?.display}</span>
-              </td>
-
-              <td rowSpan={5} className={styles.qrCodeCell}>
-                {isLoadingEncounters ? (
-                  <Loading withOverlay={false} small />
-                ) : (
-                  <>
-                    <QRCodeSVG value={`{"uuid":"${prescription?.encounter?.visit?.uuid}","res":"visit"}`} size={96} />
-
-                    <span>
+        <div className={styles.patientInfoRow}>
+          {(leftQrValue || leftQrBottomText) && (
+            <div className={styles.qrBlock}>
+              {isLoadingEncounters ? (
+                <Loading withOverlay={false} small />
+              ) : (
+                <>
+                  {leftQrValue && <QRCodeSVG value={leftQrValue} size={96} />}
+                  {leftQrBottomText && (
+                    <>
                       <br />
-                      <strong>Visit Details</strong>
-                    </span>
-                  </>
-                )}
-              </td>
-            </tr>
+                      {leftQrBottomText}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          )}
 
-            <tr>
-              <td>
-                <strong>Age:</strong> {prescription?.patient?.age}
-              </td>
+          <table>
+            <tbody>
+              {showPatientIdentifierRow && (
+                <tr>
+                  <td colSpan={3}>
+                    <strong>{t('patientId', 'Patient ID:')}</strong>{' '}
+                    <span className={styles.value}>{prescription?.patient?.identifiers?.[0]}</span>
+                  </td>
+                </tr>
+              )}
 
-              <td>
-                <strong>Gender:</strong> {prescription?.patient?.gender}
-              </td>
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('patientName', 'Patient Name:')}</strong>{' '}
+                  <span className={styles.value}>{prescription?.patient?.display}</span>
+                </td>
+              </tr>
 
-              <td>
-                <strong>Weight:</strong> {prescription?.patient?.weightKg}
-              </td>
-            </tr>
+              <tr>
+                <td>
+                  <strong>{t('dob', 'Date of birth:')}</strong> {formatDateUtils(prescription?.patient?.birthdate)}
+                </td>
 
-            <tr>
-              <td colSpan={3}>
-                <strong>Allergies:</strong>{' '}
-                {prescription?.patient?.allergies?.length
-                  ? prescription.patient.allergies.join(', ')
-                  : 'No allergies recorded'}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <td>
+                  <strong>{t('age', 'Age:')}</strong> {prescription?.patient?.age}
+                </td>
+
+                <td>
+                  <strong>{t('gender', 'Gender:')}</strong> {prescription?.patient?.gender}
+                </td>
+              </tr>
+
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('allergies', 'Allergies:')}</strong>{' '}
+                  {prescription?.patient?.allergies?.length
+                    ? prescription.patient.allergies.join(', ')
+                    : t('noAllergiesRecorded', 'No allergies recorded')}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          {(rightQrValue || rightQrBottomText) && (
+            <div className={styles.qrBlock}>
+              {isLoadingEncounters ? (
+                <Loading withOverlay={false} small />
+              ) : (
+                <>
+                  {rightQrValue && <QRCodeSVG value={rightQrValue} size={96} />}
+                  {rightQrBottomText && (
+                    <>
+                      <br />
+                      {rightQrBottomText}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <BodyComponent
@@ -165,6 +240,16 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
         isLoadingEncounters={isLoadingEncounters}
         formatDate={formatDateUtils}
       />
+
+      <div className={styles.centerDetailsFooter}>
+        <p>
+          <strong>
+            {prescription?.encounter?.visit?.location?.attributes?.display ??
+              prescription?.encounter?.visit?.location?.name}
+          </strong>
+        </p>
+        <p>{prescription?.encounter?.visit?.location?.attributes?.comment}</p>
+      </div>
     </div>
   );
 };
