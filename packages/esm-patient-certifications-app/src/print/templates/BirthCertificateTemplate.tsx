@@ -71,6 +71,10 @@ const BirthCertificateTemplate: React.FC<Props> = ({ patientDetails, encounter }
           </div>
         </div>
 
+        <div className={styles.certStatement}>
+          {t('birthCertStatement', 'And certifies having attended or ascertained the birth of the child identified above.')}
+        </div>
+
         <div className={styles.closingStatement}>{t('birthCertClosing')}</div>
 
         <div className={styles.dateAndPlaceRow}>

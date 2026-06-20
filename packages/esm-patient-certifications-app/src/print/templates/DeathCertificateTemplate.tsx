@@ -74,6 +74,10 @@ const DeathCertificateTemplate: React.FC<Props> = ({ patientDetails, encounter }
           </div>
         </div>
 
+        <div className={styles.certStatement}>
+          {t('deathCertStatement', 'And certifies having ascertained the death of the above-named person.')}
+        </div>
+
         {/* ── Death info — only fields that have values ── */}
         {(dateOfDeath || placeOfDeath || causeOfDeath) && (
           <div className={styles.certSection}>

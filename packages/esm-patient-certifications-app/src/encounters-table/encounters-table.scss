@@ -115,14 +115,45 @@
   }
 }
 
+// Portal is rendered (so images are fetched) but invisible on screen.
+// display:none would prevent the browser from loading the logo image.
+:global(#certifications-print-root) {
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -9999;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 1.5cm;
+}
+
 @media print {
+  // Hide everything except the portal mounted at body level
+  :global(body > *:not(#certifications-print-root)) {
+    display: none !important;
+  }
+
+  // Reset the screen-hiding overrides so the portal flows normally on print
+  :global(#certifications-print-root) {
+    opacity: 1 !important;
+    position: static !important;
+    z-index: auto !important;
+    pointer-events: auto !important;
+  }
+
   .printContainer {
     width: 100%;
+    background: white;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
   .printableEncounterPage {
     page-break-after: always;
-    page-break-inside: avoid;
 
     &:last-child {
       page-break-after: avoid;
