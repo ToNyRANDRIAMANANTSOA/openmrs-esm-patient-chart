@@ -253,6 +253,14 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
       header: t('dateAndTime', 'Date & time'),
       key: 'datetime',
     },
+    {
+      header: t('form', 'Form name'),
+      key: 'formName',
+    },
+    {
+      header: t('provider', 'Provider'),
+      key: 'provider',
+    },
     ...(showVisitType
       ? [
           {
@@ -264,14 +272,6 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
     {
       header: t('encounterType', 'Encounter type'),
       key: 'encounterType',
-    },
-    {
-      header: t('form', 'Form name'),
-      key: 'formName',
-    },
-    {
-      header: t('provider', 'Provider'),
-      key: 'provider',
     },
   ];
 
