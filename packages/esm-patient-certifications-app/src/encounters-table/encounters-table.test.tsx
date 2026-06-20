@@ -1,0 +1,456 @@
+/* eslint-disable testing-library/no-node-access */
+import { vi, describe, it, expect, test, beforeEach, afterEach } from 'vitest';
+/* Please re-enable this ESLint rule if you are able to find a practical way to test the overflow menu buttons
+   without using parentElement and the expanded row functionality without using nextElementSibling. */
+
+import React from 'react';
+import {
+  ExtensionSlot,
+  getDefaultsFromConfigSchema,
+  showModal,
+  useConfig,
+  useFeatureFlag,
+  userHasAccess,
+} from '@openmrs/esm-framework';
+import { usePatientChartStore } from '@openmrs/esm-patient-common-lib';
+import { screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { mockEncountersAlice, mockFhirPatient, mockPatientAlice } from '__mocks__';
+import { renderWithSwr } from 'tools';
+import { type EncountersTableProps } from './encounters-table.resource';
+import { type ChartConfig, esmPatientChartSchema } from '../config-schema';
+import { jsonSchemaResourceName } from '../constants';
+import EncountersTable from './encounters-table.component';
+
+const testProps: EncountersTableProps = {
+  patientUuid: mockPatientAlice.uuid,
+  paginatedEncounters: mockEncountersAlice,
+  totalCount: mockEncountersAlice.length,
+  currentPage: 1,
+  goTo: vi.fn(),
+  isLoading: false,
+  showVisitType: true,
+  showFormNameFilter: false,
+  pageSize: 10,
+  setPageSize: vi.fn(),
+  isSelectable: true,
+  canPrintEncounters: true,
+};
+
+const mockShowModal = vi.mocked(showModal);
+const mockUserHasAccess = vi.mocked(userHasAccess).mockReturnValue(true);
+const mockUseFeatureFlag = vi.mocked(useFeatureFlag);
+const mockExtensionSlot = vi.mocked(ExtensionSlot);
+const mockUsePatientChartStore = vi.mocked(usePatientChartStore);
+
+const mockUseConfig = vi.mocked(useConfig);
+
+vi.mock('./encounters-table.resource', async () => ({
+  ...((await vi.importActual('./encounters-table.resource')) as object),
+  useEncounterTypes: () => ({
+    data: [],
+    totalCount: 0,
+    hasMore: false,
+    loadMore: vi.fn(),
+    error: undefined,
+    mutate: vi.fn(),
+    isValidating: false,
+    isLoading: false,
+    nextUri: '',
+  }),
+}));
+
+vi.mock('@openmrs/esm-patient-common-lib', async () => ({
+  ...((await vi.importActual('@openmrs/esm-patient-common-lib')) as object),
+  usePatientChartStore: vi.fn(),
+}));
+
+beforeEach(() => {
+  mockUseFeatureFlag.mockReturnValue(true);
+  mockUsePatientChartStore.mockReturnValue({
+    patientUuid: mockPatientAlice.uuid,
+    patient: mockFhirPatient,
+    visitContext: null,
+    mutateVisitContext: vi.fn(),
+    setPatient: vi.fn(),
+    setVisitContext: vi.fn(),
+  } as any);
+});
+
+describe('EncountersTable', () => {
+  it('renders an empty state when no encounters are available', async () => {
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return getDefaultsFromConfigSchema(esmPatientChartSchema);
+    });
+    renderEncountersTable({ totalCount: 0, paginatedEncounters: [] });
+
+    expect(screen.getByText(/No encounters to display/i)).toBeInTheDocument();
+  });
+
+  it("renders a tabular overview of the patient's clinical encounters", async () => {
+    renderEncountersTable();
+
+    await screen.findByRole('table');
+
+    const expectedColumnHeaders = [/date & time/, /visit type/, /encounter type/, /form name/, /provider/];
+    const expectedTableRows = [
+      /select row 18\-jan\-2022, 04:25 pm facility visit admission poc consent form \-\- options/,
+      /select row 03\-aug\-2021, 12:47 am facility visit visit note \-\- user one options/,
+      /select row 05\-jul\-2021, 10:07 am facility visit consultation covid 19 dennis the doctor options/,
+    ];
+
+    expectedColumnHeaders.forEach((header) => {
+      expect(screen.getByRole('columnheader', { name: new RegExp(header, 'i') })).toBeInTheDocument();
+    });
+    expectedTableRows.forEach((row) => {
+      expect(screen.getByRole('row', { name: new RegExp(row, 'i') })).toBeInTheDocument();
+    });
+  });
+
+  it('passes visit and patient context to embedded form slot state', async () => {
+    const user = userEvent.setup();
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return getDefaultsFromConfigSchema(esmPatientChartSchema);
+    });
+    const encounterWithEmbeddedForm = {
+      ...mockEncountersAlice[0],
+      form: {
+        ...mockEncountersAlice[0].form,
+        resources: [
+          {
+            uuid: 'embedded-form-resource',
+            name: jsonSchemaResourceName,
+            dataType: 'AmpathJsonSchema',
+            valueReference: 'embedded-schema-reference',
+          },
+        ],
+      },
+    };
+
+    renderEncountersTable({
+      paginatedEncounters: [encounterWithEmbeddedForm],
+      totalCount: 1,
+    });
+
+    const [expandButton] = screen.getAllByRole('button', { name: /expand current row/i });
+    await user.click(expandButton);
+
+    await waitFor(() => {
+      expect(mockExtensionSlot.mock.calls.find((call) => call[0].name === 'form-widget-slot')).toBeDefined();
+    });
+
+    const formWidgetCall = mockExtensionSlot.mock.calls.find((call) => call[0].name === 'form-widget-slot');
+    expect(formWidgetCall?.[0]?.state).toEqual(
+      expect.objectContaining({
+        visitUuid: encounterWithEmbeddedForm.visit.uuid,
+        visitTypeUuid: encounterWithEmbeddedForm.visit.visitType.uuid,
+        patientUuid: mockPatientAlice.uuid,
+        patient: mockFhirPatient,
+      }),
+    );
+  });
+
+  it('passes null visit context values to embedded form slot state for visitless encounters', async () => {
+    const user = userEvent.setup();
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return getDefaultsFromConfigSchema(esmPatientChartSchema);
+    });
+    const visitlessEncounterWithEmbeddedForm = {
+      ...mockEncountersAlice[0],
+      visit: null,
+      form: {
+        ...mockEncountersAlice[0].form,
+        resources: [
+          {
+            uuid: 'visitless-embedded-form-resource',
+            name: jsonSchemaResourceName,
+            dataType: 'AmpathJsonSchema',
+            valueReference: 'visitless-embedded-schema-reference',
+          },
+        ],
+      },
+    };
+
+    renderEncountersTable({
+      paginatedEncounters: [visitlessEncounterWithEmbeddedForm],
+      totalCount: 1,
+    });
+
+    const [expandButton] = screen.getAllByRole('button', { name: /expand current row/i });
+    await user.click(expandButton);
+
+    await waitFor(() => {
+      expect(mockExtensionSlot.mock.calls.find((call) => call[0].name === 'form-widget-slot')).toBeDefined();
+    });
+
+    const formWidgetCall = mockExtensionSlot.mock.calls.find((call) => call[0].name === 'form-widget-slot');
+    expect(formWidgetCall?.[0]?.state).toEqual(
+      expect.objectContaining({
+        visitUuid: null,
+        visitTypeUuid: null,
+        visitStartDatetime: null,
+        visitStopDatetime: null,
+        patientUuid: mockPatientAlice.uuid,
+        patient: mockFhirPatient,
+      }),
+    );
+  });
+});
+
+describe('Encounter editability', () => {
+  let dateNowSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    dateNowSpy = vi.spyOn(Date, 'now').mockImplementation(() => new Date('2022-01-18T20:00:00.000Z').getTime());
+  });
+
+  afterEach(() => {
+    dateNowSpy.mockRestore();
+  });
+
+  it('displays edit and delete encounter buttons by default', async () => {
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return getDefaultsFromConfigSchema(esmPatientChartSchema);
+    });
+    mockUserHasAccess.mockImplementation((privilege) => privilege == null);
+    const user = userEvent.setup();
+
+    renderEncountersTable();
+
+    const row = screen.getByRole('row', {
+      name: /Select row 18-Jan-2022, 04:25 PM Facility Visit Admission POC Consent Form -- Options/i,
+    });
+
+    // Check overflow menu buttons
+    await user.click(within(row).getByRole('button', { name: /options/i }));
+    const overflowMenu = screen.getAllByText('Focus sentinel')[0].parentElement;
+    expect(within(overflowMenu).getByText(/edit this encounter/i)).toBeInTheDocument();
+    expect(within(overflowMenu).getByText(/Delete this encounter/i)).toBeInTheDocument();
+    await user.click(within(row).getByRole('button', { name: /options/i }));
+    expect(screen.queryByText('Focus sentinel')).not.toBeInTheDocument();
+
+    // Check big buttons in expanded row
+    await user.click(within(row).getByRole('button', { name: /expand current row/i }));
+    const expandedRow = row.nextElementSibling as HTMLElement;
+    expect(within(expandedRow).getByRole('button', { name: /edit this encounter/i })).toBeInTheDocument();
+    expect(within(expandedRow).getByRole('button', { name: /danger\s*Delete this encounter/i })).toBeInTheDocument();
+  });
+
+  it('displays edit and delete encounter buttons only if the encounter is within the editable duration', async () => {
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return {
+        ...(getDefaultsFromConfigSchema(esmPatientChartSchema) as ChartConfig),
+        encounterEditableDuration: 1440,
+        encounterEditableDurationOverridePrivileges: ['Super Edit Encounter', 'Magic Superpowers'],
+      };
+    });
+    mockUserHasAccess.mockImplementation((privilege) => privilege == null);
+
+    const user = userEvent.setup();
+
+    renderEncountersTable();
+
+    // Check today's encounter -- should be editable
+    const todayRow = screen.getByRole('row', {
+      name: /Select row 18-Jan-2022, 04:25 PM Facility Visit Admission POC Consent Form -- Options/i,
+    });
+
+    // Check overflow menu buttons
+    await user.click(within(todayRow).getByRole('button', { name: /options/i }));
+    const overflowMenu = screen.getAllByText('Focus sentinel')[0].parentElement;
+    expect(within(overflowMenu).getByText(/edit this encounter/i)).toBeInTheDocument();
+    expect(within(overflowMenu).getByText(/Delete this encounter/i)).toBeInTheDocument();
+    await user.click(within(todayRow).getByRole('button', { name: /options/i }));
+    expect(screen.queryByText('Focus sentinel')).not.toBeInTheDocument();
+
+    // Check big buttons in expanded row
+    await user.click(within(todayRow).getByRole('button', { name: /expand current row/i }));
+    const expandedTodayRow = todayRow.nextElementSibling as HTMLElement;
+    await user.click(within(expandedTodayRow).getByRole('button', { name: /edit this encounter/i }));
+    expect(within(expandedTodayRow).getByRole('button', { name: /edit this encounter/i })).toBeInTheDocument();
+    expect(
+      within(expandedTodayRow).getByRole('button', { name: /danger\s*Delete this encounter/i }),
+    ).toBeInTheDocument();
+
+    // Check old encounter -- should not be editable
+    const oldRow = screen.getByRole('row', {
+      name: /Select row 03-Aug-2021, 12:47 AM Facility Visit Visit Note -- User One/i,
+    });
+    expect(within(oldRow).queryByRole('button', { name: /options/i })).not.toBeInTheDocument();
+    await user.click(within(oldRow).getByRole('button', { name: /expand current row/i }));
+    const expandedOldRow = oldRow.nextElementSibling as HTMLElement;
+    expect(within(expandedOldRow).queryByRole('button', { name: /edit this encounter/i })).not.toBeInTheDocument();
+    expect(
+      within(expandedOldRow).queryByRole('button', { name: /danger\s*Delete this encounter/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays edit and delete buttons if the user has the override privilege, even if the encounter is outside the editable duration', async () => {
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return {
+        ...(getDefaultsFromConfigSchema(esmPatientChartSchema) as ChartConfig),
+        encounterEditableDuration: 1440,
+        encounterEditableDurationOverridePrivileges: ['Super Edit Encounter', 'Magic Superpowers'],
+      };
+    });
+
+    mockUserHasAccess.mockImplementation((privilege) => privilege == null || privilege === 'Magic Superpowers');
+
+    const user = userEvent.setup();
+
+    renderEncountersTable();
+
+    const oldRow = screen.getByRole('row', {
+      name: /Select row 03-Aug-2021, 12:47 AM Facility Visit Visit Note -- User One Options/i,
+    });
+
+    // Check overflow menu buttons
+    await user.click(within(oldRow).getByRole('button', { name: /options/i }));
+    const overflowMenu = screen.getAllByText('Focus sentinel')[0].parentElement;
+    expect(within(overflowMenu).getByText(/edit this encounter/i)).toBeInTheDocument();
+    expect(within(overflowMenu).getByText(/Delete this encounter/i)).toBeInTheDocument();
+    await user.click(within(oldRow).getByRole('button', { name: /options/i }));
+    expect(screen.queryByText('Focus sentinel')).not.toBeInTheDocument();
+
+    // Check big buttons in expanded row
+    await user.click(within(oldRow).getByRole('button', { name: /expand current row/i }));
+    const expandedOldRow = oldRow.nextElementSibling as HTMLElement;
+    expect(within(expandedOldRow).getByRole('button', { name: /edit this encounter/i })).toBeInTheDocument();
+    expect(within(expandedOldRow).getByRole('button', { name: /danger\s*Delete this encounter/i })).toBeInTheDocument();
+  });
+});
+
+describe('Delete Encounter', () => {
+  beforeEach(() => {
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return getDefaultsFromConfigSchema(esmPatientChartSchema);
+    });
+    mockUserHasAccess.mockReturnValue(true);
+  });
+
+  it('Clicking the `Delete` button deletes an encounter', async () => {
+    const user = userEvent.setup();
+
+    renderEncountersTable();
+
+    await screen.findByRole('table');
+    expect(screen.getByRole('table')).toBeInTheDocument();
+
+    const row = screen.getByRole('row', {
+      name: /Select row 18-Jan-2022, 04:25 PM Facility Visit Admission POC Consent Form -- Options/i,
+    });
+
+    await user.click(within(row).getByRole('button', { name: /expand current row/i }));
+    const expandedRow = row.nextElementSibling as HTMLElement;
+    await user.click(within(expandedRow).getByRole('button', { name: /danger\s*Delete this encounter/i }));
+
+    expect(mockShowModal).toHaveBeenCalledTimes(1);
+    expect(mockShowModal).toHaveBeenCalledWith(
+      'delete-encounter-modal',
+      expect.objectContaining({
+        encounterTypeName: 'POC Consent Form',
+      }),
+    );
+  });
+});
+
+function renderEncountersTable(props: Partial<EncountersTableProps> = {}) {
+  renderWithSwr(<EncountersTable {...testProps} {...props} />);
+}
+
+describe('EncountersTable print functionality', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let onPrintStateChange: any;
+
+  beforeEach(() => {
+    onPrintStateChange = vi.fn();
+    mockUseConfig.mockImplementation((options) => {
+      if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
+        return { htmlFormEntryForms: [] };
+      }
+      return getDefaultsFromConfigSchema(esmPatientChartSchema);
+    });
+    mockUserHasAccess.mockReturnValue(true);
+  });
+
+  it('hides selection checkboxes when canPrintEncounters is false', async () => {
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: false,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
+
+    await screen.findByRole('table');
+
+    expect(screen.queryByRole('checkbox', { name: /select all rows/i })).not.toBeInTheDocument();
+  });
+
+  it('shows selection checkboxes when isSelectable and canPrintEncounters are true', async () => {
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: true,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
+
+    await screen.findByRole('table');
+
+    expect(screen.getByRole('checkbox', { name: /select all rows/i })).toBeInTheDocument();
+  });
+
+  it('calls onPrintStateChange with disabled=true when no rows are selected', async () => {
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: true,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
+
+    await screen.findByRole('table');
+
+    await waitFor(() => {
+      expect(onPrintStateChange).toHaveBeenCalledWith(expect.objectContaining({ disabled: true }));
+    });
+  });
+
+  it('calls onPrintStateChange with disabled=false after selecting a row', async () => {
+    const user = userEvent.setup();
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: true,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
+
+    await screen.findByRole('table');
+
+    const firstRowCheckbox = screen.getAllByRole('checkbox', { name: /select row/i })[0];
+    await user.click(firstRowCheckbox);
+
+    await waitFor(() => {
+      expect(onPrintStateChange).toHaveBeenCalledWith(expect.objectContaining({ disabled: false }));
+    });
+  });
+});

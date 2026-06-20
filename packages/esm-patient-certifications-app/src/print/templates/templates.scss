@@ -1,0 +1,309 @@
+// ─────────────────────────────────────────────────────────────
+// Certificate template styles — Modern clean design
+// ─────────────────────────────────────────────────────────────
+
+// ── Base page ──
+.certFullPage {
+  display: block;
+  width: 100%;
+  font-family: 'Times New Roman', Times, serif;
+  color: #111;
+  line-height: 1.7;
+  font-size: 11pt;
+}
+
+// ── Certificate Header (Logo) ──
+.certHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.certLogo {
+  max-height: 64px;
+  max-width: 200px;
+  object-fit: contain;
+}
+
+.certLogoName {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13pt;
+  font-weight: bold;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+// ── Title ──
+.certTitle {
+  text-align: center;
+  font-size: 14pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin: 0 0 28px;
+  padding: 8px 0 10px;
+  border-bottom: 2pt solid #111;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+// ── Body wrapper ──
+.certBody {
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Section block ──
+.certSection {
+  margin-bottom: 14px;
+}
+
+.certSectionLabel {
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 7pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+// ── Field grid (2-column) ──
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 32px;
+}
+
+.fieldGridFull {
+  grid-column: 1 / -1;
+}
+
+// ── Single field item: label above value ──
+.fieldItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fieldLabel {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: #888;
+}
+
+.fieldValue {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 11pt;
+  font-weight: bold;
+  color: #111;
+  min-height: 22px;
+  padding-bottom: 3px;
+  border-bottom: 0.75pt solid #bbb;
+}
+
+// ── Main statement (italic, left-border accent) ──
+.certStatement {
+  margin: 12px 0;
+  padding: 8px 14px;
+  border-left: 3pt solid #111;
+  background-color: #fafafa;
+  font-style: italic;
+  font-size: 11pt;
+  line-height: 1.6;
+}
+
+// ── Section sub-heading ──
+.sectionHeader {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 8.5pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #444;
+  margin: 16px 0 8px;
+}
+
+// ── Checkbox row (sports / diving decisions) ──
+.checkboxOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  span {
+    margin-right: 2px;
+  }
+}
+
+.checkboxBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5pt solid #111;
+  font-weight: bold;
+  font-size: 10pt;
+  flex-shrink: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.checkboxSportValue {
+  font-weight: bold;
+  font-style: italic;
+  color: #111;
+}
+
+.subCheckboxGroup {
+  margin-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+// ── Closing note ──
+.closingStatement {
+  margin-top: 10px;
+  font-size: 9.5pt;
+  color: #555;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+// ── Date / place row ──
+.dateAndPlaceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 10.5pt;
+
+  span {
+    white-space: nowrap;
+  }
+
+  .dateValue {
+    font-weight: bold;
+  }
+}
+
+// ── Signature boxes ──
+.signatureSection {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 32px;
+  page-break-inside: avoid;
+}
+
+.signatureLine {
+  flex: 1;
+  border: 0.75pt solid #bbb;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 6px 12px 10px;
+}
+
+// Kept for backward compat (not visually rendered)
+.signatureLineBar {
+  flex: 1;
+}
+
+.signatureLabel {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 7.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 6px;
+  border-top: 0.5pt solid #ccc;
+  margin-top: 4px;
+}
+
+// ── General cert – classic form line style ──
+.certFormLine {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 14px;
+  gap: 6px;
+  font-size: 11pt;
+  line-height: 1.6;
+}
+
+.certFormLineLabel {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.certFormLineValue {
+  flex: 1;
+  border-bottom: 1pt solid #555;
+  padding-bottom: 2px;
+  font-weight: bold;
+  min-width: 80px;
+  min-height: 18px;
+}
+
+.certFormLineTwoCol {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex: 1;
+}
+
+.certBoldHeader {
+  font-weight: bold;
+  font-size: 11pt;
+  margin: 20px 0 14px;
+}
+
+.certCheckboxRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 12px 20px;
+  font-size: 11pt;
+}
+
+.certClosingBold {
+  font-weight: bold;
+  font-size: 11pt;
+  margin-top: 28px;
+  line-height: 1.8;
+}
+
+// ── Misc helpers ──
+.boldInline {
+  font-weight: bold;
+}
+
+// ── Legacy compat (certBodyOnly) ──
+.certBodyOnly {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 11pt;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.certBodyOnlyTitle {
+  text-align: center;
+  font-size: 13pt;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}

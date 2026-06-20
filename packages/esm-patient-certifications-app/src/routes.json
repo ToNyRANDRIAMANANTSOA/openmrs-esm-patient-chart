@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.openmrs.org/routes.schema.json",
+  "backendDependencies": {
+    "webservices.rest": ">=2.2.0"
+  },
+  "extensions": [
+    {
+      "name": "certifications-overview-widget",
+      "component": "certificationsOverview",
+      "meta": {
+        "fullWidth": false
+      },
+      "order": 6
+    },
+    {
+      "name": "certifications-details-widget",
+      "slot": "patient-chart-certifications-dashboard-slot",
+      "component": "certificationsDetailedSummary",
+      "order": 6
+    },
+    {
+      "name": "certifications-summary-dashboard",
+      "slot": "patient-chart-dashboard-slot",
+      "component": "certificationsDashboardLink",
+      "meta": {
+        "slot": "patient-chart-certifications-dashboard-slot",
+        "path": "certifications"
+      },
+      "order": 10
+    },
+    {
+      "name": "certifications-print-button",
+      "slot": "certifications-print-actions-slot",
+      "component": "printCertificationsExtensionButton"
+    }
+  ],
+  "pages": [],
+  "workspaces2": [
+    {
+      "name": "certifications-form-workspace",
+      "component": "certificationsFormWorkspace",
+      "window": "certifications-form-window"
+    }
+  ],
+  "workspaceWindows2": [
+    {
+      "name": "certifications-form-window",
+      "group": "patient-chart"
+    }
+  ],
+  "modals": [
+    {
+      "name": "certification-delete-confirmation-modal",
+      "component": "deleteCertificationConfirmationModal"
+    }
+  ]
+}
+

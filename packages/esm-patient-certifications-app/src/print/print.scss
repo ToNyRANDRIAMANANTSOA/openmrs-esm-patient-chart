@@ -1,0 +1,144 @@
+@use '@carbon/colors';
+@use '@carbon/layout';
+@use '@carbon/type';
+
+@media screen {
+  .printPage {
+    display: none;
+  }
+}
+
+@media print {
+  .printPage {
+    display: block;
+    width: 100%;
+    margin-bottom: layout.$spacing-06;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: layout.$spacing-05;
+  }
+
+  .headerTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    padding-bottom: layout.$spacing-05;
+    border-bottom: 2px solid colors.$gray-20;
+    margin-bottom: layout.$spacing-05;
+  }
+
+  .logoWrap {
+    display: flex;
+    align-items: center;
+    max-height: 48px;
+
+    .logo {
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .logoName {
+      @include type.type-style('heading-03');
+      font-weight: bold;
+      color: colors.$blue-60;
+    }
+  }
+
+  .printedByWrap {
+    text-align: right;
+    @include type.type-style('body-compact-01');
+    color: colors.$gray-60;
+
+    .printedByLabel {
+      font-weight: normal;
+    }
+
+    .printedByValue {
+      font-weight: 600;
+      color: colors.$gray-80;
+    }
+  }
+
+  .patientBand {
+    display: flex;
+    flex-wrap: wrap;
+    gap: layout.$spacing-05;
+    background-color: colors.$gray-10;
+    border: 1px solid colors.$gray-20;
+    border-radius: 4px;
+    padding: layout.$spacing-05;
+    margin-bottom: layout.$spacing-06;
+  }
+
+  .patientField {
+    display: flex;
+    flex-direction: column;
+    gap: layout.$spacing-01;
+    flex: 1 1 120px;
+    min-width: 0;
+
+    .fieldLabel {
+      @include type.type-style('label-01');
+      color: colors.$gray-60;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .fieldValue {
+      @include type.type-style('body-compact-02');
+      font-weight: 600;
+      color: colors.$gray-100;
+      word-break: break-word;
+    }
+  }
+
+  .subheaderBand {
+    width: 100%;
+    text-align: center;
+    margin-bottom: layout.$spacing-07;
+    padding: layout.$spacing-04 0;
+    border-bottom: 1px double colors.$gray-30;
+  }
+
+  .subheaderTitle {
+    @include type.type-style('heading-04');
+    font-weight: 700;
+    color: colors.$blue-80;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  .signatureSection {
+    display: flex;
+    justify-content: space-between;
+    margin-top: layout.$spacing-10;
+    page-break-inside: avoid;
+  }
+
+  .signatureLine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+  }
+
+  .line {
+    width: 100%;
+    border-bottom: 1px solid colors.$gray-60;
+    margin-bottom: layout.$spacing-03;
+    height: 40px;
+  }
+
+  .label {
+    @include type.type-style('label-01');
+    color: colors.$gray-80;
+    text-align: center;
+    font-weight: bold;
+  }
+}
