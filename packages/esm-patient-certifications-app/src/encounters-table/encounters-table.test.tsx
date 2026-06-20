@@ -15,9 +15,9 @@ import {
 import { usePatientChartStore } from '@openmrs/esm-patient-common-lib';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { mockEncountersAlice, mockEncounterTypes, mockFhirPatient, mockPatientAlice } from '__mocks__';
+import { mockEncountersAlice, mockFhirPatient, mockPatientAlice } from '__mocks__';
 import { renderWithSwr } from 'tools';
-import { type EncountersTableProps, useEncounterTypes } from './encounters-table.resource';
+import { type EncountersTableProps } from './encounters-table.resource';
 import { type ChartConfig, esmPatientChartSchema } from '../config-schema';
 import { jsonSchemaResourceName } from '../constants';
 import EncountersTable from './encounters-table.component';
@@ -30,7 +30,7 @@ const testProps: EncountersTableProps = {
   goTo: vi.fn(),
   isLoading: false,
   showVisitType: true,
-  showEncounterTypeFilter: false,
+  showFormNameFilter: false,
   pageSize: 10,
   setPageSize: vi.fn(),
   isSelectable: true,
@@ -43,28 +43,21 @@ const mockUseFeatureFlag = vi.mocked(useFeatureFlag);
 const mockExtensionSlot = vi.mocked(ExtensionSlot);
 const mockUsePatientChartStore = vi.mocked(usePatientChartStore);
 
-const mockUseEncounterTypes = vi.fn(useEncounterTypes).mockReturnValue({
-  data: mockEncounterTypes,
-  totalCount: mockEncounterTypes.length,
-  hasMore: false,
-  loadMore: vi.fn(),
-  error: undefined,
-  mutate: vi.fn(),
-  isValidating: false,
-  isLoading: false,
-  nextUri: '',
-});
-
 const mockUseConfig = vi.mocked(useConfig);
-
-vi.mock('react-to-print', async () => ({
-  ...((await vi.importActual('react-to-print')) as object),
-  useReactToPrint: () => vi.fn(),
-}));
 
 vi.mock('./encounters-table.resource', async () => ({
   ...((await vi.importActual('./encounters-table.resource')) as object),
-  useEncounterTypes: () => mockUseEncounterTypes(),
+  useEncounterTypes: () => ({
+    data: [],
+    totalCount: 0,
+    hasMore: false,
+    loadMore: vi.fn(),
+    error: undefined,
+    mutate: vi.fn(),
+    isValidating: false,
+    isLoading: false,
+    nextUri: '',
+  }),
 }));
 
 vi.mock('@openmrs/esm-patient-common-lib', async () => ({
@@ -387,7 +380,11 @@ function renderEncountersTable(props: Partial<EncountersTableProps> = {}) {
 }
 
 describe('EncountersTable print functionality', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let onPrintStateChange: any;
+
   beforeEach(() => {
+    onPrintStateChange = vi.fn();
     mockUseConfig.mockImplementation((options) => {
       if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
         return { htmlFormEntryForms: [] };
@@ -397,41 +394,63 @@ describe('EncountersTable print functionality', () => {
     mockUserHasAccess.mockReturnValue(true);
   });
 
-  it('hides print button and selection checkboxes when canPrintEncounters is false', async () => {
-    renderEncountersTable({ isSelectable: true, canPrintEncounters: false, showEncounterTypeFilter: true });
+  it('hides selection checkboxes when canPrintEncounters is false', async () => {
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: false,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
 
     await screen.findByRole('table');
 
-    expect(screen.queryByRole('button', { name: /print selected/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('checkbox', { name: /select all rows/i })).not.toBeInTheDocument();
   });
 
-  it('shows print button and selection checkboxes when isSelectable and canPrintEncounters are true', async () => {
-    renderEncountersTable({ isSelectable: true, canPrintEncounters: true, showEncounterTypeFilter: true });
+  it('shows selection checkboxes when isSelectable and canPrintEncounters are true', async () => {
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: true,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
 
     await screen.findByRole('table');
 
-    expect(screen.getByRole('button', { name: /print selected/i })).toBeInTheDocument();
     expect(screen.getByRole('checkbox', { name: /select all rows/i })).toBeInTheDocument();
   });
 
-  it('disables print button when no rows are selected', async () => {
-    renderEncountersTable({ isSelectable: true, canPrintEncounters: true, showEncounterTypeFilter: true });
+  it('calls onPrintStateChange with disabled=true when no rows are selected', async () => {
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: true,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
 
     await screen.findByRole('table');
 
-    expect(screen.getByRole('button', { name: /print selected/i })).toBeDisabled();
+    await waitFor(() => {
+      expect(onPrintStateChange).toHaveBeenCalledWith(expect.objectContaining({ disabled: true }));
+    });
   });
 
-  it('enables print button after selecting a row', async () => {
+  it('calls onPrintStateChange with disabled=false after selecting a row', async () => {
     const user = userEvent.setup();
-    renderEncountersTable({ isSelectable: true, canPrintEncounters: true, showEncounterTypeFilter: true });
+    renderEncountersTable({
+      isSelectable: true,
+      canPrintEncounters: true,
+      showFormNameFilter: true,
+      onPrintStateChange,
+    });
 
     await screen.findByRole('table');
 
     const firstRowCheckbox = screen.getAllByRole('checkbox', { name: /select row/i })[0];
     await user.click(firstRowCheckbox);
 
-    expect(screen.getByRole('button', { name: /print selected/i })).toBeEnabled();
+    await waitFor(() => {
+      expect(onPrintStateChange).toHaveBeenCalledWith(expect.objectContaining({ disabled: false }));
+    });
   });
 });

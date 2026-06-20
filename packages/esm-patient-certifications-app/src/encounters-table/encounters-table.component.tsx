@@ -11,6 +11,7 @@ import {
   OverflowMenu,
   OverflowMenuItem,
   Pagination,
+  Search,
   Table,
   TableBody,
   TableCell,
@@ -75,10 +76,15 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   setEncounterTypeToFilter,
   setPageSize,
   showEncounterTypeFilter,
+  showFormNameFilter,
+  formNameToFilter,
+  setFormNameToFilter,
+  availableFormNames,
   showVisitType,
   totalCount,
   isSelectable,
   canPrintEncounters,
+  onPrintStateChange,
 }) => {
   const { t } = useTranslation();
   const pageSizes = [10, 20, 30, 40, 50];
@@ -86,7 +92,8 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   const session = useSession();
   const { mutateVisitContext, patient } = usePatientChartStore(patientUuid);
   const { mutate } = useSWRConfig();
-  const responsiveSize = desktopLayout ? 'sm' : 'lg';
+  // const responsiveSize = desktopLayout ? 'sm' : 'lg';
+  const responsiveSize = 'lg';
   const { data: encounterTypes, isLoading: isLoadingEncounterTypes } = useEncounterTypes();
   const enableEmbeddedFormView = useFeatureFlag('enable-embedded-form-view');
   const { encounterEditableDuration, encounterEditableDurationOverridePrivileges } = useConfig<ChartConfig>();
@@ -144,6 +151,7 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   }, [patient, excludePatientIdentifierCodeTypes?.uuids]);
 
   const [encountersToPrint, setEncountersToPrint] = useState<MappedEncounter[]>([]);
+  const [selectedEncounters, setSelectedEncounters] = useState<MappedEncounter[]>([]);
 
   // Trigger window.print() after React has committed the print content to the DOM.
   // Sets the document title (→ PDF filename) and waits for images to load before printing.
@@ -206,6 +214,19 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
     return () => window.removeEventListener('afterprint', handleAfterPrint);
   }, []);
 
+  // Notify parent about current print state so it can render the print button in the header
+  useEffect(() => {
+    onPrintStateChange?.({
+      onPrint: () => {
+        if (!selectedEncounters.length) return;
+        setEncountersToPrint(selectedEncounters);
+        setIsPrinting(true);
+      },
+      disabled: selectedEncounters.length === 0 || isPrinting,
+      isPrinting,
+    });
+  }, [selectedEncounters, isPrinting, onPrintStateChange]);
+
   const paginatedMappedEncounters = useMemo(
     () => (paginatedEncounters ?? []).map(mapEncounter).filter(Boolean),
     [paginatedEncounters],
@@ -214,6 +235,17 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   const encountersByUuid = useMemo(
     () => new Map(paginatedMappedEncounters?.map((encounter) => [encounter.id, encounter]) ?? []),
     [paginatedMappedEncounters],
+  );
+
+  // Track selected rows from DataTable render prop (same pattern as order-details-table)
+  const handleChangeSelectedEncounters = useCallback(
+    (selectedRows: Array<{ id: string }>) => {
+      if (selectedRows.length !== selectedEncounters.length) {
+        const selectedIds = new Set(selectedRows.map((r) => r.id));
+        setSelectedEncounters(paginatedMappedEncounters.filter((enc) => selectedIds.has(enc.id)));
+      }
+    },
+    [paginatedMappedEncounters, selectedEncounters.length],
   );
 
   const tableHeaders = [
@@ -283,16 +315,6 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
     [mutate, mutateVisitContext, patientUuid, t],
   );
 
-  const handlePrintSelected = useCallback(
-    (selectedRows: Array<any>) => {
-      const selectedEncounters = selectedRows.map((row) => encountersByUuid.get(row.id)).filter(Boolean);
-      if (!selectedEncounters.length) return;
-      setEncountersToPrint(selectedEncounters);
-      setIsPrinting(true);
-    },
-    [encountersByUuid],
-  );
-
   if (isLoadingEncounterTypes || isLoading) {
     return <DataTableSkeleton role="progressbar" zebra />;
   }
@@ -316,40 +338,51 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
           getTableProps,
           getSelectionProps,
           selectedRows,
+          onInputChange,
         }: {
           headers: Array<{ header: React.ReactNode; key: string }>;
           rows: Array<{ id: string; isExpanded: boolean; cells: Array<{ id: string; value: React.ReactNode }> }>;
           [key: string]: any;
         }) => {
-          const selectedRowsCount = selectedRows.length;
+          handleChangeSelectedEncounters(selectedRows);
           return (
             <TableContainer className={styles.tableContainer}>
-              {showEncounterTypeFilter && (
+              {!isPrinting && (
                 <TableToolbar {...getToolbarProps()}>
                   <TableToolbarContent>
-                    <div className={styles.filterContainer}>
-                      <ComboBox
-                        aria-label={t('filterByEncounterType', 'Filter by encounter type')}
-                        className={styles.substitutionType}
-                        id="encounterTypeFilter"
-                        items={encounterTypes}
-                        itemToString={(item: EncounterType) => item?.display}
-                        onChange={({ selectedItem }) => setEncounterTypeToFilter(selectedItem)}
-                        placeholder={t('filterByEncounterType', 'Filter by encounter type')}
-                        selectedItem={encounterTypeToFilter}
-                        size={responsiveSize}
-                      />
-                    </div>
-                    {isSelectable && canPrintEncounters && (
-                      <ExtensionSlot
-                        name="certifications-print-actions-slot"
-                        state={{
-                          onPrint: () => handlePrintSelected(selectedRows),
-                          isPrinting,
-                          disabled: selectedRowsCount === 0 || isPrinting,
-                          size: responsiveSize,
-                        }}
-                      />
+                    <Search
+                      isExpanded
+                      labelText={t('searchTable', 'Search table')}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputChange(e)}
+                      placeholder={t('searchTable', 'Search table')}
+                    />
+                    {showEncounterTypeFilter && (
+                      <div className={styles.filterContainer}>
+                        <ComboBox
+                          aria-label={t('filterByEncounterType', 'Filter by encounter type')}
+                          className={styles.substitutionType}
+                          id="encounterTypeFilter"
+                          items={encounterTypes}
+                          itemToString={(item: EncounterType) => item?.display}
+                          onChange={({ selectedItem }) => setEncounterTypeToFilter(selectedItem)}
+                          placeholder={t('filterByEncounterType', 'Filter by encounter type')}
+                          selectedItem={encounterTypeToFilter}
+                          size={responsiveSize}
+                        />
+                      </div>
+                    )}
+                    {showFormNameFilter && (
+                      <div className={styles.filterContainer}>
+                        <ComboBox
+                          id="formNameFilter"
+                          items={availableFormNames ?? []}
+                          itemToString={(item: string) => item ?? ''}
+                          onChange={({ selectedItem }) => setFormNameToFilter?.(selectedItem ?? null)}
+                          placeholder={t('filterByFormName', 'Filter by form name')}
+                          selectedItem={formNameToFilter ?? null}
+                          size={responsiveSize}
+                        />
+                      </div>
                     )}
                   </TableToolbarContent>
                 </TableToolbar>
@@ -537,7 +570,8 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                   <Tile className={styles.tile}>
                     <div className={styles.tileContent}>
                       <p className={styles.content}>{t('noEncountersToDisplay', 'No encounters to display')}</p>
-                      {showEncounterTypeFilter && encounterTypeToFilter && (
+                      {((showEncounterTypeFilter && encounterTypeToFilter) ||
+                        (showFormNameFilter && formNameToFilter)) && (
                         <p className={styles.helper}>{t('checkFilters', 'Check the filters above')}</p>
                       )}
                     </div>
@@ -575,6 +609,7 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                 <div key={encounter.id} className={styles.printableEncounterPage}>
                   <PrintComponent
                     subheader={
+                      formNameToFilter ||
                       encounterTypeToFilter?.display ||
                       encounter.encounterType ||
                       t('medicalCertification', 'Medical Certification')

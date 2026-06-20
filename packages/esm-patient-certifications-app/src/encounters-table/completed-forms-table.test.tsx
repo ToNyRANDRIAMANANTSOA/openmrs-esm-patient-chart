@@ -17,7 +17,7 @@ vi.mock('./encounters-table.component', () => ({
       <div
         data-testid="encounters-table"
         data-is-selectable={props.isSelectable}
-        data-show-encounter-type-filter={props.showEncounterTypeFilter}
+        data-show-form-name-filter={props.showFormNameFilter}
         data-show-visit-type={props.showVisitType}
         data-total-count={props.totalCount}
       >
@@ -51,7 +51,7 @@ describe('CompletedFormsTable', () => {
 
     renderWithSwr(<CompletedFormsTable patientUuid={mockPatientAlice.uuid} isTabActive />);
 
-    expect(mockUseAllEncounters).toHaveBeenCalledWith(mockPatientAlice.uuid, undefined);
+    expect(mockUseAllEncounters).toHaveBeenCalledWith(mockPatientAlice.uuid);
   });
 
   it('renders the encounters table with row selection enabled', () => {
@@ -67,7 +67,7 @@ describe('CompletedFormsTable', () => {
     expect(table).toHaveAttribute('data-is-selectable', 'true');
   });
 
-  it('renders the encounters table with the encounter type filter', () => {
+  it('renders the encounters table with the form name filter', () => {
     mockUseAllEncounters.mockReturnValue({
       data: [],
       isLoading: false,
@@ -77,7 +77,7 @@ describe('CompletedFormsTable', () => {
     renderWithSwr(<CompletedFormsTable patientUuid={mockPatientAlice.uuid} isTabActive />);
 
     const table = screen.getByTestId('encounters-table');
-    expect(table).toHaveAttribute('data-show-encounter-type-filter', 'true');
+    expect(table).toHaveAttribute('data-show-form-name-filter', 'true');
   });
 
   it('renders the encounters table with the visit type column', () => {

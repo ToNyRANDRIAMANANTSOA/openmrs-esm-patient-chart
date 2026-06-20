@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSWRConfig } from 'swr';
-import { userHasAccess, useSession, type EncounterType } from '@openmrs/esm-framework';
 import { invalidateVisitAndEncounterData } from '@openmrs/esm-patient-common-lib';
 import { type EncountersTableProps, useAllEncounters, encounterHasJsonSchemaForm } from './encounters-table.resource';
 import EncountersTable from './encounters-table.component';
@@ -8,13 +7,19 @@ import EncountersTable from './encounters-table.component';
 interface CompletedFormsTableProps {
   patientUuid: string;
   isTabActive?: boolean;
+  canPrintEncounters?: boolean;
+  onPrintStateChange?: (state: { onPrint: () => void; disabled: boolean; isPrinting: boolean } | null) => void;
 }
 
-const CompletedFormsTable: React.FC<CompletedFormsTableProps> = ({ patientUuid, isTabActive = false }) => {
-  const [encounterTypeToFilter, setEncounterTypeToFilterState] = useState<EncounterType>(null);
-
+const CompletedFormsTable: React.FC<CompletedFormsTableProps> = ({
+  patientUuid,
+  isTabActive = false,
+  canPrintEncounters = false,
+  onPrintStateChange,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  const [formNameToFilter, setFormNameToFilterState] = useState<string | null>(null);
 
   const { mutate } = useSWRConfig();
 
@@ -24,21 +29,27 @@ const CompletedFormsTable: React.FC<CompletedFormsTableProps> = ({ patientUuid, 
     }
   }, [isTabActive, mutate, patientUuid]);
 
-  const setEncounterTypeToFilter = useCallback((encounterType: EncounterType) => {
-    setEncounterTypeToFilterState(encounterType);
+  const setFormNameToFilter = useCallback((name: string | null) => {
+    setFormNameToFilterState(name);
     setCurrentPage(1);
   }, []);
 
-  const { data: allEncounters, isLoading } = useAllEncounters(
-    isTabActive ? patientUuid : null,
-    encounterTypeToFilter?.uuid,
-  );
+  const { data: allEncounters, isLoading } = useAllEncounters(isTabActive ? patientUuid : null);
 
   const filteredCompletedForms = useMemo(() => {
-    if (!allEncounters) {
-      return [];
-    }
-    return allEncounters.filter(encounterHasJsonSchemaForm);
+    if (!allEncounters) return [];
+    return allEncounters
+      .filter(encounterHasJsonSchemaForm)
+      .filter((enc) => !formNameToFilter || enc.form?.display === formNameToFilter);
+  }, [allEncounters, formNameToFilter]);
+
+  const availableFormNames = useMemo(() => {
+    if (!allEncounters) return [];
+    const names = new Set<string>();
+    allEncounters.filter(encounterHasJsonSchemaForm).forEach((enc) => {
+      if (enc.form?.display) names.add(enc.form.display);
+    });
+    return Array.from(names).sort();
   }, [allEncounters]);
 
   const paginatedEncounters = useMemo(() => {
@@ -51,24 +62,23 @@ const CompletedFormsTable: React.FC<CompletedFormsTableProps> = ({ patientUuid, 
     setCurrentPage(pageNumber);
   };
 
-  const session = useSession();
-  const canPrintEncounters = userHasAccess('App: Print encounter forms', session?.user);
-
   const encountersTableProps: EncountersTableProps = {
     currentPage,
-    encounterTypeToFilter,
+    showFormNameFilter: true,
+    formNameToFilter,
+    setFormNameToFilter,
+    availableFormNames,
     goTo,
     isLoading,
     pageSize,
-    paginatedEncounters: paginatedEncounters,
+    paginatedEncounters,
     patientUuid,
-    setEncounterTypeToFilter,
     setPageSize,
-    showEncounterTypeFilter: true,
     showVisitType: true,
     totalCount: filteredCompletedForms.length,
     isSelectable: true,
     canPrintEncounters,
+    onPrintStateChange,
   };
 
   return <EncountersTable {...encountersTableProps} />;

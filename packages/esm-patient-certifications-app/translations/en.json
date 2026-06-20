@@ -38,6 +38,7 @@
   "error": "Error",
   "errorDeletingProgram": "Error deleting program enrollment",
   "filterByEncounterType": "Filter by encounter type",
+  "filterByFormName": "Filter by form name",
   "form": "Form name",
   "fullyEnrolled": "Enrolled in all programs",
   "gender": "Gender",
@@ -69,11 +70,9 @@
   "provider": "Provider",
   "saveAndClose": "Save and close",
   "saving": "Saving",
+  "searchTable": "Search table",
   "seeAll": "See all",
   "state": "State",
   "status": "Status",
-  "visitType": "Visit type",
-  "generalCertStatement": "And certifies, after clinical examination, that the health of the above-named person warrants the issuance of this medical certificate.",
-  "deathCertStatement": "And certifies having ascertained the death of the above-named person.",
-  "birthCertStatement": "And certifies having attended or ascertained the birth of the child identified above."
+  "visitType": "Visit type"
 }

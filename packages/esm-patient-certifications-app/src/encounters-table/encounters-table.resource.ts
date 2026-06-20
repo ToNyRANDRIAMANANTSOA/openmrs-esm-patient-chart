@@ -24,13 +24,18 @@ export interface EncountersTableProps {
   isLoading: boolean;
   showVisitType: boolean;
   paginatedEncounters: Array<Encounter>;
-  showEncounterTypeFilter: boolean;
+  showEncounterTypeFilter?: boolean;
   encounterTypeToFilter?: EncounterType;
   setEncounterTypeToFilter?: React.Dispatch<React.SetStateAction<EncounterType>>;
+  showFormNameFilter?: boolean;
+  formNameToFilter?: string | null;
+  setFormNameToFilter?: (name: string | null) => void;
+  availableFormNames?: string[];
   pageSize: number;
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   isSelectable: boolean;
   canPrintEncounters: boolean;
+  onPrintStateChange?: (state: { onPrint: () => void; disabled: boolean; isPrinting: boolean } | null) => void;
 }
 
 export interface MappedEncounter {
