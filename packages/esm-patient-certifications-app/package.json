@@ -1,6 +1,6 @@
 {
   "name": "@openmrs/esm-patient-certifications-app",
-  "version": "12.1.0",
+  "version": "12.1.1-0",
   "license": "MPL-2.0",
   "description": "Patient programs microfrontend for the OpenMRS SPA",
   "browser": "dist/openmrs-esm-patient-programs-app.js",
@@ -55,5 +55,6 @@
     "@openmrs/esm-patient-common-lib": "workspace:*",
     "openmrs": "next",
     "vitest": "^4.1.2"
-  }
+  },
+  "stableVersion": "12.1.0"
 }
