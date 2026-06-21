@@ -8,12 +8,21 @@
       "name": "print-selected-orders-button",
       "component": "printSelectedOrdersButtonExtension",
       "slot": "orders-selections-actions-slot"
+    },
+    {
+      "name": "print-certifications-button",
+      "component": "printCertificationsButtonExtension",
+      "slot": "certifications-selections-actions-slot"
     }
   ],
   "modals": [
     {
       "name": "print-selected-orders-modal",
       "component": "printSelectedOrdersModal"
+    },
+    {
+      "name": "print-certifications-modal",
+      "component": "printCertificationsModal"
     }
   ]
 }
