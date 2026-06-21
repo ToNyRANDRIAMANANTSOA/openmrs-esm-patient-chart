@@ -2,11 +2,11 @@
 @use '@carbon/layout';
 @use '@carbon/type';
 
-@media screen {
-  .printPage {
-    display: none;
-  }
-}
+// @media screen {
+//   .printPage {
+//     display: none;
+//   }
+// }
 
 @media print {
   .printPage {

@@ -25,7 +25,7 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
   const responsiveSize = isDesktop(layout) ? 'sm' : 'lg';
   const session = useSession();
   const canPrintEncounters = userHasAccess('App: Print encounter forms', session?.user);
-  const launchProgramsForm = useCallback(() => launchWorkspace2('programs-form-workspace'), []);
+  const launchClinicalForms = useCallback(() => launchWorkspace2('clinical-forms-workspace'), []);
 
   const [selectionState, setSelectionState] = useState<{ selectedEncounters: any[]; patientDetails: any } | null>(null);
 
@@ -50,8 +50,8 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
           <Button
             kind="ghost"
             renderIcon={(props: ComponentProps<typeof AddIcon>) => <AddIcon size={16} {...props} />}
-            iconDescription={t('addPrograms', 'Add programs')}
-            onClick={launchProgramsForm}
+            iconDescription={t('addCertification', 'Add certification')}
+            onClick={launchClinicalForms}
           >
             {t('add', 'Add')}
           </Button>
