@@ -4,3 +4,4 @@ packages/esm-patient-notes-app
 packages/esm-patient-orders-app
 packages/esm-patient-tests-app
 packages/esm-patient-print-app
+packages/esm-patient-certifications-app
