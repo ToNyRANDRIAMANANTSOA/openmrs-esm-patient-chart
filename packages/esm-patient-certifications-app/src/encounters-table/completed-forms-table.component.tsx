@@ -8,14 +8,14 @@ interface CompletedFormsTableProps {
   patientUuid: string;
   isTabActive?: boolean;
   canPrintEncounters?: boolean;
-  onPrintStateChange?: (state: { onPrint: () => void; disabled: boolean; isPrinting: boolean } | null) => void;
+  onSelectionChange?: (state: { selectedEncounters: any[]; patientDetails: any } | null) => void;
 }
 
 const CompletedFormsTable: React.FC<CompletedFormsTableProps> = ({
   patientUuid,
   isTabActive = false,
   canPrintEncounters = false,
-  onPrintStateChange,
+  onSelectionChange,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -78,7 +78,7 @@ const CompletedFormsTable: React.FC<CompletedFormsTableProps> = ({
     totalCount: filteredCompletedForms.length,
     isSelectable: true,
     canPrintEncounters,
-    onPrintStateChange,
+    onSelectionChange,
   };
 
   return <EncountersTable {...encountersTableProps} />;

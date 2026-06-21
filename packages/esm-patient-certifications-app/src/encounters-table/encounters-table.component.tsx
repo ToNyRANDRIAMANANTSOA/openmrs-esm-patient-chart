@@ -1,5 +1,4 @@
 import React, { type ComponentProps, useCallback, useMemo, useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
 import {
@@ -57,14 +56,8 @@ import {
   type MappedEncounter,
 } from './encounters-table.resource';
 import EncounterObservations from '../encounter-observations';
-import PrintComponent from '../print/print.component';
 import styles from './encounters-table.scss';
 
-/**
- * This components is used by the AllEncountersTable and VisitEncountersTable to display
- * a table of encounters, with the actual data, pagination and filtering logic passed in
- * as props.
- */
 const EncountersTable: React.FC<EncountersTableProps> = ({
   currentPage,
   encounterTypeToFilter,
@@ -84,7 +77,7 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   totalCount,
   isSelectable,
   canPrintEncounters,
-  onPrintStateChange,
+  onSelectionChange,
 }) => {
   const { t } = useTranslation();
   const pageSizes = [10, 20, 30, 40, 50];
@@ -92,12 +85,10 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   const session = useSession();
   const { mutateVisitContext, patient } = usePatientChartStore(patientUuid);
   const { mutate } = useSWRConfig();
-  // const responsiveSize = desktopLayout ? 'sm' : 'lg';
   const responsiveSize = 'lg';
   const { data: encounterTypes, isLoading: isLoadingEncounterTypes } = useEncounterTypes();
   const enableEmbeddedFormView = useFeatureFlag('enable-embedded-form-view');
   const { encounterEditableDuration, encounterEditableDurationOverridePrivileges } = useConfig<ChartConfig>();
-  const [isPrinting, setIsPrinting] = useState(false);
 
   const config = useConfig();
   const excludePatientIdentifierCodeTypes = config?.excludePatientIdentifierCodeTypes;
@@ -150,82 +141,11 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
     };
   }, [patient, excludePatientIdentifierCodeTypes?.uuids]);
 
-  const [encountersToPrint, setEncountersToPrint] = useState<MappedEncounter[]>([]);
   const [selectedEncounters, setSelectedEncounters] = useState<MappedEncounter[]>([]);
 
-  // Trigger window.print() after React has committed the print content to the DOM.
-  // Sets the document title (→ PDF filename) and waits for images to load before printing.
   useEffect(() => {
-    if (!isPrinting || !encountersToPrint.length) return;
-
-    const originalTitle = document.title;
-    document.title = `${patientDetails.name} - Certifications`;
-
-    let cancelled = false;
-    let rafId: ReturnType<typeof requestAnimationFrame>;
-    const cleanupListeners: Array<() => void> = [];
-
-    rafId = requestAnimationFrame(() => {
-      if (cancelled) return;
-
-      const portal = document.getElementById('certifications-print-root');
-      const imgs = portal ? Array.from(portal.querySelectorAll<HTMLImageElement>('img')) : [];
-      const pending = imgs.filter((img) => !img.complete);
-
-      const doPrint = () => {
-        if (!cancelled) window.print();
-      };
-
-      if (pending.length === 0) {
-        doPrint();
-        return;
-      }
-
-      let settled = 0;
-      const onSettled = () => {
-        settled += 1;
-        if (settled === pending.length) doPrint();
-      };
-      pending.forEach((img) => {
-        img.addEventListener('load', onSettled, { once: true });
-        img.addEventListener('error', onSettled, { once: true });
-        cleanupListeners.push(() => {
-          img.removeEventListener('load', onSettled);
-          img.removeEventListener('error', onSettled);
-        });
-      });
-    });
-
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafId);
-      cleanupListeners.forEach((fn) => fn());
-      document.title = originalTitle;
-    };
-  }, [isPrinting, encountersToPrint, patientDetails.name]);
-
-  // Reset state when the browser print dialog closes
-  useEffect(() => {
-    const handleAfterPrint = () => {
-      setIsPrinting(false);
-      setEncountersToPrint([]);
-    };
-    window.addEventListener('afterprint', handleAfterPrint);
-    return () => window.removeEventListener('afterprint', handleAfterPrint);
-  }, []);
-
-  // Notify parent about current print state so it can render the print button in the header
-  useEffect(() => {
-    onPrintStateChange?.({
-      onPrint: () => {
-        if (!selectedEncounters.length) return;
-        setEncountersToPrint(selectedEncounters);
-        setIsPrinting(true);
-      },
-      disabled: selectedEncounters.length === 0 || isPrinting,
-      isPrinting,
-    });
-  }, [selectedEncounters, isPrinting, onPrintStateChange]);
+    onSelectionChange?.({ selectedEncounters, patientDetails });
+  }, [selectedEncounters, patientDetails, onSelectionChange]);
 
   const paginatedMappedEncounters = useMemo(
     () => (paginatedEncounters ?? []).map(mapEncounter).filter(Boolean),
@@ -237,7 +157,6 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
     [paginatedMappedEncounters],
   );
 
-  // Track selected rows from DataTable render prop (same pattern as order-details-table)
   const handleChangeSelectedEncounters = useCallback(
     (selectedRows: Array<{ id: string }>) => {
       if (selectedRows.length !== selectedEncounters.length) {
@@ -284,12 +203,8 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
           const abortController = new AbortController();
           deleteEncounter(encounterUuid, abortController)
             .then(() => {
-              // Update current visit data for critical components
               mutateVisitContext?.();
-
-              // Also invalidate visit history and encounter tables since the encounter was deleted
               invalidateVisitAndEncounterData(mutate, patientUuid);
-
               showSnackbar({
                 isLowContrast: true,
                 title: t('encounterDeleted', 'Encounter deleted'),
@@ -313,6 +228,17 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
       });
     },
     [mutate, mutateVisitContext, patientUuid, t],
+  );
+
+  const handlePrintEncounter = useCallback(
+    (encounter: MappedEncounter) => {
+      const dispose = showModal('print-certifications-modal', {
+        closeModal: () => dispose(),
+        encounters: [encounter],
+        patientDetails,
+      });
+    },
+    [patientDetails],
   );
 
   if (isLoadingEncounterTypes || isLoading) {
@@ -347,46 +273,44 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
           handleChangeSelectedEncounters(selectedRows);
           return (
             <TableContainer className={styles.tableContainer}>
-              {!isPrinting && (
-                <TableToolbar {...getToolbarProps()}>
-                  <TableToolbarContent>
-                    <Search
-                      isExpanded
-                      labelText={t('searchTable', 'Search table')}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputChange(e)}
-                      placeholder={t('searchTable', 'Search table')}
-                    />
-                    {showEncounterTypeFilter && (
-                      <div className={styles.filterContainer}>
-                        <ComboBox
-                          aria-label={t('filterByEncounterType', 'Filter by encounter type')}
-                          className={styles.substitutionType}
-                          id="encounterTypeFilter"
-                          items={encounterTypes}
-                          itemToString={(item: EncounterType) => item?.display}
-                          onChange={({ selectedItem }) => setEncounterTypeToFilter(selectedItem)}
-                          placeholder={t('filterByEncounterType', 'Filter by encounter type')}
-                          selectedItem={encounterTypeToFilter}
-                          size={responsiveSize}
-                        />
-                      </div>
-                    )}
-                    {showFormNameFilter && (
-                      <div className={styles.filterContainer}>
-                        <ComboBox
-                          id="formNameFilter"
-                          items={availableFormNames ?? []}
-                          itemToString={(item: string) => item ?? ''}
-                          onChange={({ selectedItem }) => setFormNameToFilter?.(selectedItem ?? null)}
-                          placeholder={t('filterByFormName', 'Filter by form name')}
-                          selectedItem={formNameToFilter ?? null}
-                          size={responsiveSize}
-                        />
-                      </div>
-                    )}
-                  </TableToolbarContent>
-                </TableToolbar>
-              )}
+              <TableToolbar {...getToolbarProps()}>
+                <TableToolbarContent>
+                  <Search
+                    isExpanded
+                    labelText={t('searchTable', 'Search table')}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputChange(e)}
+                    placeholder={t('searchTable', 'Search table')}
+                  />
+                  {showEncounterTypeFilter && (
+                    <div className={styles.filterContainer}>
+                      <ComboBox
+                        aria-label={t('filterByEncounterType', 'Filter by encounter type')}
+                        className={styles.substitutionType}
+                        id="encounterTypeFilter"
+                        items={encounterTypes}
+                        itemToString={(item: EncounterType) => item?.display}
+                        onChange={({ selectedItem }) => setEncounterTypeToFilter(selectedItem)}
+                        placeholder={t('filterByEncounterType', 'Filter by encounter type')}
+                        selectedItem={encounterTypeToFilter}
+                        size={responsiveSize}
+                      />
+                    </div>
+                  )}
+                  {showFormNameFilter && (
+                    <div className={styles.filterContainer}>
+                      <ComboBox
+                        id="formNameFilter"
+                        items={availableFormNames ?? []}
+                        itemToString={(item: string) => item ?? ''}
+                        onChange={({ selectedItem }) => setFormNameToFilter?.(selectedItem ?? null)}
+                        placeholder={t('filterByFormName', 'Filter by form name')}
+                        selectedItem={formNameToFilter ?? null}
+                        size={responsiveSize}
+                      />
+                    </div>
+                  )}
+                </TableToolbarContent>
+              </TableToolbar>
               <Table {...getTableProps()}>
                 <TableHead>
                   <TableRow>
@@ -469,11 +393,7 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
                                     <OverflowMenuItem
                                       className={styles.menuItem}
                                       itemText={t('printEncounter', 'Print this encounter')}
-                                      disabled={isPrinting}
-                                      onClick={() => {
-                                        setEncountersToPrint([encounter]);
-                                        setIsPrinting(true);
-                                      }}
+                                      onClick={() => handlePrintEncounter(encounter)}
                                     />
                                   )}
                                   {canDeleteEncounter && (
@@ -582,48 +502,22 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
           );
         }}
       </DataTable>
-      {
-        <Pagination
-          forwardText={t('nextPage', 'Next page')}
-          backwardText={t('previousPage', 'Previous page')}
-          page={currentPage}
-          pageSize={pageSize}
-          pageSizes={pageSizes}
-          totalItems={totalCount}
-          onChange={({ pageSize: newPageSize, page }) => {
-            if (newPageSize !== pageSize) {
-              setPageSize(newPageSize);
-            }
-            if (page !== currentPage) {
-              goTo(page);
-            }
-          }}
-        />
-      }
-      {isPrinting &&
-        encountersToPrint.length > 0 &&
-        createPortal(
-          <div id="certifications-print-root">
-            <div className={styles.printContainer}>
-              {encountersToPrint.map((encounter, index) => (
-                <div key={encounter.id} className={styles.printableEncounterPage}>
-                  <PrintComponent
-                    subheader={
-                      formNameToFilter ||
-                      encounterTypeToFilter?.display ||
-                      encounter.encounterType ||
-                      t('medicalCertification', 'Medical Certification')
-                    }
-                    patientDetails={patientDetails}
-                    encounter={encounter}
-                  />
-                  {index < encountersToPrint.length - 1 && <div className={styles.pageBreak} />}
-                </div>
-              ))}
-            </div>
-          </div>,
-          document.body,
-        )}
+      <Pagination
+        forwardText={t('nextPage', 'Next page')}
+        backwardText={t('previousPage', 'Previous page')}
+        page={currentPage}
+        pageSize={pageSize}
+        pageSizes={pageSizes}
+        totalItems={totalCount}
+        onChange={({ pageSize: newPageSize, page }) => {
+          if (newPageSize !== pageSize) {
+            setPageSize(newPageSize);
+          }
+          if (page !== currentPage) {
+            goTo(page);
+          }
+        }}
+      />
     </div>
   );
 };

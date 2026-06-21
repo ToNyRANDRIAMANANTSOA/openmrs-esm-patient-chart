@@ -2,7 +2,7 @@ import React from 'react';
 import { useConfig } from '@openmrs/esm-framework';
 import styles from './templates.scss';
 
-const mediaikoLogoUrl = new URL('../../../public/Mediaiko-colored-logo.webp', import.meta.url).href;
+const mediaikoLogoUrl = new URL('../../../../public/Mediaiko-colored-logo.webp', import.meta.url).href;
 
 export const CertLogo: React.FC = () => {
   const { logo } = useConfig();

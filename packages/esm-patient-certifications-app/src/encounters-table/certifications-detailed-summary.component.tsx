@@ -27,18 +27,11 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
   const canPrintEncounters = userHasAccess('App: Print encounter forms', session?.user);
   const launchProgramsForm = useCallback(() => launchWorkspace2('programs-form-workspace'), []);
 
-  const [printState, setPrintState] = useState<{
-    onPrint: () => void;
-    disabled: boolean;
-    isPrinting: boolean;
-  } | null>(null);
+  const [selectionState, setSelectionState] = useState<{ selectedEncounters: any[]; patientDetails: any } | null>(null);
 
-  const handlePrintStateChange = useCallback(
-    (state: { onPrint: () => void; disabled: boolean; isPrinting: boolean } | null) => {
-      setPrintState(state);
-    },
-    [],
-  );
+  const handleSelectionChange = useCallback((state: { selectedEncounters: any[]; patientDetails: any } | null) => {
+    setSelectionState(state);
+  }, []);
 
   return (
     <div className={styles.widgetCard}>
@@ -46,11 +39,10 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
         <div className={styles.buttons}>
           {canPrintEncounters && (
             <ExtensionSlot
-              name="certifications-print-actions-slot"
+              name="certifications-selections-actions-slot"
               state={{
-                onPrint: printState?.onPrint ?? (() => {}),
-                isPrinting: printState?.isPrinting ?? false,
-                disabled: printState?.disabled ?? true,
+                selectedEncounters: selectionState?.selectedEncounters ?? [],
+                patientDetails: selectionState?.patientDetails ?? {},
                 size: responsiveSize,
               }}
             />
@@ -69,7 +61,7 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
         patientUuid={patientUuid}
         isTabActive
         canPrintEncounters={canPrintEncounters}
-        onPrintStateChange={handlePrintStateChange}
+        onSelectionChange={handleSelectionChange}
       />
     </div>
   );

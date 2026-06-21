@@ -381,10 +381,10 @@ function renderEncountersTable(props: Partial<EncountersTableProps> = {}) {
 
 describe('EncountersTable print functionality', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let onPrintStateChange: any;
+  let onSelectionChange: any;
 
   beforeEach(() => {
-    onPrintStateChange = vi.fn();
+    onSelectionChange = vi.fn();
     mockUseConfig.mockImplementation((options) => {
       if (options?.externalModuleName === '@openmrs/esm-patient-forms-app') {
         return { htmlFormEntryForms: [] };
@@ -399,7 +399,7 @@ describe('EncountersTable print functionality', () => {
       isSelectable: true,
       canPrintEncounters: false,
       showFormNameFilter: true,
-      onPrintStateChange,
+      onSelectionChange,
     });
 
     await screen.findByRole('table');
@@ -412,7 +412,7 @@ describe('EncountersTable print functionality', () => {
       isSelectable: true,
       canPrintEncounters: true,
       showFormNameFilter: true,
-      onPrintStateChange,
+      onSelectionChange,
     });
 
     await screen.findByRole('table');
@@ -420,28 +420,28 @@ describe('EncountersTable print functionality', () => {
     expect(screen.getByRole('checkbox', { name: /select all rows/i })).toBeInTheDocument();
   });
 
-  it('calls onPrintStateChange with disabled=true when no rows are selected', async () => {
+  it('calls onSelectionChange with empty selectedEncounters when no rows are selected', async () => {
     renderEncountersTable({
       isSelectable: true,
       canPrintEncounters: true,
       showFormNameFilter: true,
-      onPrintStateChange,
+      onSelectionChange,
     });
 
     await screen.findByRole('table');
 
     await waitFor(() => {
-      expect(onPrintStateChange).toHaveBeenCalledWith(expect.objectContaining({ disabled: true }));
+      expect(onSelectionChange).toHaveBeenCalledWith(expect.objectContaining({ selectedEncounters: [] }));
     });
   });
 
-  it('calls onPrintStateChange with disabled=false after selecting a row', async () => {
+  it('calls onSelectionChange with non-empty selectedEncounters after selecting a row', async () => {
     const user = userEvent.setup();
     renderEncountersTable({
       isSelectable: true,
       canPrintEncounters: true,
       showFormNameFilter: true,
-      onPrintStateChange,
+      onSelectionChange,
     });
 
     await screen.findByRole('table');
@@ -450,7 +450,9 @@ describe('EncountersTable print functionality', () => {
     await user.click(firstRowCheckbox);
 
     await waitFor(() => {
-      expect(onPrintStateChange).toHaveBeenCalledWith(expect.objectContaining({ disabled: false }));
+      expect(onSelectionChange).toHaveBeenCalledWith(
+        expect.objectContaining({ selectedEncounters: expect.arrayContaining([expect.any(Object)]) }),
+      );
     });
   });
 });

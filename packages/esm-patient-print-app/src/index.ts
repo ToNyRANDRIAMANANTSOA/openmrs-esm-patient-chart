@@ -21,9 +21,19 @@ export const printSelectedOrdersButtonExtension = getAsyncLifecycle(
   options,
 );
 
+export const printCertificationsButtonExtension = getAsyncLifecycle(
+  () => import('./print-certifications/print-certifications-button.extension'),
+  options,
+);
+
 // Modals
 export const printSelectedOrdersModal = getAsyncLifecycle(
   () => import('./print-selected-orders/components/print-selected-orders.modal'),
+  options,
+);
+
+export const printCertificationsModal = getAsyncLifecycle(
+  () => import('./print-certifications/components/print-certifications.modal'),
   options,
 );
 

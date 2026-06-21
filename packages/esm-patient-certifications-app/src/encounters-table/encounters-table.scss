@@ -132,10 +132,10 @@
 }
 
 @media print {
-  // Hide everything except the portal mounted at body level
-  :global(body > *:not(#certifications-print-root)) {
-    display: none !important;
-  }
+  // // Hide everything except the portal mounted at body level
+  // :global(body > *:not(#certifications-print-root)) {
+  //   display: none !important;
+  // }
 
   // Reset the screen-hiding overrides so the portal flows normally on print
   :global(#certifications-print-root) {

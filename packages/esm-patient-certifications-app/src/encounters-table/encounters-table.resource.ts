@@ -35,7 +35,7 @@ export interface EncountersTableProps {
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   isSelectable: boolean;
   canPrintEncounters: boolean;
-  onPrintStateChange?: (state: { onPrint: () => void; disabled: boolean; isPrinting: boolean } | null) => void;
+  onSelectionChange?: (state: { selectedEncounters: MappedEncounter[]; patientDetails: any } | null) => void;
 }
 
 export interface MappedEncounter {
