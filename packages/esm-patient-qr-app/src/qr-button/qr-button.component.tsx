@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Button } from '@carbon/react';
+import { HeaderGlobalAction } from '@carbon/react';
 import { QrCode } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import { showModal } from '@openmrs/esm-framework';
@@ -14,16 +14,9 @@ const QrButton: React.FC = () => {
   }, []);
 
   return (
-    <Button
-      hasIconOnly
-      iconDescription={t('scanQrCode', 'Scan QR code')}
-      kind="ghost"
-      onClick={handleClick}
-      renderIcon={() => <QrCode color="white" />}
-      size="lg"
-      tooltipAlignment="end"
-      tooltipPosition="bottom"
-    />
+    <HeaderGlobalAction aria-label={t('scanQrCode', 'Scan QR code')} onClick={handleClick}>
+      <QrCode size={20} />
+    </HeaderGlobalAction>
   );
 };
 
