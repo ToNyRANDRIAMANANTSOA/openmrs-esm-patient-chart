@@ -1,7 +1,17 @@
 {
+  "audio": "Audio",
+  "camera": "Camera",
   "close": "Close",
+  "defaultCamera": "Default camera",
   "invalidQrContent": "Invalid QR code content",
+  "pause": "Pause",
+  "resume": "Resume",
   "scanError": "Failed to read QR code",
   "scanQrCode": "Scan QR code",
+  "tracking": "Tracking",
+  "trackingBoundingBox": "Bounding box",
+  "trackingCenterText": "Center text",
+  "trackingNone": "None",
+  "trackingOutline": "Outline",
   "unknownQrType": "Unknown QR code type: {{type}}"
 }
