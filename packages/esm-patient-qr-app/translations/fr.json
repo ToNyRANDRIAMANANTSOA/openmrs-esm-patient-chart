@@ -1,17 +1,24 @@
 {
   "audio": "Audio",
   "camera": "Caméra",
+  "checking": "Vérification...",
   "close": "Fermer",
   "defaultCamera": "Caméra par défaut",
-  "invalidQrContent": "Contenu du QR code invalide",
+  "invalidQrContent": "QR code invalide",
+  "invalidQrContentDetail": "Impossible de lire le contenu scanné.",
+  "noRecordFound": "Aucun enregistrement ne correspond à ce QR code.",
+  "patientNotFound": "Patient introuvable",
   "pause": "Pause",
   "resume": "Reprendre",
-  "scanError": "Échec de la lecture du QR code",
+  "scanAQrCode": "Scannez un QR code patient ou visite pour naviguer.",
+  "scanError": "Erreur de scan",
   "scanQrCode": "Scanner le QR code",
   "tracking": "Visualisation",
   "trackingBoundingBox": "Cadre englobant",
   "trackingCenterText": "Texte centré",
   "trackingNone": "Aucune",
   "trackingOutline": "Contour",
-  "unknownQrType": "Type de QR code inconnu : {{type}}"
+  "unknownQrType": "Type de QR code inconnu",
+  "unknownQrTypeDetail": "Attendu \"patient\" ou \"visite\", reçu \"{{type}}\".",
+  "visitNotFound": "Visite introuvable"
 }

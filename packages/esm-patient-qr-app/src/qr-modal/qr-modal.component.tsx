@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import {
   Button,
+  InlineLoading,
   InlineNotification,
   ModalBody,
   ModalFooter,
@@ -25,6 +26,13 @@ interface QrPayload {
 }
 
 type TrackingStyle = 'outline' | 'boundingBox' | 'centerText' | 'none';
+type ScanStatusState = 'loading' | 'not-found' | 'invalid' | 'unknown-type' | 'error';
+
+interface ScanStatus {
+  state: ScanStatusState;
+  res?: string;
+  message?: string;
+}
 
 const TRACKING_FNS: Record<Exclude<TrackingStyle, 'none'>, TrackFunction> = {
   outline,
@@ -37,7 +45,7 @@ const PatientQrModal: React.FC<PatientQrModalProps> = ({ closeModal }) => {
   const devices = useDevices();
 
   const [paused, setPaused] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [scanStatus, setScanStatus] = useState<ScanStatus | null>(null);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | undefined>(undefined);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [trackingStyle, setTrackingStyle] = useState<TrackingStyle>('outline');
@@ -49,43 +57,60 @@ const PatientQrModal: React.FC<PatientQrModalProps> = ({ closeModal }) => {
       if (!codes.length || paused) return;
 
       setPaused(true);
-      setError(null);
+      setScanStatus(null);
 
       const rawValue = codes[0].rawValue;
 
+      let payload: QrPayload;
       try {
-        const payload = JSON.parse(rawValue) as QrPayload;
+        payload = JSON.parse(rawValue) as QrPayload;
+      } catch {
+        setScanStatus({ state: 'invalid' });
+        setPaused(false);
+        return;
+      }
 
+      setScanStatus({ state: 'loading', res: payload.res });
+
+      try {
         if (payload.res === 'patient') {
-          navigate({ to: '${openmrsSpaBase}/patient/' + payload.uuid + '/chart' });
+          await openmrsFetch(`/ws/rest/v1/patient/${payload.uuid}?v=ref`);
+          navigate({ to: '${openmrsSpaBase}/patient/' + payload.uuid });
           closeModal();
         } else if (payload.res === 'visit') {
-          const response = await openmrsFetch<{ patient: { uuid: string } }>(
-            `/ws/rest/v1/visit/${payload.uuid}?v=custom:(patient:(uuid))`,
+          const response = await openmrsFetch<{ uuid: string; patient: { uuid: string } }>(
+            `/ws/rest/v1/visit/${payload.uuid}?v=custom:(uuid,patient:(uuid))`,
           );
-          navigate({ to: '${openmrsSpaBase}/patient/' + response.data.patient.uuid + '/chart' });
+          navigate({
+            to: '${openmrsSpaBase}/patient/' + response.data.patient.uuid + '/chart/visits/' + payload.uuid,
+          });
           closeModal();
         } else {
-          setError(t('unknownQrType', 'Unknown QR code type: {{type}}', { type: payload.res }));
+          setScanStatus({ state: 'unknown-type', res: payload.res });
           setPaused(false);
         }
-      } catch {
-        setError(t('invalidQrContent', 'Invalid QR code content'));
+      } catch (err: unknown) {
+        const status = (err as { response?: { status?: number } })?.response?.status;
+        if (status === 404) {
+          setScanStatus({ state: 'not-found', res: payload.res });
+        } else {
+          setScanStatus({ state: 'error', message: String((err as { message?: string })?.message ?? '') });
+        }
         setPaused(false);
       }
     },
-    [closeModal, paused, t],
+    [closeModal, paused],
   );
 
-  const handleError = useCallback(
+  const handleScannerError = useCallback(
     (err: IScannerError) => {
-      setError(err?.message ?? t('scanError', 'Failed to read QR code'));
+      setScanStatus({ state: 'error', message: err?.message ?? t('scanError', 'Failed to read QR code') });
     },
     [t],
   );
 
-  const dismissError = useCallback(() => {
-    setError(null);
+  const clearStatus = useCallback(() => {
+    setScanStatus(null);
     setPaused(false);
   }, []);
 
@@ -140,26 +165,82 @@ const PatientQrModal: React.FC<PatientQrModalProps> = ({ closeModal }) => {
             />
           </div>
 
-          <div style={{ width: '280px', alignSelf: 'center' }}>
-            <Scanner
-              onScan={handleScan}
-              onError={handleError}
-              paused={paused}
-              constraints={selectedDeviceId ? { deviceId: selectedDeviceId } : undefined}
-              tracker={tracker}
-              sound={audioEnabled}
-              components={{ finder: true, torch: true, zoom: true, onOff: true }}
-            />
-          </div>
+          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+            <div style={{ width: '280px', flexShrink: 0 }}>
+              <Scanner
+                onScan={handleScan}
+                onError={handleScannerError}
+                paused={paused}
+                constraints={selectedDeviceId ? { deviceId: selectedDeviceId } : undefined}
+                tracker={tracker}
+                sound={audioEnabled}
+                components={{ finder: true, torch: true, zoom: true, onOff: true }}
+              />
+            </div>
 
-          {error && (
-            <InlineNotification
-              kind="error"
-              subtitle={error}
-              title={t('scanError', 'Scan error')}
-              onCloseButtonClick={dismissError}
-            />
-          )}
+            <div
+              style={{
+                flex: 1,
+                minWidth: '180px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                paddingTop: '2rem',
+              }}
+            >
+              {scanStatus === null && (
+                <p style={{ color: 'var(--cds-text-secondary)', fontSize: '0.875rem' }}>
+                  {t('scanAQrCode', 'Scan a patient or visit QR code to navigate.')}
+                </p>
+              )}
+
+              {scanStatus?.state === 'loading' && (
+                <InlineLoading description={t('checking', 'Checking...')} status="active" />
+              )}
+
+              {scanStatus?.state === 'not-found' && (
+                <InlineNotification
+                  kind="warning"
+                  title={
+                    scanStatus.res === 'patient'
+                      ? t('patientNotFound', 'Patient not found')
+                      : t('visitNotFound', 'Visit not found')
+                  }
+                  subtitle={t('noRecordFound', 'No record matches this QR code.')}
+                  onCloseButtonClick={clearStatus}
+                />
+              )}
+
+              {scanStatus?.state === 'invalid' && (
+                <InlineNotification
+                  kind="error"
+                  title={t('invalidQrContent', 'Invalid QR code')}
+                  subtitle={t('invalidQrContentDetail', 'Could not parse the scanned content.')}
+                  onCloseButtonClick={clearStatus}
+                />
+              )}
+
+              {scanStatus?.state === 'unknown-type' && (
+                <InlineNotification
+                  kind="warning"
+                  title={t('unknownQrType', 'Unknown QR code type')}
+                  subtitle={t('unknownQrTypeDetail', 'Expected "patient" or "visit", got "{{type}}".', {
+                    type: scanStatus.res,
+                  })}
+                  onCloseButtonClick={clearStatus}
+                />
+              )}
+
+              {scanStatus?.state === 'error' && (
+                <InlineNotification
+                  kind="error"
+                  title={t('scanError', 'Scan error')}
+                  subtitle={scanStatus.message}
+                  onCloseButtonClick={clearStatus}
+                />
+              )}
+            </div>
+          </div>
         </div>
       </ModalBody>
       <ModalFooter>
