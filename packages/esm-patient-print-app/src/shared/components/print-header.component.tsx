@@ -8,6 +8,20 @@ import styles from './print-shared.scss';
 
 type TitlePosition = 'top-left' | 'bottom-center';
 
+export const getSpecialtiesDisplay = (specialties: string | undefined, locale: string = 'en'): string => {
+  if (!specialties) return '';
+
+  try {
+    const parsed = JSON.parse(specialties);
+    if (typeof parsed === 'object' && parsed !== null) {
+      return parsed[locale] || parsed['en'] || Object.values(parsed)[0] || specialties;
+    }
+    return specialties;
+  } catch {
+    return specialties;
+  }
+};
+
 type PrintHeaderProps = {
   title: string;
   subtitle?: string;
@@ -47,7 +61,7 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
   sideBAlignment = 'right',
   showHeaderBorderBottom = true,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { logo } = useConfig<ConfigSchema>();
 
   const logoEl = logo?.src ? (
@@ -101,7 +115,7 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
                   <span>{provider?.attributes?.title} </span>
                   <span>{provider?.name}</span>
                   <br />
-                  <span>{provider?.attributes?.specialties}</span>
+                  <span>{getSpecialtiesDisplay(provider?.attributes?.specialties, i18n.language)}</span>
                   <br />
                   <strong>{provider?.attributes?.licenseType ?? t('licenseTypeDefault', 'Nº Ordre')}:</strong>{' '}
                   <span>{provider?.attributes?.licenseNb}</span>
