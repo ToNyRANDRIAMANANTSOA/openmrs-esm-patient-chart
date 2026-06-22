@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.openmrs.org/routes.schema.json",
+  "backendDependencies": {
+    "webservices.rest": ">=2.2.0"
+  },
+  "extensions": [
+    {
+      "name": "patient-qr-button",
+      "slot": "top-nav-actions-slot",
+      "component": "patientQrButton",
+      "order": 20
+    }
+  ],
+  "modals": [
+    {
+      "name": "patient-qr-modal",
+      "component": "patientQrModal"
+    }
+  ]
+}

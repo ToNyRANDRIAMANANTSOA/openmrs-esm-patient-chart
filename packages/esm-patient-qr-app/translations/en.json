@@ -1,0 +1,7 @@
+{
+  "close": "Close",
+  "invalidQrContent": "Invalid QR code content",
+  "scanError": "Failed to read QR code",
+  "scanQrCode": "Scan QR code",
+  "unknownQrType": "Unknown QR code type: {{type}}"
+}
