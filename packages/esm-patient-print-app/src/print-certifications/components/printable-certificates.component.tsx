@@ -40,6 +40,12 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
         location={location}
         isLoadingProviders={isLoadingProviders}
         isLoadingEncounters={isLoadingEncounters}
+        titleAndLogoInSharedRow={certificatesPrint.header.titleAndLogoInSharedRow}
+        showProviderInfo={certificatesPrint.header.showProviderInfo}
+        showClinicInfo={certificatesPrint.header.showClinicInfo}
+        showFacilityAddress={certificatesPrint.header.showFacilityAddress}
+        sideAAlignment={certificatesPrint.header.sideAAlignment}
+        sideBAlignment={certificatesPrint.header.sideBAlignment}
       />
 
       <PrintProviderIntro provider={certificate.provider} isLoadingProviders={isLoadingProviders} />

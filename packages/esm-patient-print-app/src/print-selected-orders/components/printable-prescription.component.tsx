@@ -49,6 +49,12 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
         location={location}
         isLoadingProviders={isLoadingProviders}
         isLoadingEncounters={isLoadingEncounters}
+        titleAndLogoInSharedRow={prescriptionsPrint.header.titleAndLogoInSharedRow}
+        showProviderInfo={prescriptionsPrint.header.showProviderInfo}
+        showClinicInfo={prescriptionsPrint.header.showClinicInfo}
+        showFacilityAddress={prescriptionsPrint.header.showFacilityAddress}
+        sideAAlignment={prescriptionsPrint.header.sideAAlignment}
+        sideBAlignment={prescriptionsPrint.header.sideBAlignment}
       />
 
       <PrintPatientDetails

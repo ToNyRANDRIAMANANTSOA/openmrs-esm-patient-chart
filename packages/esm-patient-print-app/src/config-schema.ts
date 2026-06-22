@@ -2,6 +2,52 @@ import { Type, validators } from '@openmrs/esm-framework';
 
 const qrCodeValueTypes = ['patient_uuid', 'visit_uuid', 'none'] as const;
 const qrBottomTextSources = ['patient_identifier', 'visit_label', 'custom', 'none'] as const;
+const headerAlignments = ['left', 'center', 'right'] as const;
+
+type HeaderAlignmentDefault = (typeof headerAlignments)[number];
+
+const headerConfigSchema = (defaults: {
+  showProviderInfo: boolean;
+  showClinicInfo: boolean;
+  showFacilityAddress: boolean;
+  sideAAlignment: HeaderAlignmentDefault;
+  sideBAlignment: HeaderAlignmentDefault;
+  titleAndLogoInSharedRow: boolean;
+}) => ({
+  titleAndLogoInSharedRow: {
+    _type: Type.Boolean,
+    _default: defaults.titleAndLogoInSharedRow,
+    _description:
+      'When true, the title and logo share a top row above the A/B columns, and are hidden from inside those columns. When false, the title appears at the top of column A and the logo at the top of column B.',
+  },
+  showProviderInfo: {
+    _type: Type.Boolean,
+    _default: defaults.showProviderInfo,
+    _description: 'Show provider name, title, and license info in column A of the print header.',
+  },
+  showClinicInfo: {
+    _type: Type.Boolean,
+    _default: defaults.showClinicInfo,
+    _description: 'Show clinic/facility display name in column B of the print header.',
+  },
+  showFacilityAddress: {
+    _type: Type.Boolean,
+    _default: defaults.showFacilityAddress,
+    _description: 'Show contact, email, and address in column B of the print header.',
+  },
+  sideAAlignment: {
+    _type: Type.String,
+    _default: defaults.sideAAlignment,
+    _description: 'Horizontal alignment of column A content. Options: "left", "center", "right".',
+    _validators: [validators.oneOf([...headerAlignments])],
+  },
+  sideBAlignment: {
+    _type: Type.String,
+    _default: defaults.sideBAlignment,
+    _description: 'Horizontal alignment of column B content. Options: "left", "center", "right".',
+    _validators: [validators.oneOf([...headerAlignments])],
+  },
+});
 
 const qrCodeConfigSchema = (defaultValueType: string, defaultBottomTextSource: string) => ({
   valueType: {
@@ -43,6 +89,14 @@ export const configSchema = {
     },
   },
   prescriptionsPrint: {
+    header: headerConfigSchema({
+      titleAndLogoInSharedRow: true,
+      showProviderInfo: true,
+      showClinicInfo: true,
+      showFacilityAddress: true,
+      sideAAlignment: 'left',
+      sideBAlignment: 'right',
+    }),
     showPatientIdentifierRow: {
       _type: Type.Boolean,
       _default: true,
@@ -52,6 +106,14 @@ export const configSchema = {
     rightQrCode: qrCodeConfigSchema('visit_uuid', 'visit_label'),
   },
   certificatesPrint: {
+    header: headerConfigSchema({
+      titleAndLogoInSharedRow: false,
+      showProviderInfo: true,
+      showClinicInfo: true,
+      showFacilityAddress: false,
+      sideAAlignment: 'center',
+      sideBAlignment: 'center',
+    }),
     showPatientIdentifierRow: {
       _type: Type.Boolean,
       _default: true,
@@ -64,11 +126,21 @@ export const configSchema = {
 
 type QrCodeValueType = (typeof qrCodeValueTypes)[number];
 type QrBottomTextSource = (typeof qrBottomTextSources)[number];
+export type HeaderAlignment = (typeof headerAlignments)[number];
 
 type QrCodeConfig = {
   valueType: QrCodeValueType;
   bottomTextSource: QrBottomTextSource;
   bottomTextCustomValue: string;
+};
+
+export type HeaderConfig = {
+  titleAndLogoInSharedRow: boolean;
+  showProviderInfo: boolean;
+  showClinicInfo: boolean;
+  showFacilityAddress: boolean;
+  sideAAlignment: HeaderAlignment;
+  sideBAlignment: HeaderAlignment;
 };
 
 export type ConfigSchema = {
@@ -78,11 +150,13 @@ export type ConfigSchema = {
     src: string;
   };
   prescriptionsPrint: {
+    header: HeaderConfig;
     showPatientIdentifierRow: boolean;
     leftQrCode: QrCodeConfig;
     rightQrCode: QrCodeConfig;
   };
   certificatesPrint: {
+    header: HeaderConfig;
     showPatientIdentifierRow: boolean;
     leftQrCode: QrCodeConfig;
     rightQrCode: QrCodeConfig;
