@@ -1,4 +1,5 @@
 import type React from 'react';
+import { type PatientFieldKey } from '../../shared/components/print-patient-details.component';
 import { type CertificateBodyProps } from './templates/types';
 import GeneralCertificateBody from './templates/GeneralCertificateBody';
 import BirthCertificateBody from './templates/BirthCertificateBody';
@@ -14,9 +15,7 @@ import { getObsByConceptKeywords } from './templates/utils';
 export interface CertificateBodyConfig {
   key: string;
   title: string;
-  patientFields: Array<
-    'name' | 'familyName' | 'givenName' | 'age' | 'gender' | 'birthDate' | 'address' | 'location' | 'identifiers'
-  >;
+  patientFields: Array<PatientFieldKey>;
   practitionerFields: Array<'name' | 'onmNumber'>;
   bodyComponent: React.ComponentType<CertificateBodyProps>;
 }
@@ -25,56 +24,56 @@ export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   GENERAL: {
     key: 'GENERAL',
     title: 'General Certificate',
-    patientFields: ['name', 'age', 'gender', 'identifiers'],
+    patientFields: ['patientName', 'age', 'gender', 'patientId'],
     practitionerFields: ['name'],
     bodyComponent: GeneralCertificateBody,
   },
   BIRTH: {
     key: 'BIRTH',
     title: 'Birth Certificate',
-    patientFields: ['name', 'gender', 'birthDate', 'address'],
+    patientFields: ['patientName', 'gender', 'birthDate', 'address'],
     practitionerFields: ['name'],
     bodyComponent: BirthCertificateBody,
   },
   DEATH: {
     key: 'DEATH',
     title: 'Death Certificate',
-    patientFields: ['name', 'age', 'gender', 'birthDate', 'address'],
+    patientFields: ['patientName', 'age', 'gender', 'birthDate', 'address'],
     practitionerFields: ['name'],
     bodyComponent: DeathCertificateBody,
   },
   DIVING: {
     key: 'DIVING',
     title: 'Diving Fitness Certificate',
-    patientFields: ['name', 'age', 'gender', 'birthDate'],
+    patientFields: ['patientName', 'age', 'gender', 'birthDate'],
     practitionerFields: ['name', 'onmNumber'],
     bodyComponent: DivingFitnessBody,
   },
   FIT_TO_FLY: {
     key: 'FIT_TO_FLY',
     title: 'Fit To Fly Certificate',
-    patientFields: ['name', 'age', 'gender', 'birthDate', 'identifiers'],
+    patientFields: ['patientName', 'age', 'gender', 'birthDate', 'patientId', 'passportNumber'],
     practitionerFields: ['name', 'onmNumber'],
     bodyComponent: FitToFlyBody,
   },
   GOOD_HEALTH: {
     key: 'GOOD_HEALTH',
     title: 'Good Health Certificate',
-    patientFields: ['name', 'age', 'gender', 'birthDate', 'address'],
+    patientFields: ['patientName', 'age', 'gender', 'birthDate', 'address'],
     practitionerFields: ['name'],
     bodyComponent: GoodHealthBody,
   },
   NON_CONTAGION: {
     key: 'NON_CONTAGION',
     title: 'Non-Contagion Certificate',
-    patientFields: ['name', 'age', 'gender', 'address'],
+    patientFields: ['patientName', 'age', 'gender', 'birthDate', 'address'],
     practitionerFields: ['name'],
     bodyComponent: NonContagionBody,
   },
   SCHOOL: {
     key: 'SCHOOL',
     title: 'School Attendance/Excusal Certificate',
-    patientFields: ['name', 'age', 'gender', 'birthDate'],
+    patientFields: ['patientName', 'age', 'gender', 'birthDate'],
     practitionerFields: ['name'],
     bodyComponent: SchoolCertificateBody,
   },

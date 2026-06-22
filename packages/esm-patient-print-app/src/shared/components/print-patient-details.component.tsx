@@ -6,14 +6,32 @@ import { type Encounter } from '../../print-selected-orders/types/prescription';
 import { formatDateUtils } from '../../print-selected-orders/utils/date-time';
 import styles from './print-shared.scss';
 
+export type PatientFieldKey =
+  | 'patientId'
+  | 'patientName'
+  | 'familyName'
+  | 'givenName'
+  | 'birthDate'
+  | 'age'
+  | 'gender'
+  | 'allergies'
+  | 'address'
+  | 'location'
+  | 'passportNumber';
+
 type PatientInfo = {
   uuid?: string;
   identifiers?: string[];
   display: string;
+  familyName?: string;
+  givenName?: string;
   age?: string | number;
   birthdate?: string;
   gender?: string;
   allergies?: any[];
+  address?: string;
+  location?: string;
+  passportNumber?: string;
 };
 
 type QrCodeSlotConfig = {
@@ -23,7 +41,6 @@ type QrCodeSlotConfig = {
 };
 
 export type QrLayoutConfig = {
-  showIdentifierRow?: boolean;
   leftQrCode?: QrCodeSlotConfig;
   rightQrCode?: QrCodeSlotConfig;
 };
@@ -31,6 +48,7 @@ export type QrLayoutConfig = {
 type PrintPatientDetailsProps = {
   patient: PatientInfo;
   encounter?: Encounter;
+  fields: PatientFieldKey[];
   config?: QrLayoutConfig;
   isLoadingEncounters?: boolean;
 };
@@ -38,10 +56,13 @@ type PrintPatientDetailsProps = {
 const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
   patient,
   encounter,
+  fields,
   config,
   isLoadingEncounters,
 }) => {
   const { t } = useTranslation();
+
+  const has = (key: PatientFieldKey) => fields.includes(key);
 
   const getQrValue = (valueType: string): string | null => {
     switch (valueType) {
@@ -76,9 +97,7 @@ const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
     ? getQrBottomText(config.rightQrCode.bottomTextSource, config.rightQrCode.bottomTextCustomValue)
     : null;
 
-  // TODO: If weight must be display, get inspiration from :
-  // VitalsHeader at openmrs-esm-patient-chart\packages\esm-patient-vitals-app\src\vitals-and-biometrics-header\vitals-header.extension.tsx:45
-  // const { data: vitals, isLoading, isValidating } = useVitalsAndBiometrics(patientUuid, 'both');
+  const showDobAgeGenderRow = has('birthDate') || has('age') || has('gender');
 
   return (
     <div className={styles.patientInfo}>
@@ -103,7 +122,7 @@ const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
 
         <table>
           <tbody>
-            {config?.showIdentifierRow && (
+            {has('patientId') && (
               <tr>
                 <td colSpan={3}>
                   <strong>{t('patientId', 'Patient ID:')}</strong> <span>{patient?.identifiers?.[0]}</span>
@@ -111,32 +130,84 @@ const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
               </tr>
             )}
 
-            <tr>
-              <td colSpan={3}>
-                <strong>{t('patientName', 'Patient Name:')}</strong> <span>{patient?.display}</span>
-              </td>
-            </tr>
+            {has('patientName') && (
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('patientName', 'Patient Name:')}</strong> <span>{patient?.display}</span>
+                </td>
+              </tr>
+            )}
 
-            <tr>
-              <td>
-                <strong>{t('dob', 'Date of birth:')}</strong> {formatDateUtils(patient?.birthdate)}
-              </td>
-              <td>
-                <strong>{t('age', 'Age:')}</strong> {patient?.age}
-              </td>
-              <td>
-                <strong>{t('gender', 'Gender:')}</strong> {patient?.gender}
-              </td>
-            </tr>
+            {has('familyName') && (
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('familyName', 'Family Name:')}</strong> <span>{patient?.familyName}</span>
+                </td>
+              </tr>
+            )}
 
-            <tr>
-              <td colSpan={3}>
-                <strong>{t('allergies', 'Allergies:')}</strong>{' '}
-                {patient?.allergies?.length
-                  ? patient.allergies.join(', ')
-                  : t('noAllergiesRecorded', 'No allergies recorded')}
-              </td>
-            </tr>
+            {has('givenName') && (
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('givenName', 'Given Name:')}</strong> <span>{patient?.givenName}</span>
+                </td>
+              </tr>
+            )}
+
+            {showDobAgeGenderRow && (
+              <tr>
+                {has('birthDate') && (
+                  <td>
+                    <strong>{t('dob', 'Date of birth:')}</strong> {formatDateUtils(patient?.birthdate)}
+                  </td>
+                )}
+                {has('age') && (
+                  <td>
+                    <strong>{t('age', 'Age:')}</strong> {patient?.age}
+                  </td>
+                )}
+                {has('gender') && (
+                  <td>
+                    <strong>{t('gender', 'Gender:')}</strong> {patient?.gender}
+                  </td>
+                )}
+              </tr>
+            )}
+
+            {has('allergies') && (
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('allergies', 'Allergies:')}</strong>{' '}
+                  {patient?.allergies?.length
+                    ? patient.allergies.join(', ')
+                    : t('noAllergiesRecorded', 'No allergies recorded')}
+                </td>
+              </tr>
+            )}
+
+            {has('address') && patient?.address && (
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('address', 'Address:')}</strong> <span>{patient.address}</span>
+                </td>
+              </tr>
+            )}
+
+            {has('location') && encounter?.visit?.location?.display && (
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('location', 'Location:')}</strong> <span>{encounter.visit.location.display}</span>
+                </td>
+              </tr>
+            )}
+
+            {has('passportNumber') && patient?.passportNumber && (
+              <tr>
+                <td colSpan={3}>
+                  <strong>{t('passportNumber', 'Passport No:')}</strong> <span>{patient.passportNumber}</span>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 

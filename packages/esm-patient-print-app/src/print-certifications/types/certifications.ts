@@ -83,12 +83,15 @@ export type Certificate = {
   patient: {
     uuid: string;
     display: string;
+    familyName?: string;
+    givenName?: string;
     age: string | number;
     birthdate: string;
     gender: string;
     address: string;
     identifiers: string[];
     allergies: string[];
+    passportNumber?: string;
   };
   obs: Array<Obs>;
   formName: string;

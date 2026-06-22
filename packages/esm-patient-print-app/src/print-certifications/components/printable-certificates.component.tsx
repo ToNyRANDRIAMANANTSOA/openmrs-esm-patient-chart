@@ -53,8 +53,8 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
       <PrintPatientDetails
         patient={certificate.patient}
         encounter={certificate.encounter as any}
+        fields={certConfig.patientFields}
         config={{
-          showIdentifierRow: certificatesPrint.showPatientIdentifierRow,
           leftQrCode: certificatesPrint.leftQrCode,
           rightQrCode: certificatesPrint.rightQrCode,
         }}

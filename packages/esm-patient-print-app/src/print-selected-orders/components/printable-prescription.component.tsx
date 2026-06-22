@@ -10,7 +10,7 @@ import { getPrescriptionTypeMetadata } from './prescription-type-map';
 import { prescriptionBodyComponentMap } from './prescription-body-registry';
 import { formatDateUtils } from '../utils/date-time';
 import PrintHeader from '../../shared/components/print-header.component';
-import PrintPatientDetails from '../../shared/components/print-patient-details.component';
+import PrintPatientDetails, { type PatientFieldKey } from '../../shared/components/print-patient-details.component';
 import CenterDetailsFooter from '../../shared/components/center-details-footer.component';
 
 type TitlePosition = 'top-left' | 'bottom-center';
@@ -40,6 +40,15 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
 
   const location = prescription?.encounter?.visit?.location;
 
+  const patientFields: PatientFieldKey[] = [
+    'patientName',
+    'birthDate',
+    'age',
+    'gender',
+    'allergies',
+    ...(prescriptionsPrint.showPatientIdentifierRow ? (['patientId'] as PatientFieldKey[]) : []),
+  ];
+
   return (
     <div className={styles.printWrapper}>
       <PrintHeader
@@ -60,8 +69,8 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
       <PrintPatientDetails
         patient={prescription?.patient}
         encounter={prescription?.encounter}
+        fields={patientFields}
         config={{
-          showIdentifierRow: prescriptionsPrint.showPatientIdentifierRow,
           leftQrCode: prescriptionsPrint.leftQrCode,
           rightQrCode: prescriptionsPrint.rightQrCode,
         }}
