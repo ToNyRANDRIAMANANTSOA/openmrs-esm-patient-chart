@@ -8,6 +8,8 @@ import PrintHeader from '../../shared/components/print-header.component';
 import PrintPatientDetails from '../../shared/components/print-patient-details.component';
 import PrintProviderIntro from '../../shared/components/print-provider-intro.component';
 import CenterDetailsFooter from '../../shared/components/center-details-footer.component';
+import { type ConfigSchema } from '../../config-schema';
+import { useConfig } from '@openmrs/esm-framework';
 
 type PrintableCertificateProps = {
   certificate: Certificate;
@@ -22,6 +24,8 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
   isLoadingEncounters,
 }) => {
   const certConfig = getCertificateBodyConfig(certificate.encounterType ?? certificate.formName, certificate.encounter);
+
+  const { certificatesPrint } = useConfig<ConfigSchema>();
 
   const BodyComponent = certConfig.bodyComponent;
 
@@ -43,6 +47,11 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
       <PrintPatientDetails
         patient={certificate.patient}
         encounter={certificate.encounter as any}
+        config={{
+          showIdentifierRow: certificatesPrint.showPatientIdentifierRow,
+          leftQrCode: certificatesPrint.leftQrCode,
+          rightQrCode: certificatesPrint.rightQrCode,
+        }}
         isLoadingEncounters={isLoadingEncounters}
       />
 

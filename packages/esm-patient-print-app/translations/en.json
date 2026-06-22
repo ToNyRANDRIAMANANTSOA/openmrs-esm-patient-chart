@@ -2,6 +2,7 @@
   "age": "Age:",
   "allergies": "Allergies:",
   "cancel": "Cancel",
+  "certifyHavingExamined": "Certify having examined:",
   "contact": "Contact:",
   "dob": "Date of birth:",
   "doctorSignature": "Doctor's Signature / Stamp",
@@ -11,9 +12,10 @@
   "generating": "Generating...",
   "generatingPdf": "Generating PDF...",
   "id": "ID",
+  "iUndersigned": "I, the undersigned,",
   "licenseTypeDefault": "Nº Ordre",
   "loading": "Loading",
-  "medicalCertification": "Medical Certification",
+  "loadingData": "Loading data...",
   "noAllergiesRecorded": "No allergies recorded",
   "onDate": "on",
   "patient": "Patient",
@@ -26,7 +28,5 @@
   "print": "Print",
   "printedBy": "Printed by",
   "printSelected": "Print selected",
-  "visitDetails": "Visit Details",
-  "iUndersigned": "I, the undersigned,",
-  "certifyHavingExamined": "Certify having examined:"
+  "visitDetails": "Visit Details"
 }

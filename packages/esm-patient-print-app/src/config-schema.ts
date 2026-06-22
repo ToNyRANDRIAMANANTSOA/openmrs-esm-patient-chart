@@ -51,6 +51,15 @@ export const configSchema = {
     leftQrCode: qrCodeConfigSchema('none', 'none'),
     rightQrCode: qrCodeConfigSchema('visit_uuid', 'visit_label'),
   },
+  certificatesPrint: {
+    showPatientIdentifierRow: {
+      _type: Type.Boolean,
+      _default: true,
+      _description: 'When true, displays an extra row above the patient name showing the patient OpenMRS identifier.',
+    },
+    leftQrCode: qrCodeConfigSchema('none', 'none'),
+    rightQrCode: qrCodeConfigSchema('visit_uuid', 'visit_label'),
+  },
 };
 
 type QrCodeValueType = (typeof qrCodeValueTypes)[number];
@@ -69,6 +78,11 @@ export type ConfigSchema = {
     src: string;
   };
   prescriptionsPrint: {
+    showPatientIdentifierRow: boolean;
+    leftQrCode: QrCodeConfig;
+    rightQrCode: QrCodeConfig;
+  };
+  certificatesPrint: {
     showPatientIdentifierRow: boolean;
     leftQrCode: QrCodeConfig;
     rightQrCode: QrCodeConfig;
