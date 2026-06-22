@@ -6,14 +6,12 @@ import { type MappedEncounter } from './types/certifications';
 
 interface PrintCertificationsButtonProps {
   selectedEncounters: Array<MappedEncounter>;
-  patientDetails: any;
   patient: fhir.Patient;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 }
 
 const PrintCertificationsButton: FunctionComponent<PrintCertificationsButtonProps> = ({
   selectedEncounters,
-  patientDetails,
   patient,
   size = 'sm',
 }) => {
@@ -23,10 +21,9 @@ const PrintCertificationsButton: FunctionComponent<PrintCertificationsButtonProp
     const dispose = showModal('print-certifications-modal', {
       closeModal: () => dispose(),
       encounters: selectedEncounters,
-      patientDetails,
       patient,
     });
-  }, [selectedEncounters, patientDetails, patient]);
+  }, [selectedEncounters, patient]);
 
   return (
     <Button

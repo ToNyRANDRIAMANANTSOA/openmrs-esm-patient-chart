@@ -1,126 +1,94 @@
 import type React from 'react';
-import GeneralCertificateTemplate from './templates/GeneralCertificateTemplate';
-import BirthCertificateTemplate from './templates/BirthCertificateTemplate';
-import DeathCertificateTemplate from './templates/DeathCertificateTemplate';
-import DivingFitnessTemplate from './templates/DivingFitnessTemplate'; // Import diving template
-import FitToFlyTemplate from './templates/FitToFlyTemplate';
-import GoodHealthTemplate from './templates/GoodHealthTemplate';
-import NonContagionTemplate from './templates/NonContagionTemplate';
-import SchoolCertificateTemplate from './templates/SchoolCertificateTemplate';
-import SportsFitnessTemplate from './templates/SportsFitnessTemplate'; // Import sports fitness template
+import { type CertificateBodyProps } from './templates/types';
+import GeneralCertificateBody from './templates/GeneralCertificateBody';
+import BirthCertificateBody from './templates/BirthCertificateBody';
+import DeathCertificateBody from './templates/DeathCertificateBody';
+import DivingFitnessBody from './templates/DivingFitnessBody';
+import FitToFlyBody from './templates/FitToFlyBody';
+import GoodHealthBody from './templates/GoodHealthBody';
+import NonContagionBody from './templates/NonContagionBody';
+import SchoolCertificateBody from './templates/SchoolCertificateBody';
+import SportsFitnessBody from './templates/SportsFitnessBody';
 import { getObsByConceptKeywords } from './templates/utils';
 
-export interface CertificateConfig {
+export interface CertificateBodyConfig {
   key: string;
   title: string;
   patientFields: Array<
     'name' | 'familyName' | 'givenName' | 'age' | 'gender' | 'birthDate' | 'address' | 'location' | 'identifiers'
   >;
   practitionerFields: Array<'name' | 'onmNumber'>;
-  showCommonHeader: boolean;
-  showCommonPatientBand: boolean;
-  showCommonSignatures: boolean;
-  templateComponent: React.ComponentType<{
-    patientDetails: any;
-    encounter: any;
-  }>;
+  bodyComponent: React.ComponentType<CertificateBodyProps>;
 }
 
-export const certificatesRegistry: Record<string, CertificateConfig> = {
+export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   GENERAL: {
     key: 'GENERAL',
     title: 'General Certificate',
     patientFields: ['name', 'age', 'gender', 'identifiers'],
     practitionerFields: ['name'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: GeneralCertificateTemplate,
+    bodyComponent: GeneralCertificateBody,
   },
   BIRTH: {
     key: 'BIRTH',
     title: 'Birth Certificate',
     patientFields: ['name', 'gender', 'birthDate', 'address'],
     practitionerFields: ['name'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: BirthCertificateTemplate,
+    bodyComponent: BirthCertificateBody,
   },
   DEATH: {
     key: 'DEATH',
     title: 'Death Certificate',
     patientFields: ['name', 'age', 'gender', 'birthDate', 'address'],
     practitionerFields: ['name'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: DeathCertificateTemplate,
+    bodyComponent: DeathCertificateBody,
   },
   DIVING: {
     key: 'DIVING',
     title: 'Diving Fitness Certificate',
     patientFields: ['name', 'age', 'gender', 'birthDate'],
     practitionerFields: ['name', 'onmNumber'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: DivingFitnessTemplate,
+    bodyComponent: DivingFitnessBody,
   },
   FIT_TO_FLY: {
     key: 'FIT_TO_FLY',
     title: 'Fit To Fly Certificate',
     patientFields: ['name', 'age', 'gender', 'birthDate', 'identifiers'],
     practitionerFields: ['name', 'onmNumber'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: FitToFlyTemplate,
+    bodyComponent: FitToFlyBody,
   },
   GOOD_HEALTH: {
     key: 'GOOD_HEALTH',
     title: 'Good Health Certificate',
     patientFields: ['name', 'age', 'gender', 'birthDate', 'address'],
     practitionerFields: ['name'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: GoodHealthTemplate,
+    bodyComponent: GoodHealthBody,
   },
   NON_CONTAGION: {
     key: 'NON_CONTAGION',
     title: 'Non-Contagion Certificate',
     patientFields: ['name', 'age', 'gender', 'address'],
     practitionerFields: ['name'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: NonContagionTemplate,
+    bodyComponent: NonContagionBody,
   },
   SCHOOL: {
     key: 'SCHOOL',
     title: 'School Attendance/Excusal Certificate',
     patientFields: ['name', 'age', 'gender', 'birthDate'],
     practitionerFields: ['name'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: SchoolCertificateTemplate,
+    bodyComponent: SchoolCertificateBody,
   },
   SPORTS_FITNESS: {
     key: 'SPORTS_FITNESS',
     title: 'Medical Certificate of Fitness or Unfitness for Sports',
     patientFields: ['familyName', 'givenName', 'birthDate', 'address', 'location'],
     practitionerFields: ['name', 'onmNumber'],
-    showCommonHeader: false,
-    showCommonPatientBand: false,
-    showCommonSignatures: false,
-    templateComponent: SportsFitnessTemplate,
+    bodyComponent: SportsFitnessBody,
   },
 };
 
-export function getCertificateConfig(subheader: string, encounter?: any): CertificateConfig {
-  const obsList = encounter?.obs || [];
+export function getCertificateBodyConfig(subheader: string, encounter?: any): CertificateBodyConfig {
+  const obsList = encounter?.obs ?? [];
 
   const certificateTypeFromObs = getObsByConceptKeywords(
     obsList,
@@ -138,40 +106,40 @@ export function getCertificateConfig(subheader: string, encounter?: any): Certif
 
   const textToMatch = (
     certificateTypeFromObs ||
-    encounter?.formName ||
-    encounter?.encounterType ||
+    encounter?.form?.name ||
+    encounter?.encounterType?.display ||
     subheader ||
     ''
   ).toLowerCase();
 
   if (textToMatch.includes('sport') || textToMatch.includes('aptitude sportive')) {
-    return certificatesRegistry.SPORTS_FITNESS;
+    return certificatesBodyRegistry.SPORTS_FITNESS;
   }
   if (textToMatch.includes('plong') || textToMatch.includes('diving')) {
-    return certificatesRegistry.DIVING;
+    return certificatesBodyRegistry.DIVING;
   }
   if (textToMatch.includes('fly') || textToMatch.includes('fit to fly')) {
-    return certificatesRegistry.FIT_TO_FLY;
+    return certificatesBodyRegistry.FIT_TO_FLY;
   }
   if (textToMatch.includes('birth') || textToMatch.includes('naissance')) {
-    return certificatesRegistry.BIRTH;
+    return certificatesBodyRegistry.BIRTH;
   }
   if (textToMatch.includes('death') || textToMatch.includes('décès') || textToMatch.includes('deces')) {
-    return certificatesRegistry.DEATH;
+    return certificatesBodyRegistry.DEATH;
   }
   if (
     textToMatch.includes('good health') ||
     textToMatch.includes('bonne santé') ||
     textToMatch.includes('bonne sante')
   ) {
-    return certificatesRegistry.GOOD_HEALTH;
+    return certificatesBodyRegistry.GOOD_HEALTH;
   }
   if (textToMatch.includes('contagious') || textToMatch.includes('non-contagious')) {
-    return certificatesRegistry.NON_CONTAGION;
+    return certificatesBodyRegistry.NON_CONTAGION;
   }
   if (textToMatch.includes('school') || textToMatch.includes('scolaire')) {
-    return certificatesRegistry.SCHOOL;
+    return certificatesBodyRegistry.SCHOOL;
   }
 
-  return certificatesRegistry.GENERAL;
+  return certificatesBodyRegistry.GENERAL;
 }

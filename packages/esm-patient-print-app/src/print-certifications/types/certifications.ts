@@ -1,6 +1,7 @@
 // from esm-patient-common-lib\src\types\index.ts
 
 import { type Diagnosis, type Obs } from '@openmrs/esm-framework';
+import { type Encounter, type Provider, type Visit } from '../../print-selected-orders/types/prescription';
 
 /**
  * The form encounter as it is fetched from the API.
@@ -60,3 +61,41 @@ export interface MappedEncounter {
   visitTypeUuid?: string;
   visitUuid: string;
 }
+
+export interface EnrichedCertEncounter extends Encounter {
+  encounterType?: { uuid: string; display: string };
+  form?: { uuid: string; display: string; name: string };
+  obs?: Array<Obs>;
+  encounterProviders?: Array<{
+    provider: {
+      uuid: string;
+      display: string;
+      person?: { uuid: string; display: string };
+      attributes?: Record<string, string>;
+    };
+  }>;
+}
+
+export type Certificate = {
+  id: string;
+  provider: Provider;
+  encounter: EnrichedCertEncounter;
+  patient: {
+    uuid: string;
+    display: string;
+    age: string | number;
+    birthdate: string;
+    gender: string;
+    address: string;
+    identifiers: string[];
+    allergies: string[];
+  };
+  obs: Array<Obs>;
+  formName: string;
+  encounterType: string;
+  metadata: {
+    generatedAt: string;
+  };
+};
+
+export type { Encounter, Provider, Visit };

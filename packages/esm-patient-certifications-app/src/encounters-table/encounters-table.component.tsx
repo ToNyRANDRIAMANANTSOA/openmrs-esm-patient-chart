@@ -235,10 +235,10 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
       const dispose = showModal('print-certifications-modal', {
         closeModal: () => dispose(),
         encounters: [encounter],
-        patientDetails,
+        patient,
       });
     },
-    [patientDetails],
+    [patient],
   );
 
   if (isLoadingEncounterTypes || isLoading) {

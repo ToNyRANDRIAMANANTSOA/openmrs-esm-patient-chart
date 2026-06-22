@@ -33,12 +33,14 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
   const headerBlock = (
     <div className={styles.printHeader}>
       <div className={styles.printLogoPlusText}>
-        {titlePosition !== 'bottom-center' && (
-          <div className={styles.printLogoText}>
-            <h3>{title}</h3>
-            {subtitle && <p>{subtitle}</p>}
-          </div>
-        )}
+        <div className={styles.printLogoText}>
+          {titlePosition !== 'bottom-center' && (
+            <>
+              <h3>{title}</h3>
+              {subtitle && <p>{subtitle}</p>}
+            </>
+          )}
+        </div>
 
         {logo?.src ? (
           <img width={110} className={styles.printLogo} src={logo.src} alt={logo.alt} />
@@ -62,7 +64,7 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
             <Loading withOverlay={false} small />
           ) : (
             <div>
-              <span>{provider?.attributes?.title}. </span>
+              <span>{provider?.attributes?.title} </span>
               <span>{provider?.name}</span>
               <br />
               <span>{provider?.attributes?.specialties}</span>
