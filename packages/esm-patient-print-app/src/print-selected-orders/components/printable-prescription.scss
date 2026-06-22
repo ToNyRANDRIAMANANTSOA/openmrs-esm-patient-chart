@@ -92,58 +92,6 @@
   .printWrapper:last-child {
     break-after: auto;
   }
-
-  .centerDetailsFooter {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
-}
-
-.printHeader {
-  border-bottom: 2px solid var(--header-border);
-  padding-bottom: 15px;
-  margin-bottom: 20px;
-}
-
-.printLogoPlusText {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.printLogo {
-  object-fit: contain;
-}
-
-.printLogoText {
-  margin: 0 0 5px;
-  font-weight: bold;
-}
-
-.clinicInfo {
-  color: var(--title-color);
-  // flex-grow: 1;
-  // font-size: 22px;
-}
-
-.printInfo {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  line-height: 1.5;
-  align-items: flex-end;
-}
-
-.facilityAddress {
-  min-width: 50%;
-  text-align: right;
-}
-
-.providerInfo {
-  min-width: 50%;
 }
 
 .watermark {
@@ -154,43 +102,6 @@
   transform: translate(-50%, 50%);
   pointer-events: none;
   z-index: 0;
-}
-
-.patientInfo {
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 1;
-}
-
-.patientInfoRow {
-  display: flex;
-  align-items: flex-start;
-
-  table {
-    width: 100%;
-    flex: 1;
-    min-width: 0;
-    border-collapse: collapse;
-  }
-
-  td {
-    padding: 5px 8px;
-    vertical-align: top;
-  }
-
-  tr:nth-child(even) {
-    background-color: var(--table-row-alt);
-  }
-}
-
-.qrBlock {
-  min-width: 108px;
-  width: 108px;
-  padding: 5px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
 }
 
 .sectionTitleWrapper {
@@ -321,13 +232,5 @@
 @media print {
   .prescriptionFooter p {
     font-size: 11px;
-  }
-}
-
-.centerDetailsFooter {
-  margin-top: 2rem;
-  p {
-    font-size: 11px;
-    text-align: justify;
   }
 }
