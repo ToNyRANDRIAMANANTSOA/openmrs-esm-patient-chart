@@ -5,6 +5,7 @@
   "arriveBeforeScheduledProcedureTime": "Por favor, llegue antes de la hora programada del procedimiento.",
   "bringPreviousImagingReports": "Traiga informes de imágenes anteriores si están disponibles.",
   "cancel": "Cancelar",
+  "certBody.dayUnit": "día(s)",
   "certifyHavingExamined": "Certifico haber examinado:",
   "clinicalHistory": "Historia clínica",
   "confidentialMedicalInfo": "Información médica confidencial",

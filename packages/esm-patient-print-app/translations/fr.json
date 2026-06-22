@@ -27,6 +27,7 @@
   "contactHealthcareProvider": "Contactez votre prestataire de soins en cas de réactions indésirables.",
   "dateAndPlaceOfBirth": "Date et lieu de naissance :",
   "dateIssued": "Date d'émission :",
+  "certBody.dayUnit": "jour(s)",
   "dayUnit": "jour(s)",
   "days": "jour(s),",
   "deathCertClosing": "Ce certificat est délivré à la demande de la famille / des autorités compétentes, et à valoir auprès de qui de droit.",

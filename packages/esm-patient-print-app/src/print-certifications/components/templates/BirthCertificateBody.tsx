@@ -1,17 +1,20 @@
 import React from 'react';
-import { Loading } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 import styles from '../../../print-selected-orders/components/printable-prescription.scss';
 import { type CertificateBodyProps } from './types';
-import { flattenObs, formatDateLong, getObsValue } from './utils';
+import { getObsByConceptKeywords } from './utils';
 
 const BirthCertificateBody: React.FC<CertificateBodyProps> = ({ certificate, isLoadingEncounters }) => {
-  const { t, i18n } = useTranslation();
-  const locale = i18n.language?.startsWith('fr') ? 'fr-FR' : 'en-US';
-  const rows = flattenObs(certificate.obs).filter((obs) => getObsValue(obs));
+  const { t } = useTranslation();
+
+  if (isLoadingEncounters) return null;
+
+  const obs = certificate.obs;
+  const motherName = getObsByConceptKeywords(obs, "mother's name", 'mother', 'mère');
 
   return (
     <section className={styles.block}>
+      {/*
       <div className={styles.sectionTitleWrapper}>
         <strong>{t('birthCertificateDetails', 'Birth certificate details:')}</strong>
         <span>
@@ -19,7 +22,6 @@ const BirthCertificateBody: React.FC<CertificateBodyProps> = ({ certificate, isL
           {certificate.encounter?.encounterDatetime && formatDateLong(certificate.encounter.encounterDatetime, locale)}
         </span>
       </div>
-
       <table className={styles.printPrescription}>
         <thead>
           <tr>
@@ -29,11 +31,7 @@ const BirthCertificateBody: React.FC<CertificateBodyProps> = ({ certificate, isL
         </thead>
         <tbody>
           {isLoadingEncounters ? (
-            <tr>
-              <td colSpan={2}>
-                <Loading withOverlay={false} small />
-              </td>
-            </tr>
+            <tr><td colSpan={2}><Loading withOverlay={false} small /></td></tr>
           ) : rows.length > 0 ? (
             rows.map((obs, index) => (
               <tr key={obs.uuid ?? index}>
@@ -42,12 +40,18 @@ const BirthCertificateBody: React.FC<CertificateBodyProps> = ({ certificate, isL
               </tr>
             ))
           ) : (
-            <tr>
-              <td colSpan={2}>{t('noDataRecorded', 'No data recorded')}</td>
-            </tr>
+            <tr><td colSpan={2}>{t('noDataRecorded', 'No data recorded')}</td></tr>
           )}
         </tbody>
       </table>
+      */}
+      <p className={styles.bodyLong01}>
+        {t('certBody.birth.theBirth', 'The birth of the aforementioned child, born of')}{' '}
+        <strong>{motherName || '—'}</strong>.
+      </p>
+      <p className={styles.bodyLong01}>
+        {t('certBody.birth.issuedOnRequest', 'This certificate is issued at the request of the interested party.')}
+      </p>
     </section>
   );
 };
