@@ -144,8 +144,8 @@ const EncountersTable: React.FC<EncountersTableProps> = ({
   const [selectedEncounters, setSelectedEncounters] = useState<MappedEncounter[]>([]);
 
   useEffect(() => {
-    onSelectionChange?.({ selectedEncounters, patientDetails });
-  }, [selectedEncounters, patientDetails, onSelectionChange]);
+    onSelectionChange?.({ selectedEncounters, patientDetails, patient });
+  }, [selectedEncounters, patientDetails, onSelectionChange, patient]);
 
   const paginatedMappedEncounters = useMemo(
     () => (paginatedEncounters ?? []).map(mapEncounter).filter(Boolean),

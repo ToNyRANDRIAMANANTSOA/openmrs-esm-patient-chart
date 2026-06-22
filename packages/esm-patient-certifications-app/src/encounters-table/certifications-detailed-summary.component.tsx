@@ -24,14 +24,22 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
   const layout = useLayoutType();
   const responsiveSize = isDesktop(layout) ? 'sm' : 'lg';
   const session = useSession();
+  // const canPrintEncounters = userHasAccess('Front: Print Certifications', session?.user);
   const canPrintEncounters = userHasAccess('App: Print encounter forms', session?.user);
   const launchClinicalForms = useCallback(() => launchWorkspace2('clinical-forms-workspace'), []);
 
-  const [selectionState, setSelectionState] = useState<{ selectedEncounters: any[]; patientDetails: any } | null>(null);
+  const [selectionState, setSelectionState] = useState<{
+    selectedEncounters: any[];
+    patientDetails: any;
+    patient: any;
+  } | null>(null);
 
-  const handleSelectionChange = useCallback((state: { selectedEncounters: any[]; patientDetails: any } | null) => {
-    setSelectionState(state);
-  }, []);
+  const handleSelectionChange = useCallback(
+    (state: { selectedEncounters: any[]; patientDetails: any; patient: any } | null) => {
+      setSelectionState(state);
+    },
+    [],
+  );
 
   return (
     <div className={styles.widgetCard}>
@@ -44,6 +52,8 @@ const MedicalCertifications: React.FC<MedicalCertificationsProps> = ({ patientUu
                 selectedEncounters: selectionState?.selectedEncounters ?? [],
                 patientDetails: selectionState?.patientDetails ?? {},
                 size: responsiveSize,
+                patientUuid: patientUuid,
+                patient: selectionState?.patient,
               }}
             />
           )}

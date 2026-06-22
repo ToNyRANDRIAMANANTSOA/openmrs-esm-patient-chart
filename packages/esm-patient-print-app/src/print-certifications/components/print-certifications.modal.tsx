@@ -5,6 +5,7 @@ import { Button, Loading, ModalBody, ModalFooter } from '@carbon/react';
 import { useReactToPrint } from 'react-to-print';
 import PrintComponent from './print.component';
 import styles from './print-certifications.scss';
+import { type MappedEncounter } from '../types/certifications';
 
 interface PatientDetails {
   name: string;
@@ -19,14 +20,16 @@ interface PatientDetails {
 }
 
 interface PrintCertificationsModalProps {
-  encounters: Array<any>;
+  encounters: Array<MappedEncounter>;
   patientDetails: PatientDetails;
+  patient: fhir.Patient;
   closeModal: () => void;
 }
 
 const PrintCertificationsModal: React.FC<PrintCertificationsModalProps> = ({
   encounters,
   patientDetails,
+  patient,
   closeModal,
 }) => {
   const { t } = useTranslation();
@@ -34,6 +37,8 @@ const PrintCertificationsModal: React.FC<PrintCertificationsModalProps> = ({
   const [isPrinting, setIsPrinting] = useState(false);
 
   const dateOfIssue = new Date().toISOString();
+
+  const patientName = `${patient?.identifier[0]?.value}-${patient?.name[0]?.text}`.replace(/ /g, '-');
 
   const handlePrint = useReactToPrint({
     content: () => contentToPrintRef.current,
@@ -45,7 +50,7 @@ const PrintCertificationsModal: React.FC<PrintCertificationsModalProps> = ({
       setIsPrinting(false);
       closeModal();
     },
-    documentTitle: `MDK-Certifications-${patientDetails.name.replace(/ /g, '-')}-${dateOfIssue}`,
+    documentTitle: `MDK-Certifications-${patientName}-${dateOfIssue}`,
     pageStyle: `
       @page { margin: 1.5cm; size: A4; }
 
