@@ -15,6 +15,8 @@ import { getObsByConceptKeywords } from './templates/utils';
 export interface CertificateBodyConfig {
   key: string;
   title: string;
+  titleKey: string;
+  subtitleKey?: string;
   patientFields: Array<PatientFieldKey>;
   practitionerFields: Array<'name' | 'onmNumber'>;
   bodyComponent: React.ComponentType<CertificateBodyProps>;
@@ -23,7 +25,8 @@ export interface CertificateBodyConfig {
 export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   GENERAL: {
     key: 'GENERAL',
-    title: 'General Certificate',
+    title: 'Medical Certificate',
+    titleKey: 'generalCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name'],
     bodyComponent: GeneralCertificateBody,
@@ -31,6 +34,7 @@ export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   BIRTH: {
     key: 'BIRTH',
     title: 'Birth Certificate',
+    titleKey: 'birthCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name'],
     bodyComponent: BirthCertificateBody,
@@ -38,6 +42,7 @@ export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   DEATH: {
     key: 'DEATH',
     title: 'Death Certificate',
+    titleKey: 'deathCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name'],
     bodyComponent: DeathCertificateBody,
@@ -45,13 +50,16 @@ export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   DIVING: {
     key: 'DIVING',
     title: 'Diving Fitness Certificate',
+    titleKey: 'divingCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name', 'onmNumber'],
     bodyComponent: DivingFitnessBody,
   },
   FIT_TO_FLY: {
     key: 'FIT_TO_FLY',
-    title: 'Fit To Fly Certificate',
+    title: 'Certificate of Fitness to Fly',
+    titleKey: 'fitToFlyCertTitle',
+    subtitleKey: 'fitToFlyCertSubtitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId', 'passportNumber'],
     practitionerFields: ['name', 'onmNumber'],
     bodyComponent: FitToFlyBody,
@@ -59,6 +67,7 @@ export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   GOOD_HEALTH: {
     key: 'GOOD_HEALTH',
     title: 'Good Health Certificate',
+    titleKey: 'goodHealthCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name'],
     bodyComponent: GoodHealthBody,
@@ -66,20 +75,23 @@ export const certificatesBodyRegistry: Record<string, CertificateBodyConfig> = {
   NON_CONTAGION: {
     key: 'NON_CONTAGION',
     title: 'Non-Contagion Certificate',
+    titleKey: 'nonContagionCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name'],
     bodyComponent: NonContagionBody,
   },
   SCHOOL: {
     key: 'SCHOOL',
-    title: 'School Attendance/Excusal Certificate',
+    title: 'School Medical Certificate',
+    titleKey: 'schoolCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name'],
     bodyComponent: SchoolCertificateBody,
   },
   SPORTS_FITNESS: {
     key: 'SPORTS_FITNESS',
-    title: 'Medical Certificate of Fitness or Unfitness for Sports',
+    title: 'Medical Certificate of Fitness for Sports',
+    titleKey: 'sportsCertTitle',
     patientFields: ['patientName', 'birthDate', 'age', 'gender', 'patientId'],
     practitionerFields: ['name', 'onmNumber'],
     bodyComponent: SportsFitnessBody,

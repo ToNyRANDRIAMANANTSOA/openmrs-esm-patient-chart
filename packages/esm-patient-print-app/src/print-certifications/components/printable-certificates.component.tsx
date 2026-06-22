@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import styles from '../../print-selected-orders/components/printable-prescription.scss';
 import { type Certificate } from '../types/certifications';
@@ -10,6 +11,7 @@ import PrintProviderIntro from '../../shared/components/print-provider-intro.com
 import CenterDetailsFooter from '../../shared/components/center-details-footer.component';
 import { type ConfigSchema } from '../../config-schema';
 import { useConfig } from '@openmrs/esm-framework';
+import { formatDateLong } from './templates/utils';
 
 type PrintableCertificateProps = {
   certificate: Certificate;
@@ -26,15 +28,36 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
   const certConfig = getCertificateBodyConfig(certificate.encounterType ?? certificate.formName, certificate.encounter);
 
   const { certificatesPrint } = useConfig<ConfigSchema>();
+  const { t, i18n } = useTranslation();
+
+  const certTitles: Record<string, string> = {
+    generalCertTitle: t('generalCertTitle', 'Medical Certificate'),
+    birthCertTitle: t('birthCertTitle', 'Birth Certificate'),
+    deathCertTitle: t('deathCertTitle', 'Death Certificate'),
+    divingCertTitle: t('divingCertTitle', 'Diving Fitness Certificate'),
+    fitToFlyCertTitle: t('fitToFlyCertTitle', 'Certificate of Fitness to Fly'),
+    goodHealthCertTitle: t('goodHealthCertTitle', 'Good Health Certificate'),
+    nonContagionCertTitle: t('nonContagionCertTitle', 'Non-Contagion Certificate'),
+    schoolCertTitle: t('schoolCertTitle', 'School Medical Certificate'),
+    sportsCertTitle: t('sportsCertTitle', 'Medical Certificate of Fitness for Sports'),
+  };
+  const certSubtitles: Record<string, string> = {
+    fitToFlyCertSubtitle: t('fitToFlyCertSubtitle', '(Medical certificate of non-contraindication to air transport)'),
+  };
 
   const BodyComponent = certConfig.bodyComponent;
 
   const location = certificate.encounter?.visit?.location;
+  const locationName = location?.display ?? location?.name ?? '';
+  const encounterDate = certificate.encounter?.encounterDatetime
+    ? formatDateLong(certificate.encounter.encounterDatetime, i18n.language)
+    : '';
 
   return (
     <div className={styles.printWrapper}>
       <PrintHeader
-        title={certConfig.title.toUpperCase()}
+        title={(certTitles[certConfig.titleKey] ?? certConfig.title).toUpperCase()}
+        subtitle={certConfig.subtitleKey ? certSubtitles[certConfig.subtitleKey] : undefined}
         titlePosition="bottom-center"
         provider={certificate.provider}
         location={location}
@@ -62,6 +85,25 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
       />
 
       <BodyComponent certificate={certificate} isLoadingEncounters={isLoadingEncounters} />
+
+      <p style={{ marginTop: '2rem', fontWeight: 'bold', lineHeight: 1.8 }}>
+        {t(
+          'certClosingStatement',
+          "Ce certificat est établi la demande de l'intéressé(e) et remis en main propre pour faire valoir ce que de droit.",
+        )}
+      </p>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+        <div style={{ fontWeight: 'bold', lineHeight: 2.2, textAlign: 'right' }}>
+          <div>
+            {t('doneAt', 'Done at')} {locationName}
+          </div>
+          <div>
+            {t('onDate', 'on')} {encounterDate}
+          </div>
+          <div>{t('signatureAndStamp', "Doctor's Signature and Stamp")}</div>
+        </div>
+      </div>
 
       <CenterDetailsFooter location={location} />
     </div>

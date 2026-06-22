@@ -3,12 +3,13 @@
   "age": "Age:",
   "allergies": "Allergies:",
   "cancel": "Cancel",
-  "certBody.dayUnit": "day(s)",
+  "certClosingStatement": "This certificate is issued at the request of the interested party and delivered in person as proof of right.",
   "certifyHavingExamined": "Certify having examined:",
   "contact": "Contact:",
   "dob": "Date of birth:",
   "doctorSignature": "Doctor's Signature / Stamp",
   "documentOfTotal": "Document #{{current}} / {{total}}",
+  "doneAt": "Done at",
   "email": "Email:",
   "familyName": "Family Name:",
   "gender": "Gender:",
@@ -34,5 +35,6 @@
   "print": "Print",
   "printedBy": "Printed by",
   "printSelected": "Print selected",
+  "signatureAndStamp": "Doctor's Signature and Stamp",
   "visitDetails": "Visit Details"
 }
