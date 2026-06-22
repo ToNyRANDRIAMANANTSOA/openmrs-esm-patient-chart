@@ -12,7 +12,8 @@ export const getSpecialtiesDisplay = (specialties: string | undefined, locale: s
   if (!specialties) return '';
 
   try {
-    const parsed = JSON.parse(specialties);
+    const decoded = decodeURIComponent(specialties);
+    const parsed = JSON.parse(decoded);
     if (typeof parsed === 'object' && parsed !== null) {
       return parsed[locale] || parsed['en'] || Object.values(parsed)[0] || specialties;
     }
