@@ -24,6 +24,23 @@
   color: var(--title-color);
 }
 
+.printTitleBelow {
+  text-align: center;
+  margin: 12px 0 8px;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+  }
+}
+
 .printInfo {
   display: flex;
   justify-content: space-between;

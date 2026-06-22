@@ -76,6 +76,10 @@ const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
     ? getQrBottomText(config.rightQrCode.bottomTextSource, config.rightQrCode.bottomTextCustomValue)
     : null;
 
+  // TODO: If weight must be display, get inspiration from :
+  // VitalsHeader at openmrs-esm-patient-chart\packages\esm-patient-vitals-app\src\vitals-and-biometrics-header\vitals-header.extension.tsx:45
+  // const { data: vitals, isLoading, isValidating } = useVitalsAndBiometrics(patientUuid, 'both');
+
   return (
     <div className={styles.patientInfo}>
       <div className={styles.patientInfoRow}>

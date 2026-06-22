@@ -13,8 +13,11 @@ import PrintHeader from '../../shared/components/print-header.component';
 import PrintPatientDetails from '../../shared/components/print-patient-details.component';
 import CenterDetailsFooter from '../../shared/components/center-details-footer.component';
 
+type TitlePosition = 'top-left' | 'bottom-center';
+
 type PrintablePrescriptionProps = {
   prescription: Prescription;
+  titlePosition?: TitlePosition;
   isLoadingProviders?: boolean;
   isLoadingEncounters?: boolean;
   index?: number;
@@ -22,6 +25,7 @@ type PrintablePrescriptionProps = {
 
 const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
   prescription,
+  titlePosition,
   isLoadingProviders,
   isLoadingEncounters,
 }) => {
@@ -34,16 +38,13 @@ const PrintablePrescription: React.FC<PrintablePrescriptionProps> = ({
   const BodyComponent =
     prescriptionBodyComponentMap[prescription?.metadata?.prescriptionType] ?? prescriptionBodyComponentMap.default;
 
-  // TODO: If weight must be display, get inspiration from :
-  // VitalsHeader at openmrs-esm-patient-chart\packages\esm-patient-vitals-app\src\vitals-and-biometrics-header\vitals-header.extension.tsx:45
-  // const { data: vitals, isLoading, isValidating } = useVitalsAndBiometrics(patientUuid, 'both');
-
   const location = prescription?.encounter?.visit?.location;
 
   return (
     <div className={styles.printWrapper}>
       <PrintHeader
         title={t(translationKey, defaultLabel).toUpperCase()}
+        titlePosition={titlePosition}
         provider={prescription?.provider}
         location={location}
         isLoadingProviders={isLoadingProviders}

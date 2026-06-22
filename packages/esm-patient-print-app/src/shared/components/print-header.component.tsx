@@ -6,9 +6,12 @@ import { type Provider, type Location } from '../../print-selected-orders/types/
 import { type ConfigSchema } from '../../config-schema';
 import styles from './print-shared.scss';
 
+type TitlePosition = 'top-left' | 'bottom-center';
+
 type PrintHeaderProps = {
   title: string;
   subtitle?: string;
+  titlePosition?: TitlePosition;
   provider?: Provider;
   location?: Location;
   isLoadingProviders?: boolean;
@@ -18,6 +21,7 @@ type PrintHeaderProps = {
 const PrintHeader: React.FC<PrintHeaderProps> = ({
   title,
   subtitle,
+  titlePosition = 'top-left',
   provider,
   location,
   isLoadingProviders,
@@ -26,13 +30,15 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
   const { t } = useTranslation();
   const { logo } = useConfig<ConfigSchema>();
 
-  return (
+  const headerBlock = (
     <div className={styles.printHeader}>
       <div className={styles.printLogoPlusText}>
-        <div className={styles.printLogoText}>
-          <h3>{title}</h3>
-          {subtitle && <p>{subtitle}</p>}
-        </div>
+        {titlePosition !== 'bottom-center' && (
+          <div className={styles.printLogoText}>
+            <h3>{title}</h3>
+            {subtitle && <p>{subtitle}</p>}
+          </div>
+        )}
 
         {logo?.src ? (
           <img width={110} className={styles.printLogo} src={logo.src} alt={logo.alt} />
@@ -92,6 +98,20 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
       </div>
     </div>
   );
+
+  if (titlePosition === 'bottom-center') {
+    return (
+      <div>
+        {headerBlock}
+        <div className={styles.printTitleBelow}>
+          <h3>{title}</h3>
+          {subtitle && <p>{subtitle}</p>}
+        </div>
+      </div>
+    );
+  }
+
+  return headerBlock;
 };
 
 export default PrintHeader;
