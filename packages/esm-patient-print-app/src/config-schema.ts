@@ -160,7 +160,7 @@ export const configSchema = {
       borderPadding: 12,
     }),
     leftQrCode: qrCodeConfigSchema('none', 'none'),
-    rightQrCode: qrCodeConfigSchema('visit_uuid', 'visit_label'),
+    rightQrCode: qrCodeConfigSchema('visit_uuid', 'none'),
   },
 };
 

@@ -9,7 +9,10 @@ type PrintSignatureBlockProps = {
 
 const PrintSignatureBlock: React.FC<PrintSignatureBlockProps> = ({ location, encounterDate }) => {
   const { t } = useTranslation();
-  const locationName = location?.display ?? location?.name ?? '';
+  let locationName = location?.countyDistrict;
+  locationName += location?.stateProvince ? ', ' + location?.stateProvince : '';
+  locationName += location?.country ? ', ' + location?.country : '';
+  locationName ??= location?.display ?? location?.name ?? '';
 
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
