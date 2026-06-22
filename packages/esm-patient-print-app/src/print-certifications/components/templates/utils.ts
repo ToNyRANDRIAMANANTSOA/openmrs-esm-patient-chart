@@ -110,21 +110,27 @@ export function getObsValue(obs: any): string {
 }
 
 export function getObsByConceptKeywords(obsList: Array<any>, ...keywords: string[]): string {
-  let result = '';
-  if (!obsList) return result;
+  if (!obsList) return '';
 
-  const traverse = (obs: any) => {
+  const traverse = (obs: any): string => {
     const conceptName = (obs.concept?.display || '').toLowerCase();
-    const matches = keywords.some((kw) => conceptName.includes(kw.toLowerCase()));
-    if (matches) {
-      result = getObsValue(obs);
-      return;
+    if (keywords.some((kw) => conceptName.includes(kw.toLowerCase()))) {
+      const value = getObsValue(obs);
+      if (value) return value;
+      // Concept matched but no direct value (obs group) — fall through to members
     }
-    if (obs.groupMembers && Array.isArray(obs.groupMembers)) {
-      obs.groupMembers.forEach(traverse);
+    if (obs.groupMembers?.length) {
+      for (const member of obs.groupMembers) {
+        const found = traverse(member);
+        if (found) return found;
+      }
     }
+    return '';
   };
 
-  obsList.forEach(traverse);
-  return result;
+  for (const obs of obsList) {
+    const found = traverse(obs);
+    if (found) return found;
+  }
+  return '';
 }
