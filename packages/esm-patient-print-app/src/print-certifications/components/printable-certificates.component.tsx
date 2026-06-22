@@ -8,6 +8,7 @@ import { getCertificateBodyConfig } from './certificate-body-registry';
 import PrintHeader from '../../shared/components/print-header.component';
 import PrintPatientDetails from '../../shared/components/print-patient-details.component';
 import PrintProviderIntro from '../../shared/components/print-provider-intro.component';
+import PrintSignatureBlock from './print-signature-block.component';
 import CenterDetailsFooter from '../../shared/components/center-details-footer.component';
 import { type ConfigSchema } from '../../config-schema';
 import { useConfig } from '@openmrs/esm-framework';
@@ -69,6 +70,7 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
         showFacilityAddress={certificatesPrint.header.showFacilityAddress}
         sideAAlignment={certificatesPrint.header.sideAAlignment}
         sideBAlignment={certificatesPrint.header.sideBAlignment}
+        showHeaderBorderBottom={false}
       />
 
       <PrintProviderIntro provider={certificate.provider} isLoadingProviders={isLoadingProviders} />
@@ -82,6 +84,8 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
           rightQrCode: certificatesPrint.rightQrCode,
         }}
         isLoadingEncounters={isLoadingEncounters}
+        useLargerFontSize={true}
+        showBorders={true}
       />
 
       <BodyComponent certificate={certificate} isLoadingEncounters={isLoadingEncounters} />
@@ -93,17 +97,7 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
         )}
       </p>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
-        <div style={{ fontWeight: 'bold', lineHeight: 2.2, textAlign: 'right' }}>
-          <div>
-            {t('doneAt', 'Done at')} {locationName}
-          </div>
-          <div>
-            {t('onDate', 'on')} {encounterDate}
-          </div>
-          <div>{t('signatureAndStamp', "Doctor's Signature and Stamp")}</div>
-        </div>
-      </div>
+      <PrintSignatureBlock location={location} encounterDate={encounterDate} />
 
       <CenterDetailsFooter location={location} />
     </div>

@@ -49,7 +49,7 @@ const SportsFitnessBody: React.FC<CertificateBodyProps> = ({ certificate, isLoad
       </table>
       */}
       <p className={styles.bodyLong01}>
-        {t('certBody.sports.declared', 'That the aforementioned patient is declared')}{' '}
+        {t('certBody.sports.declared', 'Declare that the aforementioned patient is')}{' '}
         <strong>{fitnessStatus || '—'}</strong> {t('certBody.sports.forPracticeOf', 'for the practice of')}{' '}
         <strong>{sportType || '—'}</strong>.
       </p>

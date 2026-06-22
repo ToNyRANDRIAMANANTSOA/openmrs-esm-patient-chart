@@ -13,6 +13,7 @@ const headerConfigSchema = (defaults: {
   sideAAlignment: HeaderAlignmentDefault;
   sideBAlignment: HeaderAlignmentDefault;
   titleAndLogoInSharedRow: boolean;
+  showHeaderBorderBottom: boolean;
 }) => ({
   titleAndLogoInSharedRow: {
     _type: Type.Boolean,
@@ -47,6 +48,11 @@ const headerConfigSchema = (defaults: {
     _description: 'Horizontal alignment of column B content. Options: "left", "center", "right".',
     _validators: [validators.oneOf([...headerAlignments])],
   },
+  showHeaderBorderBottom: {
+    _type: Type.Boolean,
+    _default: defaults.showHeaderBorderBottom,
+    _description: 'Show a border line below the header.',
+  },
 });
 
 const qrCodeConfigSchema = (defaultValueType: string, defaultBottomTextSource: string) => ({
@@ -67,6 +73,28 @@ const qrCodeConfigSchema = (defaultValueType: string, defaultBottomTextSource: s
     _type: Type.String,
     _default: '',
     _description: 'Text to display below the QR code when bottomTextSource is "custom".',
+  },
+});
+
+const patientDetailsConfigSchema = (defaults: {
+  useLargerFontSize: boolean;
+  showBorders: boolean;
+  borderPadding: number;
+}) => ({
+  useLargerFontSize: {
+    _type: Type.Boolean,
+    _default: defaults.useLargerFontSize,
+    _description: 'Use a larger font size for patient details text.',
+  },
+  showBorders: {
+    _type: Type.Boolean,
+    _default: defaults.showBorders,
+    _description: 'Show border lines around the patient details section.',
+  },
+  borderPadding: {
+    _type: Type.Number,
+    _default: defaults.borderPadding,
+    _description: 'Padding (in pixels) around the patient details section when borders are shown.',
   },
 });
 
@@ -96,12 +124,18 @@ export const configSchema = {
       showFacilityAddress: true,
       sideAAlignment: 'left',
       sideBAlignment: 'right',
+      showHeaderBorderBottom: true,
     }),
     showPatientIdentifierRow: {
       _type: Type.Boolean,
       _default: true,
       _description: 'When true, displays an extra row above the patient name showing the patient OpenMRS identifier.',
     },
+    patientDetails: patientDetailsConfigSchema({
+      useLargerFontSize: false,
+      showBorders: false,
+      borderPadding: 12,
+    }),
     leftQrCode: qrCodeConfigSchema('none', 'none'),
     rightQrCode: qrCodeConfigSchema('visit_uuid', 'visit_label'),
   },
@@ -113,12 +147,18 @@ export const configSchema = {
       showFacilityAddress: false,
       sideAAlignment: 'center',
       sideBAlignment: 'center',
+      showHeaderBorderBottom: true,
     }),
     showPatientIdentifierRow: {
       _type: Type.Boolean,
       _default: true,
       _description: 'When true, displays an extra row above the patient name showing the patient OpenMRS identifier.',
     },
+    patientDetails: patientDetailsConfigSchema({
+      useLargerFontSize: false,
+      showBorders: false,
+      borderPadding: 12,
+    }),
     leftQrCode: qrCodeConfigSchema('none', 'none'),
     rightQrCode: qrCodeConfigSchema('visit_uuid', 'visit_label'),
   },
@@ -134,6 +174,12 @@ type QrCodeConfig = {
   bottomTextCustomValue: string;
 };
 
+export type PatientDetailsConfig = {
+  useLargerFontSize: boolean;
+  showBorders: boolean;
+  borderPadding: number;
+};
+
 export type HeaderConfig = {
   titleAndLogoInSharedRow: boolean;
   showProviderInfo: boolean;
@@ -141,6 +187,7 @@ export type HeaderConfig = {
   showFacilityAddress: boolean;
   sideAAlignment: HeaderAlignment;
   sideBAlignment: HeaderAlignment;
+  showHeaderBorderBottom: boolean;
 };
 
 export type ConfigSchema = {
@@ -152,12 +199,14 @@ export type ConfigSchema = {
   prescriptionsPrint: {
     header: HeaderConfig;
     showPatientIdentifierRow: boolean;
+    patientDetails: PatientDetailsConfig;
     leftQrCode: QrCodeConfig;
     rightQrCode: QrCodeConfig;
   };
   certificatesPrint: {
     header: HeaderConfig;
     showPatientIdentifierRow: boolean;
+    patientDetails: PatientDetailsConfig;
     leftQrCode: QrCodeConfig;
     rightQrCode: QrCodeConfig;
   };

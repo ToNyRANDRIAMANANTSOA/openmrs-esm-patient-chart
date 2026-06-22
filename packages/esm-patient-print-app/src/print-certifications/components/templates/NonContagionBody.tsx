@@ -51,7 +51,7 @@ const NonContagionBody: React.FC<CertificateBodyProps> = ({ certificate, isLoadi
       </table>
       */}
       <p className={styles.bodyLong01}>
-        {t('certBody.nonContagion.thatThePatient', 'That the aforementioned patient')}{' '}
+        {t('certBody.nonContagion.thatThePatient', 'Declare that the aforementioned patient')}{' '}
         {isContagious ? (
           <strong>{t('certBody.nonContagion.isCarrier', 'is a carrier of a contagious disease')}</strong>
         ) : (

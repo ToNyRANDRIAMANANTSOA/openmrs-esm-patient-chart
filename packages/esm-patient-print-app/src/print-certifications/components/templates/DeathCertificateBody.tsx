@@ -58,7 +58,8 @@ const DeathCertificateBody: React.FC<CertificateBodyProps> = ({ certificate, isL
       </table>
       */}
       <p className={styles.bodyLong01}>
-        {t('certBody.death.having', 'Having confirmed the death occurring on')} <strong>{formattedDate || '—'}</strong>
+        {t('certBody.death.having', 'Having confirmed the death occurring on')}{' '}
+        <strong>{(formattedDate ?? dateOfDeath) || '—'}</strong>
         {formattedTime && (
           <>
             {' '}

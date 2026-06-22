@@ -50,9 +50,9 @@ const GoodHealthBody: React.FC<CertificateBodyProps> = ({ certificate, isLoading
       <p className={styles.bodyLong01}>
         {t(
           'certBody.goodHealth.body',
-          'That the aforementioned patient, following the clinical examination carried out today, is declared in good health',
+          'Declare that the aforementioned patient, following the clinical examination carried out today, is',
         )}{' '}
-        (<strong>{fitnessStatus || '—'}</strong>).
+        <strong>{fitnessStatus || '—'}</strong>.
       </p>
       {validity && (
         <p className={styles.bodyLong01}>

@@ -50,7 +50,7 @@ const DivingFitnessBody: React.FC<CertificateBodyProps> = ({ certificate, isLoad
       </table>
       */}
       <p className={styles.bodyLong01}>
-        {t('certBody.diving.declared', 'That the aforementioned patient is declared')}{' '}
+        {t('certBody.diving.declared', 'Declare that the aforementioned patient is')}{' '}
         <strong>{fitnessStatus || '—'}</strong> {t('certBody.diving.forDiving', 'for the practice of diving')}
         {divingType && (
           <>

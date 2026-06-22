@@ -46,7 +46,7 @@ const BirthCertificateBody: React.FC<CertificateBodyProps> = ({ certificate, isL
       </table>
       */}
       <p className={styles.bodyLong01}>
-        {t('certBody.birth.theBirth', 'The birth of the aforementioned child, born of')}{' '}
+        {t('certBody.birth.theBirth', 'Declare the birth of the aforementioned child, born of')}{' '}
         <strong>{motherName || '—'}</strong>.
       </p>
       <p className={styles.bodyLong01}>

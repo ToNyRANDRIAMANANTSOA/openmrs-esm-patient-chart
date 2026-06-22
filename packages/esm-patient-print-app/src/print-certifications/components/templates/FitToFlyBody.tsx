@@ -51,8 +51,8 @@ const FitToFlyBody: React.FC<CertificateBodyProps> = ({ certificate, isLoadingEn
       </table>
       */}
       <p className={styles.bodyLong01}>
-        {t('certBody.fitToFly.thatThePatient', 'That the aforementioned patient, holder of passport no.')}{' '}
-        <strong>{passportNumber || '—'}</strong>, {t('certBody.fitToFly.isDeclared', 'is declared')}{' '}
+        {t('certBody.fitToFly.thatThePatient', 'Declare that the aforementioned patient, holder of passport no.')}{' '}
+        <strong>{passportNumber || '—'}</strong>, {t('certBody.fitToFly.isDeclared', 'is')}{' '}
         <strong>{fitnessStatus || '—'}</strong> {t('certBody.fitToFly.forAirTravel', 'for air travel.')}
       </p>
       {remarks && (

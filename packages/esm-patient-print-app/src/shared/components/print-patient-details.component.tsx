@@ -51,6 +51,9 @@ type PrintPatientDetailsProps = {
   fields: PatientFieldKey[];
   config?: QrLayoutConfig;
   isLoadingEncounters?: boolean;
+  useLargerFontSize?: boolean;
+  showBorders?: boolean;
+  borderPadding?: number;
 };
 
 const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
@@ -59,6 +62,9 @@ const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
   fields,
   config,
   isLoadingEncounters,
+  useLargerFontSize = false,
+  showBorders = false,
+  borderPadding = 12,
 }) => {
   const { t } = useTranslation();
 
@@ -100,7 +106,14 @@ const PrintPatientDetails: React.FC<PrintPatientDetailsProps> = ({
   const showDobAgeGenderRow = has('birthDate') || has('age') || has('gender');
 
   return (
-    <div className={styles.patientInfo}>
+    <div
+      className={styles.patientInfo}
+      style={{
+        border: showBorders ? '1px solid #ccc' : 'none',
+        padding: showBorders ? `${borderPadding}px` : '0',
+        fontSize: useLargerFontSize ? '1.1em' : 'inherit',
+      }}
+    >
       <div className={styles.patientInfoRow}>
         {(leftQrValue || leftQrBottomText) && (
           <div className={styles.qrBlock}>

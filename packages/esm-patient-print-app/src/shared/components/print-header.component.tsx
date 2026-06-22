@@ -22,6 +22,7 @@ type PrintHeaderProps = {
   showFacilityAddress?: boolean;
   sideAAlignment?: HeaderAlignment;
   sideBAlignment?: HeaderAlignment;
+  showHeaderBorderBottom?: boolean;
 };
 
 const alignClass = (alignment: HeaderAlignment) => {
@@ -44,6 +45,7 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
   showFacilityAddress = true,
   sideAAlignment = 'left',
   sideBAlignment = 'right',
+  showHeaderBorderBottom = true,
 }) => {
   const { t } = useTranslation();
   const { logo } = useConfig<ConfigSchema>();
@@ -71,7 +73,12 @@ const PrintHeader: React.FC<PrintHeaderProps> = ({
     ) : null;
 
   return (
-    <div className={styles.printHeader}>
+    <div
+      className={styles.printHeader}
+      style={{
+        borderBottom: showHeaderBorderBottom ? '2px solid var(--header-border)' : 'none',
+      }}
+    >
       {/* Shared top row: title + logo side-by-side (only when titleAndLogoInSharedRow is true) */}
       {titleAndLogoInSharedRow && (
         <div className={styles.printTitleLogoRow}>
