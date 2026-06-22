@@ -6,6 +6,7 @@ import { type Certificate } from '../types/certifications';
 import { getCertificateBodyConfig } from './certificate-body-registry';
 import PrintHeader from '../../shared/components/print-header.component';
 import PrintPatientDetails from '../../shared/components/print-patient-details.component';
+import PrintProviderIntro from '../../shared/components/print-provider-intro.component';
 import CenterDetailsFooter from '../../shared/components/center-details-footer.component';
 
 type PrintableCertificateProps = {
@@ -36,6 +37,8 @@ const PrintableCertificate: React.FC<PrintableCertificateProps> = ({
         isLoadingProviders={isLoadingProviders}
         isLoadingEncounters={isLoadingEncounters}
       />
+
+      <PrintProviderIntro provider={certificate.provider} isLoadingProviders={isLoadingProviders} />
 
       <PrintPatientDetails
         patient={certificate.patient}

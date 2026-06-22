@@ -72,5 +72,7 @@
   "testRequested": "Análisis solicitado",
   "urgency": "Urgencia",
   "visitDetails": "Detalles de la visita",
-  "weight": "Peso:"
+  "weight": "Peso:",
+  "iUndersigned": "Yo, el abajo firmante,",
+  "certifyHavingExamined": "Certifico haber examinado:"
 }

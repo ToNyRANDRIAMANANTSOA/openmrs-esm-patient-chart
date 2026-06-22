@@ -158,5 +158,7 @@
   "certificateUsage": "Usage du certificat",
   "voyageBoldPart": "voyager par voie aérienne",
   "ageLabel": "Âge",
-  "printSelected": "Imprimer la sélection"
+  "printSelected": "Imprimer la sélection",
+  "iUndersigned": "Je soussigné(e),",
+  "certifyHavingExamined": "Certifie avoir examiné :"
 }
