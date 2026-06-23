@@ -35,7 +35,9 @@ export interface EncountersTableProps {
   setPageSize: React.Dispatch<React.SetStateAction<number>>;
   isSelectable: boolean;
   canPrintEncounters: boolean;
-  onSelectionChange?: (state: { selectedEncounters: MappedEncounter[]; patientDetails: any } | null) => void;
+  onSelectionChange?: (
+    state: { selectedEncounters: MappedEncounter[]; patientDetails: any; patient: any } | null,
+  ) => void;
 }
 
 export interface MappedEncounter {
@@ -63,7 +65,7 @@ export function deleteEncounter(encounterUuid: string, abortController: AbortCon
   });
 }
 
-const encountersCustomRep = `custom:(uuid,display,diagnoses:(uuid,display,rank,diagnosis,certainty,voided),encounterDatetime,form:(uuid,display,name,description,encounterType,version,resources:(uuid,display,name,valueReference)),encounterType,visit,patient,obs:(uuid,concept:(uuid,display,conceptClass:(uuid,display)),display,groupMembers:(uuid,concept:(uuid,display),value:(uuid,display),display),value,obsDatetime),encounterProviders:(provider:(person)))`;
+const encountersCustomRep = `custom:(uuid,display,diagnoses:(uuid,display,rank,diagnosis,certainty,voided),encounterDatetime,form:(uuid,display,name,description,encounterType,version,resources:(uuid,display,name,valueReference)),encounterType,visit,patient,obs:(uuid,concept:(uuid,display,conceptClass:(uuid,display)),display,groupMembers:(uuid,concept:(uuid,display),value:(uuid,display),display,groupMembers:(uuid,concept:(uuid,display),value:(uuid,display),display)),value,obsDatetime),encounterProviders:(provider:(person)))`;
 
 function buildEncountersUrl(patientUuid: string, encounterType?: string): URL {
   const url = new URL(makeUrl(`${restBaseUrl}/encounter`), window.location.toString());

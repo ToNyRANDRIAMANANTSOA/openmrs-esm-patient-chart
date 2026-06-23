@@ -13,72 +13,72 @@ import useSWR from 'swr';
 import { type Encounter, type Provider, type Prescription } from '../types/prescription';
 import { useTranslation } from 'react-i18next';
 
-export const printableDrugOrderRepresentation = `
-custom:(
-  uuid,
-  type,
-  display,
-  dateActivated,
-  drugNonCoded,
+// export const printableDrugOrderRepresentation = `
+// custom:(
+//   uuid,
+//   type,
+//   display,
+//   dateActivated,
+//   drugNonCoded,
 
-  concept:(uuid,display),
+//   concept:(uuid,display),
 
-  drug:(
-    uuid,
-    display,
-    strength,
-    dosageForm:(display)
-  ),
+//   drug:(
+//     uuid,
+//     display,
+//     strength,
+//     dosageForm:(display)
+//   ),
 
-  dose,
-  doseUnits:(display),
-  frequency:(display),
-  route:(display),
+//   dose,
+//   doseUnits:(display),
+//   frequency:(display),
+//   route:(display),
 
-  quantity,
-  quantityUnits:(display),
+//   quantity,
+//   quantityUnits:(display),
 
-  duration,
-  durationUnits:(display),
+//   duration,
+//   durationUnits:(display),
 
-  dosingInstructions,
-  instructions,
-  commentToFulfiller,
-  urgency,
+//   dosingInstructions,
+//   instructions,
+//   commentToFulfiller,
+//   urgency,
 
-  orderReason,
-  orderReasonNonCoded,
+//   orderReason,
+//   orderReasonNonCoded,
 
-  orderType:(uuid,name),
+//   orderType:(uuid,name),
 
-  patient:(
-    uuid,
-    identifiers,
-    person:(
-      display,
-      age,
-      gender,
-      birthdate,
-      preferredAddress:(display)
-    )
-  ),
+//   patient:(
+//     uuid,
+//     identifiers,
+//     person:(
+//       display,
+//       age,
+//       gender,
+//       birthdate,
+//       preferredAddress:(display)
+//     )
+//   ),
 
-  encounter:(
-    uuid,
-    display,
-    visit:(
-      uuid,
-      display,
-      startDatetime
-    )
-  ),
+//   encounter:(
+//     uuid,
+//     display,
+//     visit:(
+//       uuid,
+//       display,
+//       startDatetime
+//     )
+//   ),
 
-  orderer:(
-    uuid,
-    display
-  )
-)
-`;
+//   orderer:(
+//     uuid,
+//     display
+//   )
+// )
+// `;
 const encounterRepresentation =
   'custom:(uuid,encounterDatetime,visit:(uuid,display,startDatetime,stopDatetime,location:(uuid,display,name,description,address1,address2,cityVillage,countyDistrict,stateProvince,country,attributes,parentLocation)),orders)';
 
@@ -196,7 +196,7 @@ export function useProviderDetails(providerUuid: string) {
   };
 }
 
-async function fetchMultipleProviderDetails(providerUuids: string[]) {
+export async function fetchMultipleProviderDetails(providerUuids: string[]) {
   const uniqueUuids = [...new Set(providerUuids.filter(Boolean))];
 
   const promises = uniqueUuids.map(async (uuid) => {
@@ -224,7 +224,7 @@ async function fetchMultipleProviderDetails(providerUuids: string[]) {
   );
 }
 
-function reduceAttributesIntoMap(attributes, attribute) {
+export function reduceAttributesIntoMap(attributes, attribute) {
   const [key, ...value] = attribute?.display?.split(': ');
   attributes[key] = value?.join(': ');
   return attributes;

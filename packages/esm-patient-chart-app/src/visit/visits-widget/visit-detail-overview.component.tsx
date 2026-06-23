@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
 import { useConfig } from '@openmrs/esm-framework';
@@ -11,14 +11,27 @@ import styles from './visit-detail-overview.scss';
 interface VisitOverviewComponentProps {
   patientUuid: string;
   patient: fhir.Patient;
+  /**
+   * The trailing URL path beyond the dashboard view (e.g. the `:visitId` in
+   * `.../chart/visits/:visitId`). When present, the Visits tab is filtered to that single visit.
+   */
+  additionalPath?: string;
 }
 
-function VisitDetailOverviewComponent({ patientUuid, patient }: VisitOverviewComponentProps) {
+function VisitDetailOverviewComponent({ patientUuid, patient, additionalPath }: VisitOverviewComponentProps) {
   const { t } = useTranslation();
   const [tabIndex, setTabIndex] = useState(0);
   const { showAllEncountersTab } = useConfig<ChartConfig>();
 
+  const visitUuid = additionalPath || undefined;
   const completedFormsTabIndex = showAllEncountersTab ? 2 : 1;
+
+  // When drilling into a single visit, make sure the Visits tab is the one in view.
+  useEffect(() => {
+    if (visitUuid) {
+      setTabIndex(0);
+    }
+  }, [visitUuid]);
 
   return (
     <div className={styles.tabs}>
@@ -40,7 +53,7 @@ function VisitDetailOverviewComponent({ patientUuid, patient }: VisitOverviewCom
         </TabList>
         <TabPanels>
           <TabPanel>
-            <VisitHistoryTable patientUuid={patientUuid} patient={patient} />
+            <VisitHistoryTable patientUuid={patientUuid} patient={patient} visitUuid={visitUuid} />
           </TabPanel>
           {showAllEncountersTab && (
             <TabPanel>

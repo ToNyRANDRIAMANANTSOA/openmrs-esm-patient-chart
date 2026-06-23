@@ -2,16 +2,17 @@ import React, { useCallback, type FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@carbon/react';
 import { PrinterIcon, showModal } from '@openmrs/esm-framework';
+import { type MappedEncounter } from './types/certifications';
 
 interface PrintCertificationsButtonProps {
-  selectedEncounters: Array<any>;
-  patientDetails: any;
+  selectedEncounters: Array<MappedEncounter>;
+  patient: fhir.Patient;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 }
 
 const PrintCertificationsButton: FunctionComponent<PrintCertificationsButtonProps> = ({
   selectedEncounters,
-  patientDetails,
+  patient,
   size = 'sm',
 }) => {
   const { t } = useTranslation();
@@ -20,9 +21,9 @@ const PrintCertificationsButton: FunctionComponent<PrintCertificationsButtonProp
     const dispose = showModal('print-certifications-modal', {
       closeModal: () => dispose(),
       encounters: selectedEncounters,
-      patientDetails,
+      patient,
     });
-  }, [selectedEncounters, patientDetails]);
+  }, [selectedEncounters, patient]);
 
   return (
     <Button

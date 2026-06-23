@@ -1,3 +1,5 @@
+// TODO: replace these datetime utils with openmrs' built-in date formater which already supports locales etc.
+
 /**
  * Shared utilities used across all certificate templates.
  */
@@ -127,4 +129,9 @@ export function getObsByConceptKeywords(obsList: Array<any>, ...keywords: string
 
   obsList.forEach(traverse);
   return result;
+}
+
+/** Recursively flattens obs groups into leaf obs entries. */
+export function flattenObs(obsList: any[]): any[] {
+  return (obsList ?? []).flatMap((obs) => (obs.groupMembers?.length ? flattenObs(obs.groupMembers) : [obs]));
 }

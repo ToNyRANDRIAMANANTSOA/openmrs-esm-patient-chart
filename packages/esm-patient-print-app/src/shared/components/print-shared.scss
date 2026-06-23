@@ -1,0 +1,140 @@
+.printHeader {
+  border-bottom: 2px solid var(--header-border);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.printTitleLogoRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.printHeaderColumns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.printSideA,
+.printSideB {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.alignLeft {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.alignCenter {
+  align-items: center;
+  text-align: center;
+}
+
+.alignRight {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.printLogo {
+  object-fit: contain;
+}
+
+.printLogoText {
+  margin: 0 0 5px;
+  font-weight: bold;
+}
+
+.clinicInfo {
+  color: var(--title-color);
+}
+
+.printTitleBelow {
+  text-align: center;
+  margin: 2rem 0 8px;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+  }
+}
+
+.providerIntro {
+  margin: 3rem 0 16px;
+  line-height: 1.6;
+}
+
+.facilityAddress {
+  line-height: 1.5;
+}
+
+.providerInfo {
+  line-height: 1.5;
+}
+
+.patientInfo {
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.patientInfoRow {
+  display: flex;
+  align-items: flex-start;
+
+  table {
+    width: 100%;
+    flex: 1;
+    min-width: 0;
+    border-collapse: collapse;
+  }
+
+  td {
+    padding: 5px 8px;
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) {
+    background-color: var(--table-row-alt);
+  }
+}
+
+.qrBlock {
+  min-width: 108px;
+  width: 108px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.centerDetailsFooter {
+  margin-top: 2rem;
+
+  p {
+    font-size: 11px;
+    text-align: justify;
+  }
+}
+
+@media print {
+  .centerDetailsFooter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
