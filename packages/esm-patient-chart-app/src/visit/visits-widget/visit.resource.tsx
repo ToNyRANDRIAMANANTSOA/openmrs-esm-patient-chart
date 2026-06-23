@@ -7,7 +7,7 @@ import {
   useOpenmrsPagination,
 } from '@openmrs/esm-framework';
 
-const customRepresentation =
+export const customRepresentation =
   'custom:(uuid,location,encounters:(uuid,diagnoses:(uuid,display,rank,diagnosis,voided),form:(uuid,display,name,description,encounterType,version,resources:(uuid,display,name,valueReference)),encounterDatetime,orders:full,obs:(uuid,concept:(uuid,display,conceptClass:(uuid,display)),display,groupMembers:(uuid,concept:(uuid,display),value:(uuid,display),display),value,obsDatetime),encounterType:(uuid,display,viewPrivilege,editPrivilege),encounterProviders:(uuid,display,encounterRole:(uuid,display),provider:(uuid,person:(uuid,display)))),visitType:(uuid,name,display),startDatetime,stopDatetime,patient,attributes:(attributeType:ref,display,uuid,value)';
 
 export function useInfiniteVisits(
@@ -29,7 +29,7 @@ export function useInfiniteVisits(
 }
 
 export function usePaginatedVisits(
-  patientUuid: string,
+  patientUuid: string | null,
   pageSize: number,
   params: Record<string, number | string> = {},
 ) {
@@ -41,7 +41,7 @@ export function usePaginatedVisits(
     url.searchParams.set(key, '' + params[key]);
   }
 
-  const ret = useOpenmrsPagination<Visit>(url, pageSize);
+  const ret = useOpenmrsPagination<Visit>(patientUuid ? url : null, pageSize);
 
   return ret;
 }

@@ -35,12 +35,13 @@ export function DashboardView({ dashboard, patientUuid, patient }: DashboardView
   const widgetMetas = useExtensionSlotMeta(dashboard.slot);
   const { t } = useTranslation();
   const {
-    params: { view },
+    params: { view, '*': additionalPath },
   } = useMatch(dashboardPath);
 
   const state = useMemo(
     () => ({
       basePath: view,
+      additionalPath,
       patient,
       patientUuid,
       launchWorkspace2,
@@ -49,7 +50,7 @@ export function DashboardView({ dashboard, patientUuid, patient }: DashboardView
         launchWorkspace2('patient-chart-appointments-form-workspace', {}, {}, { patientUuid, patient });
       },
     }),
-    [patient, patientUuid, view],
+    [patient, patientUuid, view, additionalPath],
   );
 
   const [resolvedTitle, setResolvedTitle] = useState<string | undefined>();
